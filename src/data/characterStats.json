@@ -1,0 +1,3441 @@
+{
+  "general-24": {
+    "name": "General 24",
+    "level": 95,
+    "type": [
+      "Dragon",
+      "Steel"
+    ],
+    "hp": 106,
+    "atk": 80,
+    "def": 95,
+    "spAtk": 130,
+    "spDef": 90,
+    "spd": 85,
+    "total": 586,
+    "moves": [
+      {
+        "name": "Glitch Fire",
+        "desc": "An unpredictable burst of digital energy."
+      },
+      {
+        "name": "Firewall",
+        "desc": "A digital shield that blocks incoming data/special attacks."
+      },
+      {
+        "name": "Reality Defrag",
+        "desc": "Restores health and removes negative statuses."
+      },
+      {
+        "name": "Rallying Cry",
+        "desc": "Boosts the morale and stats of all allies."
+      },
+      {
+        "name": "Blue Screen of Death",
+        "desc": "Ultimate: Traps the enemy in a system crash, disabling them completely."
+      }
+    ]
+  },
+  "sync": {
+    "name": "Sync (Phantom)",
+    "level": 89,
+    "type": [
+      "Psychic",
+      "Normal"
+    ],
+    "hp": 75,
+    "atk": 85,
+    "def": 70,
+    "spAtk": 95,
+    "spDef": 80,
+    "spd": 115,
+    "total": 520,
+    "moves": [
+      {
+        "name": "Temporal Lock",
+        "desc": "Freezes an opponent in a time loop for 3 seconds."
+      },
+      {
+        "name": "Clock Pulse",
+        "desc": "Sends a shockwave synced to the universal tempo, stunning all in range."
+      },
+      {
+        "name": "Chrono Shield",
+        "desc": "A barrier woven from frozen seconds that absorbs incoming attacks."
+      },
+      {
+        "name": "Harmonic Convergence",
+        "desc": "Syncs allies' attack timing for a devastating coordinated strike."
+      },
+      {
+        "name": "Sync Override",
+        "desc": "ULTIMATE: Hijacks the opponent's internal rhythm, forcing them to move in slow motion."
+      }
+    ]
+  },
+  "molly": {
+    "name": "Molly",
+    "level": 87,
+    "type": [
+      "Electric",
+      "Fighting"
+    ],
+    "hp": 65,
+    "atk": 110,
+    "def": 55,
+    "spAtk": 95,
+    "spDef": 60,
+    "spd": 125,
+    "total": 510,
+    "moves": [
+      {
+        "name": "Voltage Pirouette",
+        "desc": "A spinning kick charged with electric current that arcs to nearby enemies."
+      },
+      {
+        "name": "Shockwave Prima",
+        "desc": "Channels electricity through a ballet stance, releasing a radial shockwave."
+      },
+      {
+        "name": "Static Waltz",
+        "desc": "Creates lingering electric zones on the ground that damage enemies who step in."
+      },
+      {
+        "name": "Conductor's Grace",
+        "desc": "Absorbs incoming electrical attacks and converts them to healing."
+      },
+      {
+        "name": "Thunder Allegro",
+        "desc": "ULTIMATE: A full choreographed sequence of lightning-charged strikes at blinding speed."
+      }
+    ]
+  },
+  "ninja-nagazaki": {
+    "name": "Ninja Nagazaki",
+    "level": 85,
+    "type": [
+      "Dark",
+      "Ghost"
+    ],
+    "hp": 55,
+    "atk": 130,
+    "def": 50,
+    "spAtk": 60,
+    "spDef": 55,
+    "spd": 150,
+    "total": 500,
+    "moves": [
+      {
+        "name": "Execution",
+        "desc": "A high-damage finishing move against weakened opponents."
+      },
+      {
+        "name": "Void Cloak",
+        "desc": "Become invisible for a short duration."
+      },
+      {
+        "name": "Nightmare",
+        "desc": "Traps a foe in a horrifying illusion."
+      },
+      {
+        "name": "Shadow Drain",
+        "desc": "Siphons life force from the enemy."
+      },
+      {
+        "name": "Umbral Evisceration",
+        "desc": "Ultimate: A single, fatal blow from the darkness."
+      }
+    ]
+  },
+  "nova": {
+    "name": "Nova",
+    "level": 79,
+    "type": [
+      "Electric",
+      "Fairy"
+    ],
+    "hp": 78,
+    "atk": 65,
+    "def": 70,
+    "spAtk": 125,
+    "spDef": 85,
+    "spd": 95,
+    "total": 518,
+    "moves": [
+      {
+        "name": "Frequency Beam",
+        "desc": "Fires a concentrated laser of pure frequency energy."
+      },
+      {
+        "name": "Starlight Aura",
+        "desc": "Radiates a field of light that reveals hidden enemies and boosts ally accuracy."
+      },
+      {
+        "name": "Nova Flare",
+        "desc": "A blinding burst of synthesized light that disorients all opponents."
+      },
+      {
+        "name": "Cosmic Resonance",
+        "desc": "Tunes into celestial frequencies to amplify all stats temporarily."
+      },
+      {
+        "name": "Supernova Crescendo",
+        "desc": "ULTIMATE: Detonates a miniature star of compressed frequency, devastating the battlefield."
+      }
+    ]
+  },
+  "striker": {
+    "name": "Striker",
+    "level": 78,
+    "type": [
+      "Fighting",
+      "Ground"
+    ],
+    "hp": 120,
+    "atk": 130,
+    "def": 95,
+    "spAtk": 40,
+    "spDef": 60,
+    "spd": 45,
+    "total": 490,
+    "moves": [
+      {
+        "name": "Drum Roll Barrage",
+        "desc": "A rapid-fire series of percussive punches that build in intensity."
+      },
+      {
+        "name": "Snare Trap",
+        "desc": "Plants a sonic snare on the ground that immobilizes enemies who trigger it."
+      },
+      {
+        "name": "Bass Drum Impact",
+        "desc": "A devastating ground-pound that sends shockwaves across the arena."
+      },
+      {
+        "name": "Cymbal Crash",
+        "desc": "Claps hands to create a disorienting sonic blast in a cone."
+      },
+      {
+        "name": "Percussion Storm",
+        "desc": "ULTIMATE: Summons a barrage of rhythmic shockwaves that pummel the entire battlefield."
+      }
+    ]
+  },
+  "king-j": {
+    "name": "King J",
+    "level": 77,
+    "type": [
+      "Normal",
+      "Psychic"
+    ],
+    "hp": 83,
+    "atk": 75,
+    "def": 80,
+    "spAtk": 90,
+    "spDef": 95,
+    "spd": 77,
+    "total": 500,
+    "moves": [
+      {
+        "name": "Royal Decree",
+        "desc": "Commands the battlefield, reducing all enemy defense by 25%."
+      },
+      {
+        "name": "Crown Resonance",
+        "desc": "Emits a golden frequency pulse that heals and buffs all allies."
+      },
+      {
+        "name": "Sovereign Strike",
+        "desc": "A regal overhead smash imbued with pure authority energy."
+      },
+      {
+        "name": "Throne Guard",
+        "desc": "Conjures a barrier of royal frequency that reflects projectile attacks."
+      },
+      {
+        "name": "King's Anthem",
+        "desc": "ULTIMATE: Broadcasts an overwhelming frequency that forces all enemies to kneel, paralyzed."
+      }
+    ]
+  },
+  "maya": {
+    "name": "Maya",
+    "level": 76,
+    "type": [
+      "Fairy",
+      "Psychic"
+    ],
+    "hp": 95,
+    "atk": 55,
+    "def": 80,
+    "spAtk": 100,
+    "spDef": 110,
+    "spd": 55,
+    "total": 495,
+    "moves": [
+      {
+        "name": "Stone Fist",
+        "desc": "A powerful punch with the force of rock."
+      },
+      {
+        "name": "Seismic Shield",
+        "desc": "Erects a barrier of solid earth."
+      },
+      {
+        "name": "Earthquake",
+        "desc": "Shakes the ground violently, knocking down opponents."
+      },
+      {
+        "name": "Titan's Strength",
+        "desc": "Massively boosts attack power for a short time."
+      },
+      {
+        "name": "Gaia's Wrath",
+        "desc": "Ultimate: The very ground erupts to attack your foe."
+      }
+    ]
+  },
+  "masterbass": {
+    "name": "MasterBass",
+    "level": 75,
+    "type": [
+      "Ground",
+      "Psychic"
+    ],
+    "hp": 80,
+    "atk": 60,
+    "def": 75,
+    "spAtk": 140,
+    "spDef": 95,
+    "spd": 30,
+    "total": 480,
+    "moves": [
+      {
+        "name": "Sub Drop",
+        "desc": "Releases a devastating sub-bass frequency that rattles organs and bones."
+      },
+      {
+        "name": "Bass Cannon",
+        "desc": "Fires a concentrated beam of low-frequency energy."
+      },
+      {
+        "name": "808 Quake",
+        "desc": "Sends tremors through the ground with deep bass pulses."
+      },
+      {
+        "name": "Low-End Shield",
+        "desc": "Creates an impenetrable wall of sub-bass vibration."
+      },
+      {
+        "name": "Frequency Floor",
+        "desc": "ULTIMATE: Drops the bass so low it destabilizes gravity in the area, crushing everything to the ground."
+      }
+    ]
+  },
+  "crossfade": {
+    "name": "Crossfade",
+    "level": 74,
+    "type": [
+      "Normal",
+      "Ghost"
+    ],
+    "hp": 72,
+    "atk": 65,
+    "def": 75,
+    "spAtk": 85,
+    "spDef": 90,
+    "spd": 80,
+    "total": 467,
+    "moves": [
+      {
+        "name": "Smooth Transition",
+        "desc": "Phases between two positions simultaneously, confusing enemies."
+      },
+      {
+        "name": "Mix Shift",
+        "desc": "Blends two elemental frequencies together for a hybrid attack."
+      },
+      {
+        "name": "Fade Out",
+        "desc": "Gradually becomes invisible over 2 seconds, gaining stealth."
+      },
+      {
+        "name": "Blend Strike",
+        "desc": "Attacks from two angles at once by splitting presence across space."
+      },
+      {
+        "name": "Seamless Override",
+        "desc": "ULTIMATE: Transitions the entire battlefield from one state to another — allies heal, enemies weaken."
+      }
+    ]
+  },
+  "subz": {
+    "name": "SubZ",
+    "level": 73,
+    "type": [
+      "Ice",
+      "Dark"
+    ],
+    "hp": 80,
+    "atk": 95,
+    "def": 85,
+    "spAtk": 60,
+    "spDef": 70,
+    "spd": 75,
+    "total": 465,
+    "moves": [
+      {
+        "name": "Frost Bass",
+        "desc": "A sub-zero frequency blast that freezes enemies on impact."
+      },
+      {
+        "name": "Chill Wave",
+        "desc": "Sends a wave of icy sound across the ground, slowing all who cross it."
+      },
+      {
+        "name": "Frozen Beat",
+        "desc": "Encases an enemy in a shell of frozen sound vibration."
+      },
+      {
+        "name": "Polar Vortex Drop",
+        "desc": "Creates a swirling cold air vortex that pulls enemies inward."
+      },
+      {
+        "name": "Absolute Sub-Zero",
+        "desc": "ULTIMATE: Drops temperature and frequency to zero — freezing time, sound, and motion."
+      }
+    ]
+  },
+  "4serj": {
+    "name": "4Serj",
+    "level": 72,
+    "type": [
+      "Steel",
+      "Electric"
+    ],
+    "hp": 77,
+    "atk": 80,
+    "def": 85,
+    "spAtk": 95,
+    "spDef": 80,
+    "spd": 90,
+    "total": 507,
+    "moves": [
+      {
+        "name": "Quadrant Strike",
+        "desc": "Four simultaneous attacks from cardinal directions."
+      },
+      {
+        "name": "Four-Count Combo",
+        "desc": "A precisely timed four-hit combo that builds power with each hit."
+      },
+      {
+        "name": "Surge Multiply",
+        "desc": "Creates three duplicates that attack independently for 5 seconds."
+      },
+      {
+        "name": "Quarter Time",
+        "desc": "Slows enemies to 1/4 speed in a designated zone."
+      },
+      {
+        "name": "Fourfold Fury",
+        "desc": "ULTIMATE: Unleashes four devastating attacks simultaneously from all angles."
+      }
+    ]
+  },
+  "ghostloop": {
+    "name": "GhostLoop",
+    "level": 71,
+    "type": [
+      "Ghost",
+      "Psychic"
+    ],
+    "hp": 65,
+    "atk": 50,
+    "def": 60,
+    "spAtk": 110,
+    "spDef": 100,
+    "spd": 75,
+    "total": 460,
+    "moves": [
+      {
+        "name": "Mind Spike",
+        "desc": "A direct assault on the target's mind."
+      },
+      {
+        "name": "Precognitive Dodge",
+        "desc": "Automatically evade the next incoming attack."
+      },
+      {
+        "name": "Telekinetic Throw",
+        "desc": "Hurls environmental objects at the foe."
+      },
+      {
+        "name": "Mental Barrier",
+        "desc": "A shield that is impervious to special attacks."
+      },
+      {
+        "name": "Psycho Break",
+        "desc": "Ultimate: Shatters the target's will to fight."
+      }
+    ]
+  },
+  "breakline": {
+    "name": "Breakline",
+    "level": 70,
+    "type": [
+      "Fighting",
+      "Normal"
+    ],
+    "hp": 76,
+    "atk": 100,
+    "def": 80,
+    "spAtk": 55,
+    "spDef": 65,
+    "spd": 80,
+    "total": 456,
+    "moves": [
+      {
+        "name": "Line Break",
+        "desc": "Shatters enemy defenses with a precise linear strike."
+      },
+      {
+        "name": "Fracture Wave",
+        "desc": "Sends a crack through the ground toward the enemy."
+      },
+      {
+        "name": "Broken Rhythm",
+        "desc": "Disrupts enemy attack timing, causing them to stumble."
+      },
+      {
+        "name": "Split Decision",
+        "desc": "A branching attack that hits multiple targets."
+      },
+      {
+        "name": "Shatter Point",
+        "desc": "ULTIMATE: Finds the structural weakness in any defense and breaks it completely."
+      }
+    ]
+  },
+  "afterimage": {
+    "name": "Afterimage",
+    "level": 69,
+    "type": [
+      "Ghost",
+      "Normal"
+    ],
+    "hp": 55,
+    "atk": 75,
+    "def": 45,
+    "spAtk": 70,
+    "spDef": 55,
+    "spd": 150,
+    "total": 450,
+    "moves": [
+      {
+        "name": "Ghost Step",
+        "desc": "Leaves behind an afterimage that absorbs the next attack."
+      },
+      {
+        "name": "Phantom Rush",
+        "desc": "Moves so fast that multiple afterimages attack simultaneously."
+      },
+      {
+        "name": "Residual Strike",
+        "desc": "An attack that hits twice — once now, once from the afterimage."
+      },
+      {
+        "name": "Fade Memory",
+        "desc": "Creates persistent afterimages that confuse enemy targeting."
+      },
+      {
+        "name": "Infinite Echo",
+        "desc": "ULTIMATE: Fills the arena with afterimages, each capable of dealing real damage."
+      }
+    ]
+  },
+  "mr-genge": {
+    "name": "Mr Genge",
+    "level": 68,
+    "type": [
+      "Fighting",
+      "Normal"
+    ],
+    "hp": 75,
+    "atk": 95,
+    "def": 65,
+    "spAtk": 80,
+    "spDef": 60,
+    "spd": 85,
+    "total": 460,
+    "moves": [
+      {
+        "name": "Grime Pulse",
+        "desc": "A raw, gritty blast of urban frequency energy."
+      },
+      {
+        "name": "Street Anthem",
+        "desc": "Rallies allies with a motivating grime beat, boosting attack speed."
+      },
+      {
+        "name": "Council Estate Shield",
+        "desc": "Erects a barrier of dense urban energy."
+      },
+      {
+        "name": "MC Barrage",
+        "desc": "A rapid-fire verbal assault that deals psychic damage."
+      },
+      {
+        "name": "Shutdown Frequency",
+        "desc": "ULTIMATE: Broadcasts an overwhelming grime frequency that silences and stuns all enemies."
+      }
+    ]
+  },
+  "liquidb": {
+    "name": "LiquidB",
+    "level": 67,
+    "type": [
+      "Water",
+      "Fighting"
+    ],
+    "hp": 85,
+    "atk": 60,
+    "def": 70,
+    "spAtk": 105,
+    "spDef": 75,
+    "spd": 80,
+    "total": 475,
+    "moves": [
+      {
+        "name": "Liquid Flow",
+        "desc": "A fluid attack that morphs shape to bypass defenses."
+      },
+      {
+        "name": "Mercury Strike",
+        "desc": "A heavy liquid-metal punch that adapts to target armor."
+      },
+      {
+        "name": "Splash Barrier",
+        "desc": "A shield of liquid energy that absorbs and redistributes impact."
+      },
+      {
+        "name": "Tidal Shift",
+        "desc": "Transforms the ground into a liquid surface, slowing enemies."
+      },
+      {
+        "name": "Flood Gate",
+        "desc": "ULTIMATE: Unleashes a torrent of liquid bass energy that drowns the battlefield."
+      }
+    ]
+  },
+  "backspin": {
+    "name": "Backspin",
+    "level": 66,
+    "type": [
+      "Normal",
+      "Ghost"
+    ],
+    "hp": 70,
+    "atk": 80,
+    "def": 90,
+    "spAtk": 65,
+    "spDef": 85,
+    "spd": 75,
+    "total": 465,
+    "moves": [
+      {
+        "name": "Reverse Flow",
+        "desc": "Spins an attack back at the sender with doubled force."
+      },
+      {
+        "name": "Turntable Kick",
+        "desc": "A spinning kick that creates a vinyl-scratch shockwave."
+      },
+      {
+        "name": "Rewind Strike",
+        "desc": "Attacks that reverse time on impact, undoing enemy buffs."
+      },
+      {
+        "name": "Scratch Loop",
+        "desc": "Traps an enemy in a repeating loop of damage."
+      },
+      {
+        "name": "Full Revolution",
+        "desc": "ULTIMATE: Spins with such force that reality itself warps, deflecting everything."
+      }
+    ]
+  },
+  "sidechain": {
+    "name": "Sidechain",
+    "level": 65,
+    "type": [
+      "Steel",
+      "Psychic"
+    ],
+    "hp": 75,
+    "atk": 55,
+    "def": 100,
+    "spAtk": 80,
+    "spDef": 95,
+    "spd": 50,
+    "total": 455,
+    "moves": [
+      {
+        "name": "Compression Hit",
+        "desc": "A technique that compresses air into a devastating punch."
+      },
+      {
+        "name": "Ducking Strike",
+        "desc": "Phases in and out of audibility, attacking from unexpected angles."
+      },
+      {
+        "name": "Pump Effect",
+        "desc": "Rhythmically pulses damage that syncs to weaken enemy defenses."
+      },
+      {
+        "name": "Signal Route",
+        "desc": "Redirects an enemy's attack back through altered frequency channels."
+      },
+      {
+        "name": "Total Compression",
+        "desc": "ULTIMATE: Compresses all sound in the area into a single devastating point of impact."
+      }
+    ]
+  },
+  "distort": {
+    "name": "Distort",
+    "level": 64,
+    "type": [
+      "Electric",
+      "Fire"
+    ],
+    "hp": 73,
+    "atk": 95,
+    "def": 55,
+    "spAtk": 90,
+    "spDef": 50,
+    "spd": 85,
+    "total": 448,
+    "moves": [
+      {
+        "name": "Warp Tone",
+        "desc": "Distorts the frequency of incoming attacks, weakening them."
+      },
+      {
+        "name": "Fuzz Blast",
+        "desc": "An overdriven wall of distorted sound that shreds defenses."
+      },
+      {
+        "name": "Signal Corruption",
+        "desc": "Corrupts an enemy's abilities, making them malfunction."
+      },
+      {
+        "name": "Feedback Scream",
+        "desc": "A high-pitched distorted shriek that damages and disorients."
+      },
+      {
+        "name": "Total Distortion",
+        "desc": "ULTIMATE: Warps all frequencies in the area, making reality itself glitch and crack."
+      }
+    ]
+  },
+  "moombah": {
+    "name": "Moombah",
+    "level": 63,
+    "type": [
+      "Fighting"
+    ],
+    "hp": 80,
+    "atk": 105,
+    "def": 80,
+    "spAtk": 50,
+    "spDef": 55,
+    "spd": 70,
+    "total": 440,
+    "moves": [
+      {
+        "name": "Tropical Slam",
+        "desc": "A heavy, island-rhythm infused ground pound."
+      },
+      {
+        "name": "Carnival Rush",
+        "desc": "A flurry of colorful, rhythm-charged attacks."
+      },
+      {
+        "name": "Reggaeton Pulse",
+        "desc": "A deep chest-rattling bass pulse that staggers enemies."
+      },
+      {
+        "name": "Island Breeze",
+        "desc": "A wind-based dodge that leaves a trail of healing energy."
+      },
+      {
+        "name": "Fiesta Inferno",
+        "desc": "ULTIMATE: Erupts in a whirlwind of tropical energy and devastating bass."
+      }
+    ]
+  },
+  "dop": {
+    "name": "d.O.P",
+    "level": 62,
+    "type": [
+      "Psychic"
+    ],
+    "hp": 70,
+    "atk": 55,
+    "def": 65,
+    "spAtk": 110,
+    "spDef": 85,
+    "spd": 65,
+    "total": 450,
+    "moves": [
+      {
+        "name": "Doppler Rush",
+        "desc": "Charges at the enemy with an attack that shifts pitch as it approaches."
+      },
+      {
+        "name": "Frequency Slide",
+        "desc": "A smooth gliding strike that changes frequency mid-attack."
+      },
+      {
+        "name": "Phase Doppler",
+        "desc": "Creates a confusing auditory illusion of attacks from all directions."
+      },
+      {
+        "name": "Shift Kick",
+        "desc": "A kick that accelerates mid-flight, hitting harder than expected."
+      },
+      {
+        "name": "Red-Blue Shift",
+        "desc": "ULTIMATE: Simultaneously attacks from the past and future, unavoidable."
+      }
+    ]
+  },
+  "wboy": {
+    "name": "WBoy",
+    "level": 61,
+    "type": [
+      "Normal",
+      "Electric"
+    ],
+    "hp": 73,
+    "atk": 70,
+    "def": 60,
+    "spAtk": 85,
+    "spDef": 75,
+    "spd": 80,
+    "total": 443,
+    "moves": [
+      {
+        "name": "Wobble Drop",
+        "desc": "A squelching wobble bass attack that destabilizes footing."
+      },
+      {
+        "name": "Dubstep Slam",
+        "desc": "Heavy, rhythmic slams synced to a wobble pattern."
+      },
+      {
+        "name": "Filthy Bass",
+        "desc": "An extremely distorted low-end blast that corrodes defenses."
+      },
+      {
+        "name": "Wub Shield",
+        "desc": "A pulsating barrier of wobble frequency."
+      },
+      {
+        "name": "Maximum Wobble",
+        "desc": "ULTIMATE: The wobble frequency resonates with everything, shaking apart all structures and defenses."
+      }
+    ]
+  },
+  "afrog": {
+    "name": "AfroG",
+    "level": 60,
+    "type": [
+      "Dragon",
+      "Normal"
+    ],
+    "hp": 91,
+    "atk": 70,
+    "def": 75,
+    "spAtk": 95,
+    "spDef": 80,
+    "spd": 85,
+    "total": 496,
+    "moves": [
+      {
+        "name": "Afro Beat",
+        "desc": "A rhythmic, groove-infused strike that boosts ally morale."
+      },
+      {
+        "name": "Funk Slide",
+        "desc": "A smooth sliding dodge that leaves enemies off-balance."
+      },
+      {
+        "name": "Soul Clap",
+        "desc": "Claps with such soul energy it creates a healing shockwave."
+      },
+      {
+        "name": "Groove Lock",
+        "desc": "Forces enemies into a dance rhythm, slowing their combat."
+      },
+      {
+        "name": "Funk Supreme",
+        "desc": "ULTIMATE: Channels pure groove energy into an unstoppable dance of devastating attacks."
+      }
+    ]
+  },
+  "general-meter": {
+    "name": "General Meter",
+    "level": 80,
+    "type": [
+      "Psychic"
+    ],
+    "hp": 85,
+    "atk": 60,
+    "def": 75,
+    "spAtk": 120,
+    "spDef": 110,
+    "spd": 80,
+    "total": 530,
+    "moves": [
+      {
+        "name": "Tempo Authority",
+        "desc": "Sets the battlefield tempo, forcing all combatants to move at his pace."
+      },
+      {
+        "name": "Metronome Pulse",
+        "desc": "A perfectly timed psychic pulse that disrupts enemy concentration."
+      },
+      {
+        "name": "Measure Lock",
+        "desc": "Traps an enemy in a repeating time measure, looping their last 3 seconds."
+      },
+      {
+        "name": "Command Cadence",
+        "desc": "Rallies all allies with a precise rhythmic command, boosting coordination."
+      },
+      {
+        "name": "Grand Conductor",
+        "desc": "ULTIMATE: Takes total control of the battlefield's tempo, allies speed up, enemies freeze."
+      }
+    ]
+  },
+  "admiral-flux": {
+    "name": "Admiral Flux",
+    "level": 84,
+    "type": [
+      "Electric"
+    ],
+    "hp": 80,
+    "atk": 65,
+    "def": 70,
+    "spAtk": 115,
+    "spDef": 95,
+    "spd": 105,
+    "total": 530,
+    "moves": [
+      {
+        "name": "Flux Cannon",
+        "desc": "Fires an unstable energy beam that fluctuates between frequencies."
+      },
+      {
+        "name": "Waveform Shift",
+        "desc": "Rapidly changes personal frequency to dodge attacks."
+      },
+      {
+        "name": "Fluctuation Field",
+        "desc": "Creates a zone where all energy becomes unstable and unpredictable."
+      },
+      {
+        "name": "Cascade Barrage",
+        "desc": "Multiple flux-charged projectiles that chain between targets."
+      },
+      {
+        "name": "Total Flux",
+        "desc": "ULTIMATE: Destabilizes all frequencies in range, causing catastrophic energy chain reactions."
+      }
+    ]
+  },
+  "major-rift": {
+    "name": "Major Rift",
+    "level": 81,
+    "type": [
+      "Psychic",
+      "Dark"
+    ],
+    "hp": 90,
+    "atk": 80,
+    "def": 85,
+    "spAtk": 100,
+    "spDef": 90,
+    "spd": 75,
+    "total": 520,
+    "moves": [
+      {
+        "name": "Dimensional Tear",
+        "desc": "Rips a hole in space that damages anything passing through."
+      },
+      {
+        "name": "Rift Walk",
+        "desc": "Steps through a tear in reality to teleport behind the enemy."
+      },
+      {
+        "name": "Spatial Fracture",
+        "desc": "Cracks the ground with dimensional energy, creating hazard zones."
+      },
+      {
+        "name": "Void Anchor",
+        "desc": "Pins an enemy to a point in space, preventing movement."
+      },
+      {
+        "name": "Reality Schism",
+        "desc": "ULTIMATE: Tears open a massive rift that splits the battlefield in two, isolating enemies."
+      }
+    ]
+  },
+  "commander-vale": {
+    "name": "Commander Vale",
+    "level": 81,
+    "type": [
+      "Psychic",
+      "Fairy"
+    ],
+    "hp": 75,
+    "atk": 50,
+    "def": 80,
+    "spAtk": 110,
+    "spDef": 120,
+    "spd": 60,
+    "total": 495,
+    "moves": [
+      {
+        "name": "Veil Command",
+        "desc": "Issues telepathic commands that bypass verbal communication."
+      },
+      {
+        "name": "Mind Fortress",
+        "desc": "Erects an impenetrable mental shield around allies."
+      },
+      {
+        "name": "Strategic Vision",
+        "desc": "Gains precognitive sight of the next 5 enemy actions."
+      },
+      {
+        "name": "Psychic Directive",
+        "desc": "Forces an enemy to execute a specific action against their will."
+      },
+      {
+        "name": "Absolute Authority",
+        "desc": "ULTIMATE: Broadcasts an overwhelming psychic command — all enemies surrender for 10 seconds."
+      }
+    ]
+  },
+  "captain-onyx": {
+    "name": "Captain Onyx",
+    "level": 83,
+    "type": [
+      "Dark",
+      "Rock"
+    ],
+    "hp": 85,
+    "atk": 100,
+    "def": 95,
+    "spAtk": 55,
+    "spDef": 70,
+    "spd": 80,
+    "total": 485,
+    "moves": [
+      {
+        "name": "Onyx Blade",
+        "desc": "Conjures a sword of crystallized dark frequency."
+      },
+      {
+        "name": "Black Stone Wall",
+        "desc": "Raises a wall of onyx-like hardened sound."
+      },
+      {
+        "name": "Shadow Shatter",
+        "desc": "Breaks onyx constructs into explosive shrapnel."
+      },
+      {
+        "name": "Dark Mineral Armor",
+        "desc": "Encases in onyx armor, dramatically boosting defense."
+      },
+      {
+        "name": "Obsidian Cataclysm",
+        "desc": "ULTIMATE: Rains shards of onyx frequency from above, devastating the field."
+      }
+    ]
+  },
+  "dr-tempo": {
+    "name": "Dr. Tempo",
+    "level": 81,
+    "type": [
+      "Normal",
+      "Psychic"
+    ],
+    "hp": 80,
+    "atk": 55,
+    "def": 70,
+    "spAtk": 105,
+    "spDef": 85,
+    "spd": 95,
+    "total": 490,
+    "moves": [
+      {
+        "name": "Tempo Injection",
+        "desc": "Speeds up or slows down a target's internal rhythm at will."
+      },
+      {
+        "name": "BPM Diagnosis",
+        "desc": "Reads an enemy's rhythm to predict their next 3 attacks."
+      },
+      {
+        "name": "Rhythmic Surgery",
+        "desc": "Precisely disrupts a single stat at the cellular level."
+      },
+      {
+        "name": "Pulse Stabilizer",
+        "desc": "Heals allies by restoring their natural tempo."
+      },
+      {
+        "name": "Cardiac Override",
+        "desc": "ULTIMATE: Takes control of every heartbeat in range, stopping enemies cold."
+      }
+    ]
+  },
+  "echo-blaze": {
+    "name": "Echo Blaze",
+    "level": 50,
+    "type": [
+      "Fire",
+      "Ghost"
+    ],
+    "hp": 70,
+    "atk": 85,
+    "def": 65,
+    "spAtk": 95,
+    "spDef": 60,
+    "spd": 80,
+    "total": 455,
+    "moves": [
+      {
+        "name": "Burning Echo",
+        "desc": "An attack that repeats as a fiery aftershock."
+      },
+      {
+        "name": "Flame Reverberation",
+        "desc": "Fire that bounces between targets, growing stronger."
+      },
+      {
+        "name": "Inferno Feedback",
+        "desc": "Absorbs an attack and returns it as a fire blast."
+      },
+      {
+        "name": "Cinderloop",
+        "desc": "Traps an enemy in a repeating fire echo loop."
+      },
+      {
+        "name": "Conflagration Echo",
+        "desc": "ULTIMATE: A single fire attack that echoes infinitely, burning hotter each time."
+      }
+    ]
+  },
+  "vanta-lux": {
+    "name": "Vanta Lux",
+    "level": 50,
+    "type": [
+      "Dark",
+      "Fairy"
+    ],
+    "hp": 65,
+    "atk": 45,
+    "def": 60,
+    "spAtk": 125,
+    "spDef": 80,
+    "spd": 75,
+    "total": 450,
+    "moves": [
+      {
+        "name": "Light Void",
+        "desc": "Absorbs all light in an area, creating total darkness."
+      },
+      {
+        "name": "Lux Beam",
+        "desc": "A piercing beam of concentrated light energy."
+      },
+      {
+        "name": "Shadow-Light Flip",
+        "desc": "Instantly inverts light and shadow, disorienting everyone."
+      },
+      {
+        "name": "Prismatic Shield",
+        "desc": "A barrier that refracts attacks into harmless scattered light."
+      },
+      {
+        "name": "Vanta Supernova",
+        "desc": "ULTIMATE: Simultaneously erupts in blinding light AND absolute darkness."
+      }
+    ]
+  },
+  "torque-titan": {
+    "name": "Torque Titan",
+    "level": 50,
+    "type": [
+      "Fighting",
+      "Steel"
+    ],
+    "hp": 110,
+    "atk": 130,
+    "def": 100,
+    "spAtk": 35,
+    "spDef": 55,
+    "spd": 40,
+    "total": 470,
+    "moves": [
+      {
+        "name": "Rotational Strike",
+        "desc": "A punch amplified by centrifugal force."
+      },
+      {
+        "name": "Torque Slam",
+        "desc": "Drives spinning energy into the ground, causing a localized quake."
+      },
+      {
+        "name": "Centrifugal Guard",
+        "desc": "Spins a defensive field that deflects projectiles outward."
+      },
+      {
+        "name": "Gyroscope Lock",
+        "desc": "Stabilizes personal balance, becoming immune to knockback."
+      },
+      {
+        "name": "Titan's Revolution",
+        "desc": "ULTIMATE: Spins with planet-cracking force, everything in range is obliterated."
+      }
+    ]
+  },
+  "cipher-rae": {
+    "name": "Cipher Rae",
+    "level": 50,
+    "type": [
+      "Dark",
+      "Electric"
+    ],
+    "hp": 65,
+    "atk": 55,
+    "def": 60,
+    "spAtk": 95,
+    "spDef": 80,
+    "spd": 105,
+    "total": 460,
+    "moves": [
+      {
+        "name": "Code Break",
+        "desc": "Cracks the encrypted frequency of enemy defenses."
+      },
+      {
+        "name": "Cipher Lock",
+        "desc": "Encrypts an ally's vitals, making them untargetable for 5 seconds."
+      },
+      {
+        "name": "Data Spike",
+        "desc": "Injects corrupted data into enemy systems."
+      },
+      {
+        "name": "Decryption Field",
+        "desc": "Reveals all hidden enemies and removes buffs."
+      },
+      {
+        "name": "Zero-Day Exploit",
+        "desc": "ULTIMATE: Finds and exploits the fatal flaw in any defense, one-shotting barriers."
+      }
+    ]
+  },
+  "nova-kid": {
+    "name": "Nova Kid",
+    "level": 50,
+    "type": [
+      "Fire",
+      "Normal"
+    ],
+    "hp": 60,
+    "atk": 75,
+    "def": 50,
+    "spAtk": 100,
+    "spDef": 55,
+    "spd": 90,
+    "total": 430,
+    "moves": [
+      {
+        "name": "Kid Nova Blast",
+        "desc": "A youthful but powerful burst of star energy."
+      },
+      {
+        "name": "Starfire Sprint",
+        "desc": "Dashes forward in a trail of stellar flame."
+      },
+      {
+        "name": "Cosmic Tantrum",
+        "desc": "An uncontrolled AOE burst when frustrated — high damage, random targeting."
+      },
+      {
+        "name": "Stellar Shield",
+        "desc": "Encases in a sphere of cool starlight."
+      },
+      {
+        "name": "Big Bang Jr.",
+        "desc": "ULTIMATE: Channels raw cosmic power for a mini Big Bang explosion."
+      }
+    ]
+  },
+  "seraph-kairo": {
+    "name": "Seraph Kairo",
+    "level": 50,
+    "type": [
+      "Psychic",
+      "Fighting"
+    ],
+    "hp": 55,
+    "atk": 45,
+    "def": 65,
+    "spAtk": 90,
+    "spDef": 90,
+    "spd": 120,
+    "total": 465,
+    "moves": [
+      {
+        "name": "Divine Frequency",
+        "desc": "Channels a holy vibration that pierces dark defenses."
+      },
+      {
+        "name": "Angelic Ward",
+        "desc": "Creates a sacred barrier impervious to shadow attacks."
+      },
+      {
+        "name": "Seraphim Wings",
+        "desc": "Gains flight and evasion boost for 10 seconds."
+      },
+      {
+        "name": "Kairo Light",
+        "desc": "A focused beam of purifying light energy."
+      },
+      {
+        "name": "Heaven's Chord",
+        "desc": "ULTIMATE: Broadcasts the divine frequency, healing all allies and smiting all enemies."
+      }
+    ]
+  },
+  "lyric-storm": {
+    "name": "Lyric Storm",
+    "level": 50,
+    "type": [
+      "Normal",
+      "Flying"
+    ],
+    "hp": 55,
+    "atk": 70,
+    "def": 50,
+    "spAtk": 95,
+    "spDef": 60,
+    "spd": 130,
+    "total": 460,
+    "moves": [
+      {
+        "name": "Verse Barrage",
+        "desc": "Rapid-fire lyrical blasts like machine gun poetry."
+      },
+      {
+        "name": "Rhyme Shield",
+        "desc": "A barrier woven from rhythmic word patterns."
+      },
+      {
+        "name": "Storm Chorus",
+        "desc": "Amplifies voice to create a literal thunderstorm of words."
+      },
+      {
+        "name": "Hook Line",
+        "desc": "A catchy frequency hook that mentally distracts enemy for 3 seconds."
+      },
+      {
+        "name": "Anthem Apocalypse",
+        "desc": "ULTIMATE: The ultimate lyric — a world-shaking verse that rewrites the battlefield."
+      }
+    ]
+  },
+  "prime-sync": {
+    "name": "Prime Sync",
+    "level": 96,
+    "type": [
+      "Dragon",
+      "Psychic"
+    ],
+    "hp": 100,
+    "atk": 90,
+    "def": 95,
+    "spAtk": 110,
+    "spDef": 100,
+    "spd": 105,
+    "total": 600,
+    "moves": [
+      {
+        "name": "Prime Lock",
+        "desc": "Syncs to the prime frequency of the universe for perfect timing."
+      },
+      {
+        "name": "Unity Pulse",
+        "desc": "Links all allies' rhythms for coordinated attacks."
+      },
+      {
+        "name": "Temporal Harmony",
+        "desc": "Briefly syncs past and future selves to attack thrice."
+      },
+      {
+        "name": "Desync Strike",
+        "desc": "Throws enemy timing off by desynchronizing their internal rhythm."
+      },
+      {
+        "name": "Omega Sync",
+        "desc": "ULTIMATE: Achieves perfect synchronization with reality, becoming untouchable for 8 seconds."
+      }
+    ]
+  },
+  "zero-molly": {
+    "name": "Zero Molly",
+    "level": 93,
+    "type": [
+      "Electric",
+      "Ice"
+    ],
+    "hp": 80,
+    "atk": 120,
+    "def": 75,
+    "spAtk": 105,
+    "spDef": 70,
+    "spd": 130,
+    "total": 580,
+    "moves": [
+      {
+        "name": "Zero Point Strike",
+        "desc": "An attack from absolute zero — no warning, no telegraph."
+      },
+      {
+        "name": "Null Field",
+        "desc": "Creates a zone where all energy drops to zero."
+      },
+      {
+        "name": "Voltage Drain",
+        "desc": "Siphons electrical energy from targets."
+      },
+      {
+        "name": "Ground Zero",
+        "desc": "Detonates all stored zero-point energy at a location."
+      },
+      {
+        "name": "Absolute Nothing",
+        "desc": "ULTIMATE: Reduces everything in range to zero — zero energy, zero motion, zero resistance."
+      }
+    ]
+  },
+  "ronin-nagazaki": {
+    "name": "Ronin Nagazaki",
+    "level": 94,
+    "type": [
+      "Dark",
+      "Fighting"
+    ],
+    "hp": 70,
+    "atk": 140,
+    "def": 60,
+    "spAtk": 65,
+    "spDef": 55,
+    "spd": 155,
+    "total": 545,
+    "moves": [
+      {
+        "name": "Shadow Slash",
+        "desc": "A katana strike wreathed in dark frequency."
+      },
+      {
+        "name": "Ronin's Path",
+        "desc": "Dashes through enemies leaving a trail of cutting shadow."
+      },
+      {
+        "name": "Void Step",
+        "desc": "Teleports through shadow to appear behind the target."
+      },
+      {
+        "name": "Dishonorable Cut",
+        "desc": "An attack that bypasses all defensive buffs."
+      },
+      {
+        "name": "Fallen Blade",
+        "desc": "ULTIMATE: A single devastating katana stroke that cuts through dimensions."
+      }
+    ]
+  },
+  "emperor-j": {
+    "name": "Emperor J",
+    "level": 94,
+    "type": [
+      "Dragon",
+      "Dark"
+    ],
+    "hp": 95,
+    "atk": 85,
+    "def": 100,
+    "spAtk": 95,
+    "spDef": 100,
+    "spd": 80,
+    "total": 555,
+    "moves": [
+      {
+        "name": "Imperial Decree",
+        "desc": "An unblockable command that reduces all enemy stats by 20%."
+      },
+      {
+        "name": "Crown of Thorns",
+        "desc": "A damaging aura that hurts anyone who attacks the Emperor."
+      },
+      {
+        "name": "Sovereign Resonance",
+        "desc": "Empowers all allies within range with imperial frequency."
+      },
+      {
+        "name": "Royal Guard",
+        "desc": "Summons spectral guardians to absorb the next 3 attacks."
+      },
+      {
+        "name": "Empire's End",
+        "desc": "ULTIMATE: Declares dominion — enemies are suppressed, allies ascend, the battlefield bows."
+      }
+    ]
+  },
+  "the-broker": {
+    "name": "The Broker",
+    "level": 92,
+    "type": [
+      "Normal",
+      "Psychic"
+    ],
+    "hp": 100,
+    "atk": 60,
+    "def": 90,
+    "spAtk": 105,
+    "spDef": 115,
+    "spd": 70,
+    "total": 540,
+    "moves": [
+      {
+        "name": "Deal Breaker",
+        "desc": "An attack that steals an enemy buff and transfers it."
+      },
+      {
+        "name": "Market Crash",
+        "desc": "Reduces all energy reserves of enemies by 40%."
+      },
+      {
+        "name": "Insider Trade",
+        "desc": "Predicts the next attack and sets up a perfect counter."
+      },
+      {
+        "name": "Leverage",
+        "desc": "The weaker the Broker gets, the stronger his attacks become."
+      },
+      {
+        "name": "Hostile Takeover",
+        "desc": "ULTIMATE: Seizes control of all enemy buffs, stealing them for allies."
+      }
+    ]
+  },
+  "the-spectator": {
+    "name": "The Spectator",
+    "level": 91,
+    "type": [
+      "Psychic",
+      "Ghost"
+    ],
+    "hp": 90,
+    "atk": 55,
+    "def": 85,
+    "spAtk": 100,
+    "spDef": 110,
+    "spd": 90,
+    "total": 530,
+    "moves": [
+      {
+        "name": "All-Seeing Pulse",
+        "desc": "Reveals all hidden enemies and traps on the battlefield."
+      },
+      {
+        "name": "Witness Mark",
+        "desc": "Marks a target — all attacks against them deal 25% more damage."
+      },
+      {
+        "name": "Observer's Shield",
+        "desc": "Gains 50% damage reduction while not attacking."
+      },
+      {
+        "name": "Hindsight Strike",
+        "desc": "Attacks with knowledge of exactly how the enemy moved."
+      },
+      {
+        "name": "Omniscient Gaze",
+        "desc": "ULTIMATE: Sees all possible futures, gaining perfect dodge for 10 seconds."
+      }
+    ]
+  },
+  "lysander-coda": {
+    "name": "Lysander Coda",
+    "level": 50,
+    "type": [
+      "Steel",
+      "Dark"
+    ],
+    "hp": 70,
+    "atk": 60,
+    "def": 65,
+    "spAtk": 100,
+    "spDef": 80,
+    "spd": 75,
+    "total": 450,
+    "moves": [
+      {
+        "name": "Final Verse",
+        "desc": "A devastating attack that grows stronger as the battle progresses."
+      },
+      {
+        "name": "Coda Hammer",
+        "desc": "A crushing blow that signals the end of a musical phrase — and the fight."
+      },
+      {
+        "name": "Lyrical Bind",
+        "desc": "Wraps an enemy in chains of musical notation."
+      },
+      {
+        "name": "Epilogue Shield",
+        "desc": "A barrier that activates when HP drops below 25%."
+      },
+      {
+        "name": "The Last Note",
+        "desc": "ULTIMATE: The concluding note of existence — an attack that ends everything."
+      }
+    ]
+  },
+  "synth-09": {
+    "name": "Synth-09",
+    "level": 50,
+    "type": [
+      "Steel",
+      "Electric"
+    ],
+    "hp": 65,
+    "atk": 55,
+    "def": 60,
+    "spAtk": 120,
+    "spDef": 70,
+    "spd": 95,
+    "total": 465,
+    "moves": [
+      {
+        "name": "Waveform Assault",
+        "desc": "Fires oscillating digital waveform projectiles."
+      },
+      {
+        "name": "Synthesizer Shield",
+        "desc": "Creates a barrier from layered synthesized frequencies."
+      },
+      {
+        "name": "Analog Spike",
+        "desc": "A raw, unfiltered analog frequency burst."
+      },
+      {
+        "name": "Preset Override",
+        "desc": "Hijacks enemy abilities, altering their effects."
+      },
+      {
+        "name": "Total Synthesis",
+        "desc": "ULTIMATE: Synthesizes the perfect counter-frequency for every enemy, neutralizing them all."
+      }
+    ]
+  },
+  "unit-omega": {
+    "name": "Unit Omega",
+    "level": 50,
+    "type": [
+      "Steel",
+      "Fighting"
+    ],
+    "hp": 130,
+    "atk": 85,
+    "def": 110,
+    "spAtk": 50,
+    "spDef": 75,
+    "spd": 35,
+    "total": 485,
+    "moves": [
+      {
+        "name": "Omega Beam",
+        "desc": "Fires the ultimate energy beam from antimatter cores."
+      },
+      {
+        "name": "Terminal Protocol",
+        "desc": "Activates final-resort defense, doubling all stats for 5 seconds."
+      },
+      {
+        "name": "End Sequence",
+        "desc": "A three-hit combo that gets exponentially stronger."
+      },
+      {
+        "name": "Extinction Shield",
+        "desc": "An impenetrable barrier that draws on Omega-level energy."
+      },
+      {
+        "name": "Omega Protocol",
+        "desc": "ULTIMATE: Initiates the end sequence — an extinction-level energy release."
+      }
+    ]
+  },
+  "red-silence": {
+    "name": "Red Silence",
+    "level": 98,
+    "type": [
+      "Dark",
+      "Psychic"
+    ],
+    "hp": 95,
+    "atk": 60,
+    "def": 90,
+    "spAtk": 154,
+    "spDef": 130,
+    "spd": 81,
+    "total": 610,
+    "moves": [
+      {
+        "name": "The Silent Note",
+        "desc": "Erases all sound in a targeted zone — opponents lose access to frequency-based attacks for 10 seconds."
+      },
+      {
+        "name": "Suppression Field",
+        "desc": "Compresses ambient sound into an oppressive dome that weakens enemy stats by 30%."
+      },
+      {
+        "name": "Crimson Void",
+        "desc": "A razor-thin wall of compressed silence that cuts through any sound barrier or defensive frequency."
+      },
+      {
+        "name": "Dead Air Command",
+        "desc": "Summons total battlefield silence, preventing ALL musical abilities — friend or foe — for 5 seconds."
+      },
+      {
+        "name": "Absolute Silence",
+        "desc": "ULTIMATE: The frequency of nothing. An expanding sphere of pure suppression that nullifies all sound, movement, and thought within range."
+      }
+    ]
+  },
+  "bass-phantom": {
+    "name": "Bass Phantom",
+    "level": 95,
+    "type": [
+      "Ground",
+      "Steel"
+    ],
+    "hp": 130,
+    "atk": 120,
+    "def": 110,
+    "spAtk": 85,
+    "spDef": 80,
+    "spd": 45,
+    "total": 570,
+    "moves": [
+      {
+        "name": "Phantom Bass",
+        "desc": "An invisible low-frequency blast that hits before being heard."
+      },
+      {
+        "name": "Ghost Shockwave",
+        "desc": "A spectral bass wave that passes through walls and shields."
+      },
+      {
+        "name": "Haunting Drone",
+        "desc": "A persistent low hum that saps enemy willpower."
+      },
+      {
+        "name": "Phase Walk",
+        "desc": "Becomes incorporeal, phasing through solid matter."
+      },
+      {
+        "name": "Phantom's Requiem",
+        "desc": "ULTIMATE: Unleashes the sound of the unseen — a bass drop that erases physical barriers."
+      }
+    ]
+  },
+  "echo-requiem": {
+    "name": "Echo Requiem",
+    "level": 93,
+    "type": [
+      "Ghost",
+      "Psychic"
+    ],
+    "hp": 76,
+    "atk": 65,
+    "def": 70,
+    "spAtk": 135,
+    "spDef": 105,
+    "spd": 109,
+    "total": 560,
+    "moves": [
+      {
+        "name": "Dying Echo",
+        "desc": "An attack that repeats with increasing intensity."
+      },
+      {
+        "name": "Requiem Chant",
+        "desc": "A mournful frequency that weakens enemy resolve."
+      },
+      {
+        "name": "Reverberation Cage",
+        "desc": "Traps an enemy in endlessly bouncing sound waves."
+      },
+      {
+        "name": "Death Knell",
+        "desc": "A single tone that marks an enemy for 200% damage."
+      },
+      {
+        "name": "Eternal Requiem",
+        "desc": "ULTIMATE: A funeral hymn made of pure sound that brings silence eternal."
+      }
+    ]
+  },
+  "static-prophet": {
+    "name": "Static Prophet",
+    "level": 92,
+    "type": [
+      "Electric",
+      "Psychic"
+    ],
+    "hp": 81,
+    "atk": 55,
+    "def": 75,
+    "spAtk": 130,
+    "spDef": 120,
+    "spd": 89,
+    "total": 550,
+    "moves": [
+      {
+        "name": "White Noise Vision",
+        "desc": "Reads the future through static patterns."
+      },
+      {
+        "name": "Prophecy Bolt",
+        "desc": "A static discharge guided by foresight to hit perfectly."
+      },
+      {
+        "name": "Static Sermon",
+        "desc": "Broadcasts disruptive static that jams enemy abilities."
+      },
+      {
+        "name": "Noise Oracle",
+        "desc": "Predicts and auto-dodges the next 3 attacks."
+      },
+      {
+        "name": "Revelation Static",
+        "desc": "ULTIMATE: Overloads all enemies with prophetic visions, paralyzing them with knowledge."
+      }
+    ]
+  },
+  "tremor-king": {
+    "name": "Tremor King",
+    "level": 91,
+    "type": [
+      "Ground",
+      "Fighting"
+    ],
+    "hp": 105,
+    "atk": 140,
+    "def": 95,
+    "spAtk": 55,
+    "spDef": 70,
+    "spd": 75,
+    "total": 540,
+    "moves": [
+      {
+        "name": "Royal Quake",
+        "desc": "Stomps with regal force, cracking the earth."
+      },
+      {
+        "name": "Tremor Throne",
+        "desc": "Creates a raised earth platform that grants defensive bonuses."
+      },
+      {
+        "name": "Seismic Crown",
+        "desc": "A headbutt that sends shockwaves through the ground."
+      },
+      {
+        "name": "King's Fissure",
+        "desc": "Opens a targeted crack in the earth beneath an enemy."
+      },
+      {
+        "name": "Continental Crush",
+        "desc": "ULTIMATE: Shifts tectonic plates with authority, reshaping the entire battlefield."
+      }
+    ]
+  },
+  "void-vocalist": {
+    "name": "Void Vocalist",
+    "level": 90,
+    "type": [
+      "Ghost",
+      "Dark"
+    ],
+    "hp": 73,
+    "atk": 45,
+    "def": 65,
+    "spAtk": 145,
+    "spDef": 125,
+    "spd": 87,
+    "total": 540,
+    "moves": [
+      {
+        "name": "Null Note",
+        "desc": "Sings a note that erases sound from an area."
+      },
+      {
+        "name": "Void Aria",
+        "desc": "A beautiful melody that draws enemies into a void pocket."
+      },
+      {
+        "name": "Silent Scream",
+        "desc": "A scream with no sound that deals pure psychic damage."
+      },
+      {
+        "name": "Emptiness Choir",
+        "desc": "Summons void echoes that attack independently."
+      },
+      {
+        "name": "Song of Nothing",
+        "desc": "ULTIMATE: Sings the universe's absence into existence — a void that swallows everything."
+      }
+    ]
+  },
+  "pulse-tyrant": {
+    "name": "Pulse Tyrant",
+    "level": 89,
+    "type": [
+      "Dark",
+      "Fighting"
+    ],
+    "hp": 90,
+    "atk": 110,
+    "def": 80,
+    "spAtk": 100,
+    "spDef": 85,
+    "spd": 85,
+    "total": 550,
+    "moves": [
+      {
+        "name": "Tyrant Pulse",
+        "desc": "An oppressive energy pulse that forces enemies to their knees."
+      },
+      {
+        "name": "Domination Beat",
+        "desc": "A rhythmic attack that compounds damage with each hit."
+      },
+      {
+        "name": "Oppression Field",
+        "desc": "An aura that reduces enemy attack speed by 40%."
+      },
+      {
+        "name": "Iron Pulse",
+        "desc": "A hardened pulse wave that acts as both offense and shield."
+      },
+      {
+        "name": "Dictator's Frequency",
+        "desc": "ULTIMATE: Broadcasts an all-consuming pulse — obey or be destroyed."
+      }
+    ]
+  },
+  "rift-cadence": {
+    "name": "Rift Cadence",
+    "level": 88,
+    "type": [
+      "Ghost",
+      "Normal"
+    ],
+    "hp": 65,
+    "atk": 80,
+    "def": 60,
+    "spAtk": 110,
+    "spDef": 90,
+    "spd": 145,
+    "total": 550,
+    "moves": [
+      {
+        "name": "Cadence Tear",
+        "desc": "A rhythmic attack that tears small dimensional rifts."
+      },
+      {
+        "name": "Temporal Beat",
+        "desc": "Strikes at multiple points in time simultaneously."
+      },
+      {
+        "name": "Rift Step",
+        "desc": "Teleports through a musical rift to flank enemies."
+      },
+      {
+        "name": "Dissonant Portal",
+        "desc": "Opens a rift that distorts incoming attacks."
+      },
+      {
+        "name": "Cadence Collapse",
+        "desc": "ULTIMATE: The rhythm of reality breaks, collapsing all rifts into a devastating singularity."
+      }
+    ]
+  },
+  "black-vinyl": {
+    "name": "Black Vinyl",
+    "level": 87,
+    "type": [
+      "Dark",
+      "Psychic"
+    ],
+    "hp": 80,
+    "atk": 60,
+    "def": 75,
+    "spAtk": 125,
+    "spDef": 110,
+    "spd": 90,
+    "total": 540,
+    "moves": [
+      {
+        "name": "Vinyl Slash",
+        "desc": "Spins a razor-sharp vinyl disc as a throwing weapon."
+      },
+      {
+        "name": "Groove Cutter",
+        "desc": "A spinning attack that carves grooves into enemy armor."
+      },
+      {
+        "name": "Record Scratch",
+        "desc": "A disorienting scratch that rewinds enemy buffs."
+      },
+      {
+        "name": "Black Groove",
+        "desc": "Creates a dark spiral trap on the ground."
+      },
+      {
+        "name": "Broken Record",
+        "desc": "ULTIMATE: Shatters into razor-sharp vinyl fragments that lacerate everything in range."
+      }
+    ]
+  },
+  "crescendo-wraith": {
+    "name": "Crescendo Wraith",
+    "level": 90,
+    "type": [
+      "Ghost",
+      "Fighting"
+    ],
+    "hp": 95,
+    "atk": 100,
+    "def": 85,
+    "spAtk": 100,
+    "spDef": 85,
+    "spd": 95,
+    "total": 560,
+    "moves": [
+      {
+        "name": "Building Howl",
+        "desc": "An attack that grows louder and stronger over 3 seconds."
+      },
+      {
+        "name": "Wraith Crescendo",
+        "desc": "A ghostly scream that builds to ear-splitting intensity."
+      },
+      {
+        "name": "Spectral Surge",
+        "desc": "Each consecutive attack deals 15% more damage."
+      },
+      {
+        "name": "Phantom Swell",
+        "desc": "An invisible force that pushes enemies back with increasing pressure."
+      },
+      {
+        "name": "Maximum Volume",
+        "desc": "ULTIMATE: The crescendo peaks — a blast of sound at 999 DB that shatters reality."
+      }
+    ]
+  },
+  "chorus-tyrant": {
+    "name": "Chorus Tyrant",
+    "level": 89,
+    "type": [
+      "Dark",
+      "Steel"
+    ],
+    "hp": 100,
+    "atk": 115,
+    "def": 90,
+    "spAtk": 95,
+    "spDef": 80,
+    "spd": 75,
+    "total": 555,
+    "moves": [
+      {
+        "name": "Tyrant's Chorus",
+        "desc": "Forces all enemies to sing a debilitating chorus against their will."
+      },
+      {
+        "name": "Commanding Voice",
+        "desc": "A single shouted note that pushes enemies back with physical force."
+      },
+      {
+        "name": "Choir of Chains",
+        "desc": "Spectral choir voices bind and restrain the target."
+      },
+      {
+        "name": "Oppressive Anthem",
+        "desc": "An anthem that reduces all enemy stats passively."
+      },
+      {
+        "name": "Voice of Tyranny",
+        "desc": "ULTIMATE: The tyrant speaks — all enemies are silenced, stunned, and crushed beneath the weight of sound."
+      }
+    ]
+  },
+  "final-drop": {
+    "name": "Final Drop",
+    "level": 99,
+    "type": [
+      "Dragon",
+      "Dark"
+    ],
+    "hp": 100,
+    "atk": 130,
+    "def": 90,
+    "spAtk": 150,
+    "spDef": 100,
+    "spd": 110,
+    "total": 680,
+    "moves": [
+      {
+        "name": "Entropy Collapse",
+        "desc": "All tier mutations activate simultaneously — fire, stone, water, lightning, ice, sand, poison, wind, void — converging into a single annihilation wave."
+      },
+      {
+        "name": "Silence Before The Drop",
+        "desc": "Nullifies ALL sound in the battlefield. Allies and enemies alike lose access to frequency-based abilities for 30 seconds."
+      },
+      {
+        "name": "Omni-Tier Resonance",
+        "desc": "Channels fragments of every Sick 52 tier — Red, Emerald, Cobalt, White, Violet — amplifying all stats beyond maximum."
+      },
+      {
+        "name": "Event Horizon",
+        "desc": "Sound rings collapse INWARD instead of outward, creating a gravitational singularity of compressed frequency that erases matter."
+      },
+      {
+        "name": "The Final Drop",
+        "desc": "ULTIMATE: The last sound before silence. Every frequency in existence converges into a single note — then nothing. Irreversible. Total annihilation."
+      }
+    ]
+  },
+  "harmonic-abomination": {
+    "name": "Harmonic Abomination",
+    "level": 78,
+    "type": [
+      "Poison",
+      "Ghost"
+    ],
+    "hp": 110,
+    "atk": 95,
+    "def": 75,
+    "spAtk": 105,
+    "spDef": 80,
+    "spd": 45,
+    "total": 510,
+    "moves": [
+      {
+        "name": "Abomination Roar",
+        "desc": "A horrific sound that damages and terrifies."
+      },
+      {
+        "name": "Twisted Harmony",
+        "desc": "A perversion of harmony that heals self while damaging nearby enemies."
+      },
+      {
+        "name": "Mutation Pulse",
+        "desc": "Releases unstable energy that randomly alters enemy stats."
+      },
+      {
+        "name": "Aberrant Chord",
+        "desc": "A chord so wrong it causes physical pain to hear."
+      },
+      {
+        "name": "Harmonic Devastation",
+        "desc": "ULTIMATE: Corrupts all harmony in range — beautiful sounds become weapons of destruction."
+      }
+    ]
+  },
+  "frequency-parasite": {
+    "name": "Frequency Parasite",
+    "level": 76,
+    "type": [
+      "Bug",
+      "Dark"
+    ],
+    "hp": 73,
+    "atk": 65,
+    "def": 60,
+    "spAtk": 120,
+    "spDef": 105,
+    "spd": 77,
+    "total": 500,
+    "moves": [
+      {
+        "name": "Parasitic Latch",
+        "desc": "Attaches to an enemy's frequency, draining power continuously."
+      },
+      {
+        "name": "Frequency Drain",
+        "desc": "Siphons raw frequency energy from the target."
+      },
+      {
+        "name": "Host Corruption",
+        "desc": "Corrupts the target's abilities, making them backfire."
+      },
+      {
+        "name": "Infestation",
+        "desc": "Spreads parasitic frequency to all enemies near the target."
+      },
+      {
+        "name": "Total Parasitism",
+        "desc": "ULTIMATE: Drains ALL frequency from ALL enemies simultaneously, feeding it to the Parasite."
+      }
+    ]
+  },
+  "dead-air-revenant": {
+    "name": "Dead Air Revenant",
+    "level": 75,
+    "type": [
+      "Ghost",
+      "Electric"
+    ],
+    "hp": 85,
+    "atk": 70,
+    "def": 85,
+    "spAtk": 100,
+    "spDef": 95,
+    "spd": 55,
+    "total": 490,
+    "moves": [
+      {
+        "name": "Dead Air Zone",
+        "desc": "Creates a zone of complete radio silence — no abilities work."
+      },
+      {
+        "name": "Revenant's Broadcast",
+        "desc": "Transmits ghostly signals that haunt enemy minds."
+      },
+      {
+        "name": "Signal Death",
+        "desc": "Kills all communication between enemies."
+      },
+      {
+        "name": "Ghost Transmission",
+        "desc": "An untraceable attack through dead frequencies."
+      },
+      {
+        "name": "Final Broadcast",
+        "desc": "ULTIMATE: The last broadcast ever — a signal so powerful it overwrites all other frequencies permanently."
+      }
+    ]
+  },
+  "lullaby-widow": {
+    "name": "Lullaby Widow",
+    "level": 77,
+    "type": [
+      "Ice",
+      "Ghost"
+    ],
+    "hp": 60,
+    "atk": 45,
+    "def": 55,
+    "spAtk": 140,
+    "spDef": 100,
+    "spd": 105,
+    "total": 505,
+    "moves": [
+      {
+        "name": "Sleep Song",
+        "desc": "A haunting lullaby that puts enemies to sleep."
+      },
+      {
+        "name": "Widow's Kiss",
+        "desc": "A close-range attack that drains life while enemy sleeps."
+      },
+      {
+        "name": "Nightmare Cradle",
+        "desc": "Traps a sleeping enemy in terrifying nightmares."
+      },
+      {
+        "name": "Drowsy Veil",
+        "desc": "An aura that makes all enemies progressively sleepier."
+      },
+      {
+        "name": "Eternal Lullaby",
+        "desc": "ULTIMATE: The final lullaby — enemies fall into a sleep from which they may never wake."
+      }
+    ]
+  },
+  "pulse-devourer": {
+    "name": "Pulse Devourer",
+    "level": 76,
+    "type": [
+      "Dark",
+      "Fighting"
+    ],
+    "hp": 95,
+    "atk": 115,
+    "def": 70,
+    "spAtk": 80,
+    "spDef": 65,
+    "spd": 75,
+    "total": 500,
+    "moves": [
+      {
+        "name": "Devour Pulse",
+        "desc": "Eats incoming energy pulses for HP recovery."
+      },
+      {
+        "name": "Energy Consumption",
+        "desc": "Absorbs enemy projectiles to grow stronger."
+      },
+      {
+        "name": "Hungering Field",
+        "desc": "An aura that slowly drains energy from all nearby enemies."
+      },
+      {
+        "name": "Gluttonous Strike",
+        "desc": "An attack that consumes enemy buffs."
+      },
+      {
+        "name": "Infinite Hunger",
+        "desc": "ULTIMATE: Devours ALL energy in range — attacks, defenses, and life force."
+      }
+    ]
+  },
+  "rage-cantata": {
+    "name": "Rage Cantata",
+    "level": 78,
+    "type": [
+      "Fire",
+      "Fighting"
+    ],
+    "hp": 80,
+    "atk": 130,
+    "def": 65,
+    "spAtk": 100,
+    "spDef": 55,
+    "spd": 80,
+    "total": 510,
+    "moves": [
+      {
+        "name": "Fury Chord",
+        "desc": "An angry musical attack that grows stronger with rage."
+      },
+      {
+        "name": "Berserker Beat",
+        "desc": "Enters a frenzy — attack increases 50% but defense drops."
+      },
+      {
+        "name": "Wrath Crescendo",
+        "desc": "Builds rage over time, each attack more devastating."
+      },
+      {
+        "name": "Rampage Rhythm",
+        "desc": "A wild rhythmic assault that hits everything nearby."
+      },
+      {
+        "name": "Cantata of Annihilation",
+        "desc": "ULTIMATE: Maximum rage — an uncontrollable explosion of pure fury energy."
+      }
+    ]
+  },
+  "silence-bishop": {
+    "name": "Silence Bishop",
+    "level": 74,
+    "type": [
+      "Dark",
+      "Psychic"
+    ],
+    "hp": 75,
+    "atk": 40,
+    "def": 90,
+    "spAtk": 115,
+    "spDef": 130,
+    "spd": 45,
+    "total": 495,
+    "moves": [
+      {
+        "name": "Silent Judgment",
+        "desc": "A soundless attack that condemns the target, marking them."
+      },
+      {
+        "name": "Diocese of Quiet",
+        "desc": "Creates a massive silence zone where no sound exists."
+      },
+      {
+        "name": "Holy Hush",
+        "desc": "A sacred silence that heals allies within range."
+      },
+      {
+        "name": "Excommunication",
+        "desc": "Cuts an enemy off from frequency energy entirely."
+      },
+      {
+        "name": "Cathedral of Silence",
+        "desc": "ULTIMATE: Erects a massive silent cathedral — all sound abilities are nullified permanently."
+      }
+    ]
+  },
+  "sonic-vicar": {
+    "name": "Sonic Vicar",
+    "level": 75,
+    "type": [
+      "Steel",
+      "Psychic"
+    ],
+    "hp": 90,
+    "atk": 55,
+    "def": 105,
+    "spAtk": 120,
+    "spDef": 85,
+    "spd": 45,
+    "total": 500,
+    "moves": [
+      {
+        "name": "Holy Frequency",
+        "desc": "A sacred sonic blast that purifies and damages."
+      },
+      {
+        "name": "Sermon of Sound",
+        "desc": "A sustained tone that heals allies and weakens enemies."
+      },
+      {
+        "name": "Acoustic Blessing",
+        "desc": "Anoints an ally with sound energy, boosting all stats."
+      },
+      {
+        "name": "Vicar's Judgment",
+        "desc": "A focused beam of righteous sonic energy."
+      },
+      {
+        "name": "Divine Resonance",
+        "desc": "ULTIMATE: Channels the voice of the divine, annihilating impurity from the battlefield."
+      }
+    ]
+  },
+  "static-hydra": {
+    "name": "Static Hydra",
+    "level": 79,
+    "type": [
+      "Electric",
+      "Dragon"
+    ],
+    "hp": 85,
+    "atk": 80,
+    "def": 70,
+    "spAtk": 130,
+    "spDef": 80,
+    "spd": 75,
+    "total": 520,
+    "moves": [
+      {
+        "name": "Multi-Head Shock",
+        "desc": "Three simultaneous electrical attacks from different angles."
+      },
+      {
+        "name": "Hydra Growth",
+        "desc": "When hit, gains an additional attack per turn."
+      },
+      {
+        "name": "Static Regeneration",
+        "desc": "Absorbs electrical damage to regenerate HP."
+      },
+      {
+        "name": "Electro Swarm",
+        "desc": "Releases dozens of small static charges that swarm enemies."
+      },
+      {
+        "name": "Hydra Storm",
+        "desc": "ULTIMATE: Grows unlimited heads, each firing electrical blasts in all directions."
+      }
+    ]
+  },
+  "thunder-dropper": {
+    "name": "Thunder Dropper",
+    "level": 77,
+    "type": [
+      "Ground",
+      "Steel"
+    ],
+    "hp": 130,
+    "atk": 120,
+    "def": 115,
+    "spAtk": 40,
+    "spDef": 70,
+    "spd": 25,
+    "total": 500,
+    "moves": [
+      {
+        "name": "Thunder Shock",
+        "desc": "A quick jolt of electricity."
+      },
+      {
+        "name": "Lightning Rod",
+        "desc": "Absorbs an incoming energy attack to boost power."
+      },
+      {
+        "name": "Static Field",
+        "desc": "An area that slows and damages enemies."
+      },
+      {
+        "name": "Volt Switch",
+        "desc": "Swap positions with a burst of speed."
+      },
+      {
+        "name": "Gigavolt Havoc",
+        "desc": "Ultimate: Calls down a massive lightning strike."
+      }
+    ]
+  },
+  "tidal-lament": {
+    "name": "Tidal Lament",
+    "level": 76,
+    "type": [
+      "Water",
+      "Ghost"
+    ],
+    "hp": 80,
+    "atk": 50,
+    "def": 70,
+    "spAtk": 135,
+    "spDef": 100,
+    "spd": 70,
+    "total": 505,
+    "moves": [
+      {
+        "name": "Aqua Jet",
+        "desc": "A high-speed tackle made of water."
+      },
+      {
+        "name": "Tidal Barrier",
+        "desc": "Summons a wall of water to block attacks."
+      },
+      {
+        "name": "Drowning Pool",
+        "desc": "Creates a vortex that pulls in and damages foes."
+      },
+      {
+        "name": "Abyssal Armor",
+        "desc": "Reduces damage taken and regenerates health."
+      },
+      {
+        "name": "Tsunami Crash",
+        "desc": "Ultimate: Summons a colossal wave to crush everything."
+      }
+    ]
+  },
+  "toxic-vibrato": {
+    "name": "Toxic Vibrato",
+    "level": 75,
+    "type": [
+      "Poison",
+      "Steel"
+    ],
+    "hp": 75,
+    "atk": 65,
+    "def": 80,
+    "spAtk": 125,
+    "spDef": 90,
+    "spd": 65,
+    "total": 500,
+    "moves": [
+      {
+        "name": "Poison Note",
+        "desc": "A vibrating tone that injects toxin on contact."
+      },
+      {
+        "name": "Venomous Vibrato",
+        "desc": "A wavering pitch that spreads poison through the air."
+      },
+      {
+        "name": "Toxic Cloud",
+        "desc": "Exhales a cloud of poisonous frequency."
+      },
+      {
+        "name": "Corrosion Chord",
+        "desc": "An acid-laced musical attack that eats through armor."
+      },
+      {
+        "name": "Pandemic Frequency",
+        "desc": "ULTIMATE: Releases a frequency that turns the air itself toxic throughout the battlefield."
+      }
+    ]
+  },
+  "frost-echo": {
+    "name": "Frost Echo",
+    "level": 72,
+    "type": [
+      "Ice"
+    ],
+    "hp": 85,
+    "atk": 90,
+    "def": 100,
+    "spAtk": 95,
+    "spDef": 80,
+    "spd": 35,
+    "total": 485,
+    "moves": [
+      {
+        "name": "Frozen Reverberation",
+        "desc": "An icy echo that freezes whatever it reflects off."
+      },
+      {
+        "name": "Crystal Chime",
+        "desc": "Shatters ice crystals into razor-sharp echoing fragments."
+      },
+      {
+        "name": "Permafrost Field",
+        "desc": "Creates a zone of permanent ice that slows and damages."
+      },
+      {
+        "name": "Echo Shatter",
+        "desc": "A reverberating ice attack that hits the same spot multiple times."
+      },
+      {
+        "name": "Glacial Resonance",
+        "desc": "ULTIMATE: Freezes sound itself — echoes become permanent frozen structures that explode."
+      }
+    ]
+  },
+  "storm-sustain": {
+    "name": "Storm Sustain",
+    "level": 71,
+    "type": [
+      "Electric"
+    ],
+    "hp": 65,
+    "atk": 70,
+    "def": 55,
+    "spAtk": 130,
+    "spDef": 60,
+    "spd": 110,
+    "total": 490,
+    "moves": [
+      {
+        "name": "Thunder Sustain",
+        "desc": "A sustained lightning note that channels continuously."
+      },
+      {
+        "name": "Storm Wall",
+        "desc": "A defensive wall of swirling wind and electricity."
+      },
+      {
+        "name": "Sustained Bolt",
+        "desc": "A single lightning bolt sustained for maximum damage over time."
+      },
+      {
+        "name": "Tempest Loop",
+        "desc": "Creates a self-sustaining storm that persists indefinitely."
+      },
+      {
+        "name": "Perpetual Storm",
+        "desc": "ULTIMATE: Summons an unending storm — lightning, wind, and rain that never stops."
+      }
+    ]
+  },
+  "sand-shuffle": {
+    "name": "Sand Shuffle",
+    "level": 70,
+    "type": [
+      "Ground",
+      "Ghost"
+    ],
+    "hp": 80,
+    "atk": 75,
+    "def": 90,
+    "spAtk": 85,
+    "spDef": 85,
+    "spd": 60,
+    "total": 475,
+    "moves": [
+      {
+        "name": "Desert Shuffle",
+        "desc": "Moves through sand to reposition instantly."
+      },
+      {
+        "name": "Sandstorm Beat",
+        "desc": "Kicks up a rhythmic sandstorm that blinds."
+      },
+      {
+        "name": "Dune Shift",
+        "desc": "Reshapes terrain into defensive sand dunes."
+      },
+      {
+        "name": "Quicksand Trap",
+        "desc": "Creates sinking sand beneath enemies."
+      },
+      {
+        "name": "Sahara Surge",
+        "desc": "ULTIMATE: Summons an entire desert's worth of sand in a devastating storm."
+      }
+    ]
+  },
+  "ember-pulse": {
+    "name": "Ember Pulse",
+    "level": 71,
+    "type": [
+      "Fire",
+      "Steel"
+    ],
+    "hp": 70,
+    "atk": 95,
+    "def": 85,
+    "spAtk": 110,
+    "spDef": 65,
+    "spd": 55,
+    "total": 480,
+    "moves": [
+      {
+        "name": "Ember Shot",
+        "desc": "Launches a volley of fiery projectiles."
+      },
+      {
+        "name": "Flame Wall",
+        "desc": "Creates a searing barrier of fire."
+      },
+      {
+        "name": "Scorched Earth",
+        "desc": "Incinerates the ground, causing damage over time."
+      },
+      {
+        "name": "Solar Flare",
+        "desc": "A blinding flash that stuns opponents."
+      },
+      {
+        "name": "Inferno Overload",
+        "desc": "Ultimate: Engulfs the area in an unstoppable firestorm."
+      }
+    ]
+  },
+  "mist-cadence": {
+    "name": "Mist Cadence",
+    "level": 69,
+    "type": [
+      "Poison",
+      "Psychic"
+    ],
+    "hp": 65,
+    "atk": 40,
+    "def": 55,
+    "spAtk": 120,
+    "spDef": 110,
+    "spd": 80,
+    "total": 470,
+    "moves": [
+      {
+        "name": "Fog Step",
+        "desc": "Moves through mist to become untargetable."
+      },
+      {
+        "name": "Misty Cadence",
+        "desc": "A rhythmic fog that heals allies and confuses enemies."
+      },
+      {
+        "name": "Vapor Shroud",
+        "desc": "Covers the battlefield in obscuring mist."
+      },
+      {
+        "name": "Condensation Strike",
+        "desc": "Condenses moisture into a powerful water jet attack."
+      },
+      {
+        "name": "Infinite Haze",
+        "desc": "ULTIMATE: An impenetrable fog descends — only allies can navigate."
+      }
+    ]
+  },
+  "stone-resonance": {
+    "name": "Stone Resonance",
+    "level": 72,
+    "type": [
+      "Rock",
+      "Ground"
+    ],
+    "hp": 120,
+    "atk": 110,
+    "def": 130,
+    "spAtk": 40,
+    "spDef": 55,
+    "spd": 35,
+    "total": 490,
+    "moves": [
+      {
+        "name": "Stone Fist",
+        "desc": "A powerful punch with the force of rock."
+      },
+      {
+        "name": "Seismic Shield",
+        "desc": "Erects a barrier of solid earth."
+      },
+      {
+        "name": "Earthquake",
+        "desc": "Shakes the ground violently, knocking down opponents."
+      },
+      {
+        "name": "Titan's Strength",
+        "desc": "Massively boosts attack power for a short time."
+      },
+      {
+        "name": "Gaia's Wrath",
+        "desc": "Ultimate: The very ground erupts to attack your foe."
+      }
+    ]
+  },
+  "acid-reverie": {
+    "name": "Acid Reverie",
+    "level": 68,
+    "type": [
+      "Poison"
+    ],
+    "hp": 75,
+    "atk": 60,
+    "def": 65,
+    "spAtk": 120,
+    "spDef": 95,
+    "spd": 50,
+    "total": 465,
+    "moves": [
+      {
+        "name": "Acid Drip",
+        "desc": "Corrosive frequency that melts through defenses over time."
+      },
+      {
+        "name": "Hallucinogenic Wave",
+        "desc": "Creates vivid hallucinations that confuse enemies."
+      },
+      {
+        "name": "Dissolving Bass",
+        "desc": "A bass frequency that dissolves physical matter."
+      },
+      {
+        "name": "Dream Acid",
+        "desc": "Traps the enemy in a hallucinatory loop."
+      },
+      {
+        "name": "Psychedelic Meltdown",
+        "desc": "ULTIMATE: Reality itself dissolves into an acid trip — enemies can't tell real from fake."
+      }
+    ]
+  },
+  "magma-mezzo": {
+    "name": "Magma Mezzo",
+    "level": 70,
+    "type": [
+      "Fire",
+      "Rock"
+    ],
+    "hp": 90,
+    "atk": 100,
+    "def": 90,
+    "spAtk": 95,
+    "spDef": 60,
+    "spd": 45,
+    "total": 480,
+    "moves": []
+  },
+  "aero-aria": {
+    "name": "Aero Aria",
+    "level": 69,
+    "type": [
+      "Flying",
+      "Ghost"
+    ],
+    "hp": 55,
+    "atk": 50,
+    "def": 45,
+    "spAtk": 115,
+    "spDef": 85,
+    "spd": 120,
+    "total": 470,
+    "moves": []
+  },
+  "blight-beat": {
+    "name": "Blight Beat",
+    "level": 68,
+    "type": [
+      "Poison",
+      "Grass"
+    ],
+    "hp": 90,
+    "atk": 65,
+    "def": 75,
+    "spAtk": 110,
+    "spDef": 80,
+    "spd": 40,
+    "total": 460,
+    "moves": []
+  },
+  "crystal-coda": {
+    "name": "Crystal Coda",
+    "level": 70,
+    "type": [
+      "Rock",
+      "Fairy"
+    ],
+    "hp": 70,
+    "atk": 55,
+    "def": 95,
+    "spAtk": 125,
+    "spDef": 90,
+    "spd": 40,
+    "total": 475,
+    "moves": []
+  },
+  "gravity-groove": {
+    "name": "Gravity Groove",
+    "level": 72,
+    "type": [
+      "Psychic",
+      "Dark"
+    ],
+    "hp": 80,
+    "atk": 70,
+    "def": 80,
+    "spAtk": 130,
+    "spDef": 90,
+    "spd": 40,
+    "total": 490,
+    "moves": []
+  },
+  "panic-symphony": {
+    "name": "Panic Symphony",
+    "level": 60,
+    "type": [
+      "Dark",
+      "Psychic"
+    ],
+    "hp": 65,
+    "atk": 40,
+    "def": 50,
+    "spAtk": 105,
+    "spDef": 90,
+    "spd": 55,
+    "total": 405,
+    "moves": [
+      {
+        "name": "Chaos Note",
+        "desc": "A discordant note that induces panic in the target."
+      },
+      {
+        "name": "Fear Frequency",
+        "desc": "Broadcasts a frequency that triggers primal fear."
+      },
+      {
+        "name": "Hysterical Crescendo",
+        "desc": "The panic builds — enemies flee in random directions."
+      },
+      {
+        "name": "Anxiety Loop",
+        "desc": "Traps an enemy in escalating anxiety, reducing all stats."
+      },
+      {
+        "name": "Symphony of Terror",
+        "desc": "ULTIMATE: A full orchestral symphony of pure dread that breaks all enemy will."
+      }
+    ]
+  },
+  "memory-static": {
+    "name": "Memory Static",
+    "level": 58,
+    "type": [
+      "Psychic",
+      "Electric"
+    ],
+    "hp": 60,
+    "atk": 35,
+    "def": 55,
+    "spAtk": 100,
+    "spDef": 90,
+    "spd": 55,
+    "total": 395,
+    "moves": [
+      {
+        "name": "Memory Wipe",
+        "desc": "Erases an enemy's memory of their last ability, resetting cooldowns."
+      },
+      {
+        "name": "Static Recall",
+        "desc": "Replays a memory as a damaging illusion attack."
+      },
+      {
+        "name": "Forgotten Frequency",
+        "desc": "Attacks with a frequency no one remembers — bypasses learned defenses."
+      },
+      {
+        "name": "Nostalgia Trap",
+        "desc": "Traps enemies in paralyzing memories of the past."
+      },
+      {
+        "name": "Total Amnesia",
+        "desc": "ULTIMATE: Erases all short-term memory in range — enemies forget how to fight."
+      }
+    ]
+  },
+  "mirage-anthem": {
+    "name": "Mirage Anthem",
+    "level": 59,
+    "type": [
+      "Psychic",
+      "Fairy"
+    ],
+    "hp": 65,
+    "atk": 40,
+    "def": 50,
+    "spAtk": 110,
+    "spDef": 80,
+    "spd": 65,
+    "total": 410,
+    "moves": [
+      {
+        "name": "Phantom Melody",
+        "desc": "Creates illusions of attacks that deal real psychological damage."
+      },
+      {
+        "name": "Mirror Image",
+        "desc": "Summons 3 mirage clones that attack independently."
+      },
+      {
+        "name": "Heat Haze",
+        "desc": "Distorts the air with a shimmering anthem, reducing enemy accuracy."
+      },
+      {
+        "name": "False Reality",
+        "desc": "Replaces an enemy's perception with an illusory battlefield."
+      },
+      {
+        "name": "Anthem of Illusions",
+        "desc": "ULTIMATE: The entire battlefield becomes a mirage — nothing anyone sees is real."
+      }
+    ]
+  },
+  "grief-sonata": {
+    "name": "Grief Sonata",
+    "level": 57,
+    "type": [
+      "Ghost",
+      "Psychic"
+    ],
+    "hp": 75,
+    "atk": 35,
+    "def": 60,
+    "spAtk": 95,
+    "spDef": 100,
+    "spd": 30,
+    "total": 395,
+    "moves": [
+      {
+        "name": "Sorrow Wave",
+        "desc": "A wave of pure sadness that saps enemy motivation."
+      },
+      {
+        "name": "Mourning Tone",
+        "desc": "A somber note that reduces enemy attack by 30%."
+      },
+      {
+        "name": "Tears of Sound",
+        "desc": "Rains sonic tears that damage and slow."
+      },
+      {
+        "name": "Melancholy Shield",
+        "desc": "Absorbs damage through emotional weight."
+      },
+      {
+        "name": "Sonata of Despair",
+        "desc": "ULTIMATE: A devastating symphony of grief that crushes enemy spirit entirely."
+      }
+    ]
+  },
+  "whisper-choir": {
+    "name": "Whisper Choir",
+    "level": 58,
+    "type": [
+      "Psychic",
+      "Ghost"
+    ],
+    "hp": 60,
+    "atk": 30,
+    "def": 55,
+    "spAtk": 105,
+    "spDef": 90,
+    "spd": 60,
+    "total": 400,
+    "moves": [
+      {
+        "name": "Silent Whisper",
+        "desc": "An inaudible attack that bypasses sound-based defenses."
+      },
+      {
+        "name": "Choir of Whispers",
+        "desc": "Multiple whispered attacks from unseen sources."
+      },
+      {
+        "name": "Subliminal Message",
+        "desc": "Implants a command beneath conscious awareness."
+      },
+      {
+        "name": "Breath of Doubt",
+        "desc": "A whisper that makes enemies question their own abilities."
+      },
+      {
+        "name": "Whispered Doom",
+        "desc": "ULTIMATE: A thousand whispers converge into a single word — and it breaks minds."
+      }
+    ]
+  },
+  "split-tempo": {
+    "name": "Split Tempo",
+    "level": 55,
+    "type": [
+      "Psychic",
+      "Fighting"
+    ],
+    "hp": 70,
+    "atk": 90,
+    "def": 55,
+    "spAtk": 85,
+    "spDef": 60,
+    "spd": 90,
+    "total": 450,
+    "moves": [
+      {
+        "name": "Tempo Split",
+        "desc": "Attacks at two different tempos simultaneously."
+      },
+      {
+        "name": "Dual Rhythm",
+        "desc": "Maintains two fighting rhythms, becoming unpredictable."
+      },
+      {
+        "name": "Fractured Beat",
+        "desc": "Breaks time into fractured segments around the target."
+      },
+      {
+        "name": "Half-Time Hammer",
+        "desc": "A devastating slow-motion attack with double impact."
+      },
+      {
+        "name": "Temporal Schism",
+        "desc": "ULTIMATE: Splits time itself — exists in two timelines simultaneously, attacking from both."
+      }
+    ]
+  },
+  "reverb-titan": {
+    "name": "Reverb Titan",
+    "level": 56,
+    "type": [
+      "Normal",
+      "Rock"
+    ],
+    "hp": 140,
+    "atk": 85,
+    "def": 70,
+    "spAtk": 90,
+    "spDef": 65,
+    "spd": 30,
+    "total": 480,
+    "moves": [
+      {
+        "name": "Titan's Echo",
+        "desc": "A massive punch whose echo hits again and again."
+      },
+      {
+        "name": "Reverb Dome",
+        "desc": "Creates a dome where all attacks echo and multiply."
+      },
+      {
+        "name": "Thunderous Rebound",
+        "desc": "A strike that rebounds off surfaces with increasing force."
+      },
+      {
+        "name": "Seismic Reverb",
+        "desc": "Stomps to create reverberating quakes that persist."
+      },
+      {
+        "name": "Infinite Reverb",
+        "desc": "ULTIMATE: An attack that never stops echoing, dealing damage forever."
+      }
+    ]
+  },
+  "maestro-noctis": {
+    "name": "Maestro Noctis",
+    "level": 15,
+    "type": [
+      "Normal",
+      "Psychic"
+    ],
+    "hp": 45,
+    "atk": 10,
+    "def": 35,
+    "spAtk": 80,
+    "spDef": 70,
+    "spd": 15,
+    "total": 255,
+    "moves": [
+      {
+        "name": "Golden Hum",
+        "desc": "A low resonance pulse that transmits commands directly into minds."
+      },
+      {
+        "name": "Grid Whisper",
+        "desc": "Taps into the Frequency Grid to monitor a distant location."
+      },
+      {
+        "name": "Authoritarian Decree",
+        "desc": "Issues an unquestionable command — but only to those sworn to the Council."
+      },
+      {
+        "name": "Ancient Resonance",
+        "desc": "A feeble defensive hum that slightly reduces incoming damage."
+      },
+      {
+        "name": "Final Composition",
+        "desc": "ULTIMATE: Attempts to freeze all sound in range. Effective only against civilians."
+      }
+    ]
+  },
+  "grand-composer-veyra-hc": {
+    "name": "Grand Composer Veyra",
+    "level": 18,
+    "type": [
+      "Normal"
+    ],
+    "hp": 50,
+    "atk": 15,
+    "def": 40,
+    "spAtk": 65,
+    "spDef": 55,
+    "spd": 25,
+    "total": 250,
+    "moves": [
+      {
+        "name": "Iron Baton",
+        "desc": "A weak strike with her conductor's baton. More symbolic than damaging."
+      },
+      {
+        "name": "Public Address",
+        "desc": "A speech that lowers enemy morale... slightly."
+      },
+      {
+        "name": "Composure",
+        "desc": "Maintains perfect poise under pressure, reducing status effect duration."
+      },
+      {
+        "name": "Propaganda Veil",
+        "desc": "Creates an illusion of authority that may cause hesitation."
+      },
+      {
+        "name": "Execution Order",
+        "desc": "ULTIMATE: Summons Harmonic Guards to fight on her behalf. She does not fight directly."
+      }
+    ]
+  },
+  "the-conductor-hc": {
+    "name": "The Conductor",
+    "level": 22,
+    "type": [
+      "Normal",
+      "Steel"
+    ],
+    "hp": 65,
+    "atk": 55,
+    "def": 60,
+    "spAtk": 40,
+    "spDef": 45,
+    "spd": 35,
+    "total": 300,
+    "moves": [
+      {
+        "name": "Orchestral Wave",
+        "desc": "A weak shockwave from his ornamental staff. Mostly ceremonial."
+      },
+      {
+        "name": "Formation Command",
+        "desc": "Directs nearby guards into defensive formation."
+      },
+      {
+        "name": "Golden Guard",
+        "desc": "Raises his staff to create a brief protective barrier."
+      },
+      {
+        "name": "Enforcement Strike",
+        "desc": "A disciplined strike aimed at civilians. Ineffective against trained fighters."
+      },
+      {
+        "name": "Harmonic Suppression",
+        "desc": "ULTIMATE: Activates the local Grid node to dampen all sound. Only works near Grid infrastructure."
+      }
+    ]
+  },
+  "arbiter-shen": {
+    "name": "Arbiter Shen",
+    "level": 12,
+    "type": [
+      "Normal",
+      "Psychic"
+    ],
+    "hp": 40,
+    "atk": 5,
+    "def": 30,
+    "spAtk": 55,
+    "spDef": 60,
+    "spd": 10,
+    "total": 200,
+    "moves": [
+      {
+        "name": "Legal Binding",
+        "desc": "Wraps the target in bureaucratic red tape. Slows movement by 10%."
+      },
+      {
+        "name": "Gavel Strike",
+        "desc": "A feeble tap with his tuning-fork gavel. Almost zero damage."
+      },
+      {
+        "name": "Objection",
+        "desc": "Interrupts an enemy's attack with a shout. May cause flinch."
+      },
+      {
+        "name": "Sound Law Citation",
+        "desc": "Recites regulations so boring they cause minor psychic damage."
+      },
+      {
+        "name": "Summary Judgment",
+        "desc": "ULTIMATE: Declares the opponent guilty. Has no actual combat effect."
+      }
+    ]
+  },
+  "warden-forte": {
+    "name": "Warden Forte",
+    "level": 16,
+    "type": [
+      "Normal",
+      "Dark"
+    ],
+    "hp": 70,
+    "atk": 45,
+    "def": 50,
+    "spAtk": 15,
+    "spDef": 30,
+    "spd": 20,
+    "total": 230,
+    "moves": [
+      {
+        "name": "Shock Baton",
+        "desc": "A weak electrical prod designed for unarmed prisoners."
+      },
+      {
+        "name": "Lockdown",
+        "desc": "Seals exits in an enclosed space. Useless in open combat."
+      },
+      {
+        "name": "Silence Chamber",
+        "desc": "Attempts to create a small zone of silence. Easily broken."
+      },
+      {
+        "name": "Intimidation",
+        "desc": "Glares menacingly. May lower attack of cowardly opponents."
+      },
+      {
+        "name": "Solitary Confinement",
+        "desc": "ULTIMATE: Traps a weakened target in a temporary sound-null bubble. Breaks immediately against strong foes."
+      }
+    ]
+  },
+  "minister-lyra": {
+    "name": "Minister Lyra",
+    "level": 14,
+    "type": [
+      "Fairy",
+      "Psychic"
+    ],
+    "hp": 45,
+    "atk": 10,
+    "def": 25,
+    "spAtk": 70,
+    "spDef": 65,
+    "spd": 30,
+    "total": 245,
+    "moves": [
+      {
+        "name": "Charming Address",
+        "desc": "A soothing speech that may confuse a weak-willed target."
+      },
+      {
+        "name": "Propaganda Wave",
+        "desc": "Broadcasts Council messaging that clouds judgment temporarily."
+      },
+      {
+        "name": "Smiling Deflection",
+        "desc": "Dodges a question — and occasionally an attack — with a perfect smile."
+      },
+      {
+        "name": "Cultural Override",
+        "desc": "Rewrites a target's musical preferences. Only works on civilians."
+      },
+      {
+        "name": "Harmony is Freedom",
+        "desc": "ULTIMATE: A mass-suggestion broadcast. Devastating to civilians, meaningless to trained fighters."
+      }
+    ]
+  },
+  "auditor-kane": {
+    "name": "Auditor Kane",
+    "level": 13,
+    "type": [
+      "Normal",
+      "Electric"
+    ],
+    "hp": 35,
+    "atk": 8,
+    "def": 25,
+    "spAtk": 60,
+    "spDef": 55,
+    "spd": 20,
+    "total": 203,
+    "moves": [
+      {
+        "name": "Frequency Scan",
+        "desc": "Identifies a target's sound signature. No damage dealt."
+      },
+      {
+        "name": "Compliance Check",
+        "desc": "Flags a target as \"non-compliant.\" Alerts nearby guards."
+      },
+      {
+        "name": "Data Log",
+        "desc": "Records everything. Has no combat use whatsoever."
+      },
+      {
+        "name": "Surveillance Ping",
+        "desc": "A weak sonar pulse that reveals hidden targets in a small area."
+      },
+      {
+        "name": "Total Monitoring",
+        "desc": "ULTIMATE: Activates the FCB surveillance network. Useful for intelligence, useless in battle."
+      }
+    ]
+  }
+}

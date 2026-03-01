@@ -1,0 +1,838 @@
+[
+  {
+    "slug": "general-24",
+    "name": "General 24",
+    "faction": "DJ24",
+    "role": "Supreme Commander of Time",
+    "rank": 1,
+    "desc": "Strategic Overwatch / Final Authority. Tactical, strict commander. Values precise order. He doesn’t fight — he schedules reality."
+  },
+  {
+    "slug": "sync",
+    "name": "Sync (Phantom)",
+    "faction": "DJ24",
+    "role": "Reality Alignment Vanguard",
+    "rank": 2,
+    "desc": "Rookie Protagonist / XDF anomaly. Rebellious and questions the system. Power he doesn’t understand — he doesn’t glitch, he aligns."
+  },
+  {
+    "slug": "molly",
+    "name": "Molly",
+    "faction": "DJ24",
+    "role": "Shockwave Prima",
+    "rank": 3,
+    "desc": "High-Energy Shock Operative / Emotional Catalyst. The emotional core of the team. Precision elegance weaponized — ballet on the battlefield."
+  },
+  {
+    "slug": "ninja-nagazaki",
+    "name": "Ninja Nagazaki",
+    "faction": "DJ24",
+    "role": "Silent Frequency Executioner",
+    "rank": 4,
+    "desc": "Stealth Frequency Assassin. Surgical and minimal. Lethal without spectacle. He creates silence by removal."
+  },
+  {
+    "slug": "nova",
+    "name": "Nova",
+    "faction": "DJ24",
+    "role": "Frequency Queen",
+    "rank": 5,
+    "desc": "Heavy Assault / Area dominance. Flashy, high-energy spectacle. She feels like the main act / festival headliner."
+  },
+  {
+    "slug": "striker",
+    "name": "Striker",
+    "faction": "DJ24",
+    "role": "Drum God",
+    "rank": 6,
+    "desc": "Shock Tank / Drum God. Black British drill general. War percussion up close and long-range sniper precision."
+  },
+  {
+    "slug": "king-j",
+    "name": "King J",
+    "faction": "DJ24",
+    "role": "Royal Rhythm Commander",
+    "rank": 7,
+    "desc": "Charismatic Frontline Leader / The Strategist King. Composed and regal. He commands tempo like a king commands armies."
+  },
+  {
+    "slug": "maya",
+    "name": "Maya",
+    "faction": "DJ24",
+    "role": "Spiritual Harmonic Manipulator",
+    "rank": 8,
+    "desc": "Spiritual Harmonic Manipulator. Calm and grounded. She feels like controlled spiritual resonance."
+  },
+  {
+    "slug": "masterbass",
+    "name": "MasterBass",
+    "faction": "DJ24",
+    "role": "Sub-Frequency Enforcer",
+    "rank": 9,
+    "desc": "Sub-Frequency Enforcer. Ancient Chinese sub-bass monk. Physically fragile but sonically overwhelming — 20Hz pressure embodied."
+  },
+  {
+    "slug": "crossfade",
+    "name": "Crossfade",
+    "faction": "DJ24",
+    "role": "Tactical Transition Architect",
+    "rank": 10,
+    "desc": "Tactical Transition Specialist. Androgynous gender-fluid appearance. The bridge between chaos and order — the literal mix engineer of reality."
+  },
+  {
+    "slug": "subz",
+    "name": "SubZ",
+    "faction": "DJ24",
+    "role": "Anti-Bass Raider",
+    "rank": 11,
+    "desc": "Anti-Bass Specialist / Frequency Eraser. Russian Frequency Pirate. Battle-scarred rogue who steals your drop instead of erasing it."
+  },
+  {
+    "slug": "4serj",
+    "name": "4Serj",
+    "faction": "DJ24",
+    "role": "Quad-Channel Sync Architect",
+    "rank": 12,
+    "desc": "Dual Sync Specialist / Quad Sync Master. Black male tech billionaire energy. He layers reality like a producer layers tracks — expensive and exact."
+  },
+  {
+    "slug": "ghostloop",
+    "name": "GhostLoop",
+    "faction": "DJ24",
+    "role": "Psychological Warfare Specialist",
+    "rank": 13,
+    "desc": "Psychological Warfare / Loop-trap enemies. Eerie and unsettling. He feels like glitch-hop in human form."
+  },
+  {
+    "slug": "breakline",
+    "name": "Breakline",
+    "faction": "DJ24",
+    "role": "Counter-Insurgency Beat Disruptor",
+    "rank": 14,
+    "desc": "Counter-Insurgency / Beat Disruptor. He fractures rhythm itself. A DJ who cuts the track mid-drop."
+  },
+  {
+    "slug": "afterimage",
+    "name": "Afterimage",
+    "faction": "DJ24",
+    "role": "Tempo Assassin",
+    "rank": 15,
+    "desc": "Speed Combat / Multi-hit tempo strikes. Frame-rate manipulation. High BPM jungle tempo in combat form."
+  },
+  {
+    "slug": "mr-genge",
+    "name": "Mr Genge",
+    "faction": "DJ24",
+    "role": "Urban Percussion Commander",
+    "rank": 16,
+    "desc": "Urban Percussion Striker. Lean Jamaican-inspired street rhythm commander. Fights with Kenyan Genge percussion weaponized."
+  },
+  {
+    "slug": "liquidb",
+    "name": "LiquidB",
+    "faction": "DJ24",
+    "role": "Flow Manipulator",
+    "rank": 17,
+    "desc": "Flow Manipulator. Black female, fluid but dominant presence. House music in combat form — uncatchable smoothness."
+  },
+  {
+    "slug": "backspin",
+    "name": "Backspin",
+    "faction": "DJ24",
+    "role": "Reversal Specialist",
+    "rank": 18,
+    "desc": "Reversal Specialist. Old-school DJ energy. Turntable assassin who reverses incoming attacks."
+  },
+  {
+    "slug": "sidechain",
+    "name": "Sidechain",
+    "faction": "DJ24",
+    "role": "Power Compression Operator",
+    "rank": 19,
+    "desc": "Power Manipulation / Compression warfare. Mexican female, precise and technical. She doesn’t attack — she reduces you."
+  },
+  {
+    "slug": "distort",
+    "name": "Distort",
+    "faction": "DJ24",
+    "role": "Overload Assault",
+    "rank": 20,
+    "desc": "Brutal Assault / Overload targets. Underground rave energy. Distortion pedal incarnate."
+  },
+  {
+    "slug": "moombah",
+    "name": "Moombah",
+    "faction": "DJ24",
+    "role": "Rhythmic Shockwave Brawler",
+    "rank": 21,
+    "desc": "Rhythmic Shockwave Brawler. Lean elastic dancer-like build. He fights like percussion — rhythmic but unpredictable."
+  },
+  {
+    "slug": "dop",
+    "name": "d.O.P",
+    "faction": "DJ24",
+    "role": "Battlefield Sound Architect",
+    "rank": 22,
+    "desc": "Battlefield Sound Architect. Strategic control through waveform math. He designs the battlefield."
+  },
+  {
+    "slug": "wboy",
+    "name": "WBoy",
+    "faction": "DJ24",
+    "role": "Founder Frequency — The Origin Signal",
+    "rank": 23,
+    "desc": "Founder Frequency. Young male prodigy (16-18) — rooted, immovable foundation. Symbolic but restrained."
+  },
+  {
+    "slug": "afrog",
+    "name": "AfroG",
+    "faction": "DJ24",
+    "role": "Final Drop Protocol — Planetary Failsafe",
+    "rank": 24,
+    "desc": "The Final Hour / doomsday slot. Absolute Authority. The end of a war before silence."
+  },
+  {
+    "slug": "general-meter",
+    "name": "General Meter",
+    "faction": "Elite Command Circle",
+    "role": "Strategic Layer Commander",
+    "rank": "Overwatch",
+    "desc": "The mind behind the tempo of war. He calculates battles like compositions."
+  },
+  {
+    "slug": "admiral-flux",
+    "name": "Admiral Flux",
+    "faction": "Elite Command Circle",
+    "role": "Energy Supply Overseer",
+    "rank": "Overwatch",
+    "desc": "Controls planetary energy infrastructure. He ensures cities stay powered — or go dark."
+  },
+  {
+    "slug": "major-rift",
+    "name": "Major Rift",
+    "faction": "Elite Command Circle",
+    "role": "Dimensional Tactician",
+    "rank": "Overwatch",
+    "desc": "Master of spatial fractures. He calculates spatial collapse to reposition armies."
+  },
+  {
+    "slug": "commander-vale",
+    "name": "Commander Vale",
+    "faction": "Elite Command Circle",
+    "role": "Psychological Architect",
+    "rank": "Overwatch",
+    "desc": "Specializes in morale disruption and frequency-based hallucinations."
+  },
+  {
+    "slug": "captain-onyx",
+    "name": "Captain Onyx",
+    "faction": "Elite Command Circle",
+    "role": "Black-Ops Director",
+    "rank": "Overwatch",
+    "desc": "Operates where the Command Circle cannot be seen. High-risk eliminations."
+  },
+  {
+    "slug": "dr-tempo",
+    "name": "Dr. Tempo",
+    "faction": "Elite Command Circle",
+    "role": "Rhythm Scientist",
+    "rank": "Overwatch",
+    "desc": "The engineer behind DJ24’s tech evolution and frequency amplifiers."
+  },
+  {
+    "slug": "echo-blaze",
+    "name": "Echo Blaze",
+    "faction": "Affiliated Operatives",
+    "role": "Sound Architect",
+    "rank": "Elite",
+    "desc": "Builds sonic structures mid-battle. He doesn’t just attack — he constructs."
+  },
+  {
+    "slug": "vanta-lux",
+    "name": "Vanta Lux",
+    "faction": "Affiliated Operatives",
+    "role": "Light Manipulator",
+    "rank": "Elite",
+    "desc": "Controls visibility and warps battlefield perception with light distortion."
+  },
+  {
+    "slug": "torque-titan",
+    "name": "Torque Titan",
+    "faction": "Affiliated Operatives",
+    "role": "The Enforcer",
+    "rank": "Elite",
+    "desc": "Brute strength. Stabilizes the frontline when rhythm fighters falter."
+  },
+  {
+    "slug": "cipher-rae",
+    "name": "Cipher Rae",
+    "faction": "Affiliated Operatives",
+    "role": "Grid Infiltration Specialist",
+    "rank": "Elite",
+    "desc": "The digital shadow. Hacks signal networks and disrupts enemy coordination."
+  },
+  {
+    "slug": "nova-kid",
+    "name": "Nova Kid",
+    "faction": "Affiliated Operatives",
+    "role": "The Wild Card",
+    "rank": "Elite",
+    "desc": "Raw, unstable power. Frequency bursts that can accidentally shift battlefield scale."
+  },
+  {
+    "slug": "seraph-kairo",
+    "name": "Seraph Kairo",
+    "faction": "Affiliated Operatives",
+    "role": "Philosopher Fighter",
+    "rank": "Elite",
+    "desc": "Calm executioner. Reads opponent intent before action with minimal motion."
+  },
+  {
+    "slug": "lyric-storm",
+    "name": "Lyric Storm",
+    "faction": "Affiliated Operatives",
+    "role": "Rhythm Assassin",
+    "rank": "Elite",
+    "desc": "Moves at BPM-driven speed. Hard to predict once the beat pattern starts."
+  },
+  {
+    "slug": "prime-sync",
+    "name": "Prime Sync",
+    "faction": "The Actual 24",
+    "role": "Alignment Master",
+    "rank": "Mythic",
+    "desc": "The purest form of synchronization theory. A stable philosophical counterweight to Sync."
+  },
+  {
+    "slug": "zero-molly",
+    "name": "Zero Molly",
+    "faction": "The Actual 24",
+    "role": "Emotionless Conductor",
+    "rank": "Mythic",
+    "desc": "Hyper-disciplined and clinical. Represents Molly without emotional influence."
+  },
+  {
+    "slug": "ronin-nagazaki",
+    "name": "Ronin Nagazaki",
+    "faction": "The Actual 24",
+    "role": "Wandering Blade",
+    "rank": "Mythic",
+    "desc": "Former assassin who left structured command. Independent and deadly."
+  },
+  {
+    "slug": "emperor-j",
+    "name": "Emperor J",
+    "faction": "The Actual 24",
+    "role": "Strategic Autocrat",
+    "rank": "Mythic",
+    "desc": "Believes rhythm should be controlled absolutely. A tyrant alternate of King J."
+  },
+  {
+    "slug": "the-broker",
+    "name": "The Broker",
+    "faction": "The Actual 24",
+    "role": "Wealth Controller",
+    "rank": "Mythic",
+    "desc": "Controls property and economic rhythm layers. Powerful without fighting directly."
+  },
+  {
+    "slug": "the-spectator",
+    "name": "The Spectator",
+    "faction": "The Actual 24",
+    "role": "Timeline Observer",
+    "rank": "Mythic",
+    "desc": "Sees macro patterns and timelines. Knows more than he reveals."
+  },
+  {
+    "slug": "lysander-coda",
+    "name": "Lysander Coda",
+    "faction": "NexaGen Harmonics",
+    "role": "CEO / Industrialist",
+    "rank": "Corporate",
+    "desc": "Ruthless visionary industrializing sound warfare through cybernetics."
+  },
+  {
+    "slug": "synth-09",
+    "name": "Synth-09",
+    "faction": "NexaGen Harmonics",
+    "role": "AI DJ Masterpiece",
+    "rank": "Corporate",
+    "desc": "The \"perfect musician.\" An unstable AI capable of mimicking any frequency."
+  },
+  {
+    "slug": "unit-omega",
+    "name": "Unit Omega",
+    "faction": "NexaGen Harmonics",
+    "role": "Mass-Produced Enforcer",
+    "rank": "Corporate",
+    "desc": "The peak of NexaGen’s synthetic soldier project. No soul, only output."
+  },
+  {
+    "slug": "red-silence",
+    "name": "Red Silence",
+    "faction": "Sick 52",
+    "role": "Founder & Leader",
+    "rank": 1,
+    "desc": "Founder of the Sick 52. Once the greatest conductor of the Sonic Order, Red Silence now commands absolute silence. His presence suppresses all sound in an area, leaving opponents deaf and powerless.",
+    "title": "Master of Frequency Suppression"
+  },
+  {
+    "slug": "bass-phantom",
+    "name": "Bass Phantom",
+    "faction": "Sick 52",
+    "role": "Living Sub-Bass Titan",
+    "rank": 2,
+    "desc": "A walking nuclear reactor wrapped in ritual cloth. Bass Phantom is a battlefield tactician and siege weapon — he calculates trajectories while his arm-mounted bass compression missiles devastate entire cities.",
+    "title": "Nuclear Artillery Conductor"
+  },
+  {
+    "slug": "echo-requiem",
+    "name": "Echo Requiem",
+    "faction": "Sick 52",
+    "role": "The Mirror",
+    "rank": 3,
+    "desc": "Echo Requiem creates perfect copies of any sound or person he encounters. His reflection clones fight with the exact abilities of his opponent, making him nearly impossible to defeat.",
+    "title": "Reflection & Sound Cloning"
+  },
+  {
+    "slug": "static-prophet",
+    "name": "Static Prophet",
+    "faction": "Sick 52",
+    "role": "Oracle of Corruption",
+    "rank": 4,
+    "desc": "The Static Prophet sees the future through distortion patterns. His prophecies guided the Sick 52 through exile, and his distortion field warps reality around him.",
+    "title": "Distortion Seer"
+  },
+  {
+    "slug": "tremor-king",
+    "name": "Tremor King",
+    "faction": "Sick 52",
+    "role": "The Earthquake",
+    "rank": 5,
+    "desc": "Tremor King controls seismic frequencies. Every step he takes sends shockwaves through the ground. He can collapse buildings with a single stomp.",
+    "title": "Seismic Beat Manipulator"
+  },
+  {
+    "slug": "void-vocalist",
+    "name": "Void Vocalist",
+    "faction": "Sick 52",
+    "role": "The Hollow Voice",
+    "rank": 6,
+    "desc": "Hollow Aria's voice opens rifts to the void. When she sings, reality tears apart. Her hollow notes drain the life force from anyone who listens.",
+    "title": "Void Vocalist"
+  },
+  {
+    "slug": "pulse-tyrant",
+    "name": "Pulse Tyrant",
+    "faction": "Sick 52",
+    "role": "Master of Pulse",
+    "rank": 7,
+    "desc": "Pulse Tyrant controls the heartbeat of every living being in range. He can stop hearts, accelerate them to explosion, or synchronize an army to move as one.",
+    "title": "Heartbeat Controller"
+  },
+  {
+    "slug": "rift-cadence",
+    "name": "Rift Cadence",
+    "faction": "Sick 52",
+    "role": "The Phase Shifter",
+    "rank": 8,
+    "desc": "Rift Cadence phases through reality by syncing with impossible rhythms. He appears and disappears between beats, striking from angles that shouldn't exist.",
+    "title": "Reality Skip via Rhythm"
+  },
+  {
+    "slug": "black-vinyl",
+    "name": "Black Vinyl",
+    "faction": "Sick 52",
+    "role": "The Eraser",
+    "rank": 9,
+    "desc": "Black Vinyl corrupts memories through sound. He can erase your knowledge of fighting, make you forget your allies, or implant false memories of loyalty to him.",
+    "title": "Memory Corruption"
+  },
+  {
+    "slug": "crescendo-wraith",
+    "name": "Crescendo Wraith",
+    "faction": "Sick 52",
+    "role": "The Escalator",
+    "rank": 10,
+    "desc": "Crescendo Wraith grows stronger the longer a fight continues. Every hit he takes amplifies his power. The only way to beat him is to end it in one strike — or not fight at all.",
+    "title": "Power Scaling Through Conflict"
+  },
+  {
+    "slug": "sonic-vicar",
+    "name": "Sonic Vicar",
+    "faction": "Sick 52",
+    "role": "The False Prophet",
+    "rank": 11,
+    "desc": "Sonic Vicar manipulates the religious doctrines of Ongaku's genre faiths, turning believers into weapons. He preaches a corrupted gospel of sound that bends minds.",
+    "title": "Religious Manipulator of Sound Doctrine"
+  },
+  {
+    "slug": "nocturne-prime",
+    "name": "Nocturne Prime",
+    "faction": "Sick 52",
+    "role": "The Silent Blade",
+    "rank": 12,
+    "desc": "Nocturne Prime operates exclusively in darkness. His dual scythes cut through sound itself, creating zones of absolute silence where his victims cannot even scream.",
+    "title": "Night Frequency Specialist"
+  },
+  {
+    "slug": "breakbeat-marauder",
+    "name": "Breakbeat Marauder",
+    "faction": "Sick 52",
+    "role": "Frontline Berserker",
+    "rank": 13,
+    "desc": "Breakbeat Marauder fights with unpredictable rhythm shifts, making his attacks impossible to anticipate. Every strike comes at a different tempo.",
+    "title": "Erratic Rhythm Assault"
+  },
+  {
+    "slug": "acid-reverie",
+    "name": "Acid Reverie",
+    "faction": "Sick 52",
+    "role": "Mind Melter",
+    "rank": 14,
+    "desc": "Acid Reverie's frequencies induce vivid hallucinations. His victims fight shadows while he strikes them down.",
+    "title": "Hallucinatory Warfare"
+  },
+  {
+    "slug": "trap-revenant",
+    "name": "Trap Revenant",
+    "faction": "Sick 52",
+    "role": "The Trap",
+    "rank": 15,
+    "desc": "Trap Revenant sets sonic traps — invisible zones of compressed sound that detonate when enemies enter, creating devastating bass explosions.",
+    "title": "Explosive Ambush Specialist"
+  },
+  {
+    "slug": "drumline-juggernaut",
+    "name": "Drumline Juggernaut",
+    "faction": "Sick 52",
+    "role": "The Battering Ram",
+    "rank": 16,
+    "desc": "Drumline Juggernaut channels rhythmic impact force. Each punch lands with the weight of a bass drum cannon. Nothing stops his forward charge.",
+    "title": "Impact Commander"
+  },
+  {
+    "slug": "feedback-executioner",
+    "name": "Feedback Executioner",
+    "faction": "Sick 52",
+    "role": "The Retaliator",
+    "rank": 17,
+    "desc": "Feedback Executioner reflects all damage back amplified. He holds a double-edged blade shaped like a distorted tuning fork that returns every attack at twice the force.",
+    "title": "Punishing Counter-Attacks"
+  },
+  {
+    "slug": "melody-hex",
+    "name": "Melody Hex",
+    "faction": "Sick 52",
+    "role": "The Songstress of Ruin",
+    "rank": 18,
+    "desc": "Melody Hex conducts cursed symphonies. Dark-skinned North African female with a thin conductor's baton-blade. The air around her bends in warped arcs.",
+    "title": "Cursed Conductor"
+  },
+  {
+    "slug": "overdrive-apostle",
+    "name": "Overdrive Apostle",
+    "faction": "Sick 52",
+    "role": "The Zealot",
+    "rank": 19,
+    "desc": "Overdrive Apostle is a militant priest of chaotic sound. Ethiopian heritage, shaved head. His war polearm channels the corrupted frequency of the Sick 52.",
+    "title": "Fanatical General"
+  },
+  {
+    "slug": "glitch-monarch",
+    "name": "Glitch Monarch",
+    "faction": "Sick 52",
+    "role": "The Flicker",
+    "rank": 20,
+    "desc": "Glitch Monarch's body flickers between states of existence. East Asian male with slick black hair. His curved blade phases in and out of reality with his body.",
+    "title": "Unstable Sovereign"
+  },
+  {
+    "slug": "harmony-eater",
+    "name": "Harmony Eater",
+    "faction": "Sick 52",
+    "role": "Absorbing Predator",
+    "rank": 21,
+    "desc": "Harmony Eater absorbs all harmonious sound, leaving only dissonance. Tall broad-shouldered female of West African descent with leopard-like hybrid traits — faint dark markings along shoulders, emerald slit pupils.",
+    "title": "The Devourer"
+  },
+  {
+    "slug": "downbeat-reaper",
+    "name": "Downbeat Reaper",
+    "faction": "Sick 52",
+    "role": "The Executioner",
+    "rank": 22,
+    "desc": "Downbeat Reaper is a cold, calculated assassin with dual curved sickle blades. Panther-hybrid traits. He strikes on the downbeat — the moment of maximum vulnerability.",
+    "title": "Assassin of Silence"
+  },
+  {
+    "slug": "sync-destroyer",
+    "name": "Sync Destroyer",
+    "faction": "Sick 52",
+    "role": "The Phase Cutter",
+    "rank": 23,
+    "desc": "Sync Destroyer locks into your timing, then shatters it. Droid-hybrid with one cybernetic arm. His katana extends from his mechanical wrist — a blade that cuts synchronization itself.",
+    "title": "Precision Breaker"
+  },
+  {
+    "slug": "chorus-tyrant",
+    "name": "Chorus Tyrant",
+    "faction": "Sick 52",
+    "role": "Field Marshal",
+    "rank": 24,
+    "desc": "The Chorus Tyrant commands all War Conductors. Mixed Japanese-African heritage. Droid-hybrid with left arm fully cybernetic. His massive greatblade is shaped like a shattered soundwave.",
+    "title": "Supreme War Conductor"
+  },
+  {
+    "slug": "blaze-riff",
+    "name": "Blaze Riff",
+    "faction": "Sick 52",
+    "role": "Fire Mutation",
+    "rank": 25,
+    "desc": "Body cracked with ember fissures glowing cobalt-blue at the core. Jagged greatblade made of semi-solid flame. Ground scorched beneath him.",
+    "title": "Cataclysm of Fire"
+  },
+  {
+    "slug": "stone-resonance",
+    "name": "Stone Resonance",
+    "faction": "Sick 52",
+    "role": "Earth Mutation",
+    "rank": 26,
+    "desc": "Skin partially overtaken by dark stone plating fused to shoulders, ribs, and forearms. Cracks in stone glow faint cobalt. Right arm transformed into colossal stone gauntlet.",
+    "title": "Living Seismic Collapse"
+  },
+  {
+    "slug": "tidal-lament",
+    "name": "Tidal Lament",
+    "faction": "Sick 52",
+    "role": "Water Mutation",
+    "rank": 27,
+    "desc": "Skin partially translucent with swirling water beneath. Lower legs dissolving into flowing water tendrils. Hands trailing streams that condense into razor-thin liquid blades.",
+    "title": "Abyssal Drowning Form"
+  },
+  {
+    "slug": "iron-tempo",
+    "name": "Iron Tempo",
+    "faction": "Sick 52",
+    "role": "Metal Mutation",
+    "rank": 28,
+    "desc": "Flesh partially fused with dark iron plating. Metallic bone protrusions pierce through skin at shoulders and forearms. One arm fully converted into heavy iron blade.",
+    "title": "Industrial Mutation"
+  },
+  {
+    "slug": "thunder-dropper",
+    "name": "Thunder Dropper",
+    "faction": "Sick 52",
+    "role": "Lightning Mutation",
+    "rank": 29,
+    "desc": "Skin marked by branching cobalt lightning scars. Hair floating from static charge. Lightning arcs snap between fingertips and ground.",
+    "title": "Walking Lightning Strike"
+  },
+  {
+    "slug": "frost-echo",
+    "name": "Frost Echo",
+    "faction": "Sick 52",
+    "role": "Ice Mutation",
+    "rank": 30,
+    "desc": "Frost crystals embedded in skin. Hair partially crystallized into ice strands. Frost spreads outward in intricate fractal patterns from her feet.",
+    "title": "Absolute Zero Mutation"
+  },
+  {
+    "slug": "sand-shuffle",
+    "name": "Sand Shuffle",
+    "faction": "Sick 52",
+    "role": "Sand Mutation",
+    "rank": 31,
+    "desc": "Sand-infused skin constantly shedding grains. Lower body partially dissolving into spinning vortex of sand.",
+    "title": "Desert Devastation"
+  },
+  {
+    "slug": "toxic-vibrato",
+    "name": "Toxic Vibrato",
+    "faction": "Sick 52",
+    "role": "Poison Mutation",
+    "rank": 32,
+    "desc": "Veins glowing cobalt beneath skin. Fingertips elongated into toxin-dripping claws. Toxic vapor leaking from shoulders.",
+    "title": "Venomous Corruption"
+  },
+  {
+    "slug": "storm-sustain",
+    "name": "Storm Sustain",
+    "faction": "Sick 52",
+    "role": "Wind Mutation",
+    "rank": 33,
+    "desc": "Body slightly lifted from ground, never fully touching earth. Miniature cyclone forming around torso with debris orbiting in slow spiral.",
+    "title": "Hurricane Incarnate"
+  },
+  {
+    "slug": "ember-pulse",
+    "name": "Ember Pulse",
+    "faction": "Sick 52",
+    "role": "Magma Mutation",
+    "rank": 34,
+    "desc": "Skin cracked with magma-like fissures glowing blue. Cloak partially burned revealing glowing volcanic core at chest.",
+    "title": "Volcanic Core Mutation"
+  },
+  {
+    "slug": "mist-cadence",
+    "name": "Mist Cadence",
+    "faction": "Sick 52",
+    "role": "Illusion Mutation",
+    "rank": 35,
+    "desc": "Body partially dissolving into fog. Arms partially intangible. Echo-like double silhouettes flickering behind them.",
+    "title": "Phantom Vapor Form"
+  },
+  {
+    "slug": "void-tremolo",
+    "name": "Void Tremolo",
+    "faction": "Sick 52",
+    "role": "Dark Element",
+    "rank": 36,
+    "desc": "Skin partially swallowed by shadow-like void matter. Black-blue ripple waves radiating outward like gravitational distortion. His staff-blade absorbs light.",
+    "title": "Abyssal Mutation"
+  },
+  {
+    "slug": "lullaby-widow",
+    "name": "Lullaby Widow",
+    "faction": "Sick 52",
+    "role": "The Sandwoman",
+    "rank": 37,
+    "desc": "Slender female wrapped in ceremonial veil. A broken crown-like sound halo forms behind her head. Around her, translucent silhouettes frozen mid-motion trapped in paralysis.",
+    "title": "Induced Sleep Paralysis"
+  },
+  {
+    "slug": "panic-symphony",
+    "name": "Panic Symphony",
+    "faction": "Sick 52",
+    "role": "The Dread",
+    "rank": 38,
+    "desc": "Panic Symphony broadcasts fear frequencies. Shadow forms stretch unnaturally from his body. The air distorts inward like a pressure wave pressing against your skull.",
+    "title": "Fear Frequency Conductor"
+  },
+  {
+    "slug": "memory-static",
+    "name": "Memory Static",
+    "faction": "Sick 52",
+    "role": "The Glitch",
+    "rank": 39,
+    "desc": "Memory Static alters recollections. White static threads drift around their head. Fractured memory fragments float in the air — translucent images fading in and out.",
+    "title": "Recollection Corruptor"
+  },
+  {
+    "slug": "mirage-anthem",
+    "name": "Mirage Anthem",
+    "faction": "Sick 52",
+    "role": "The Phantom",
+    "rank": 40,
+    "desc": "Mirage Anthem projects illusory copies of herself. Multiple afterimage silhouettes slightly offset behind her. A circular white luminous glyph floats behind her back.",
+    "title": "Illusion Projection"
+  },
+  {
+    "slug": "grief-sonata",
+    "name": "Grief Sonata",
+    "faction": "Sick 52",
+    "role": "The Mourner",
+    "rank": 41,
+    "desc": "Grief Sonata drains emotional energy. White mist flows from nearby silhouettes toward his chest. Ground beneath slightly desaturated of all color.",
+    "title": "Emotional Drain"
+  },
+  {
+    "slug": "rage-cantata",
+    "name": "Rage Cantata",
+    "faction": "Sick 52",
+    "role": "The Fury",
+    "rank": 42,
+    "desc": "Rage Cantata induces uncontrollable rage in targets. White sound rings orbit her hands. Around her, faint silhouettes of people mid-scream.",
+    "title": "Berserk Inducer"
+  },
+  {
+    "slug": "whisper-choir",
+    "name": "Whisper Choir",
+    "faction": "Sick 52",
+    "role": "The Puppeteer",
+    "rank": 43,
+    "desc": "Whisper Choir controls masses through suggestion. Multiple translucent whispering mouth-like shapes form in the air behind him. Thin white lines connect from him into darkness.",
+    "title": "Mass Suggestion Architect"
+  },
+  {
+    "slug": "silence-bishop",
+    "name": "Silence Bishop",
+    "faction": "Sick 52",
+    "role": "The Void",
+    "rank": 44,
+    "desc": "Silence Bishop nullifies all sound in a massive radius. A large white circular sigil hovers behind their head. The air is completely still. No particle motion. Absolute calm.",
+    "title": "Area-Wide Sound Nullification"
+  },
+  {
+    "slug": "split-tempo",
+    "name": "Split Tempo",
+    "faction": "Sick 52",
+    "role": "The Divided",
+    "rank": 45,
+    "desc": "Split Tempo has two bodies that fight in sync. A violet glitch tear runs vertically down his form. Two overlapping silhouettes misaligned behind him.",
+    "title": "Dual-Body Combatant"
+  },
+  {
+    "slug": "frequency-parasite",
+    "name": "Frequency Parasite",
+    "faction": "Sick 52",
+    "role": "The Leech",
+    "rank": 46,
+    "desc": "Frequency Parasite feeds on musical energy. Sickly violet veins crawl across his skin. Small floating violet tendrils reach outward, absorbing sound.",
+    "title": "Feeds on Music Energy"
+  },
+  {
+    "slug": "harmonic-abomination",
+    "name": "Harmonic Abomination",
+    "faction": "Sick 52",
+    "role": "The Fusion",
+    "rank": 47,
+    "desc": "Harmonic Abomination contains broken remnants of all previous tiers — red embers, green thread, blue mist — all fused badly. Extra limb growth. Distorted shape.",
+    "title": "Multi-Genre Hybrid"
+  },
+  {
+    "slug": "pulse-devourer",
+    "name": "Pulse Devourer",
+    "faction": "Sick 52",
+    "role": "The Counter",
+    "rank": 48,
+    "desc": "Pulse Devourer has an open chest cavity revealing an unstable pulsating violet core. Each pulse sends jagged violet ripples outward. Arms elongated.",
+    "title": "Absorbs DJ Attacks"
+  },
+  {
+    "slug": "dead-air-revenant",
+    "name": "Dead Air Revenant",
+    "faction": "Sick 52",
+    "role": "The Eraser",
+    "rank": 49,
+    "desc": "Dead Air Revenant is terrifying because nothing moves near him. Almost no visible aura. Air compressed and colorless. All particles entering his field disappear.",
+    "title": "Erases Sound Zones"
+  },
+  {
+    "slug": "reverb-titan",
+    "name": "Reverb Titan",
+    "faction": "Sick 52",
+    "role": "The Echoing Mountain",
+    "rank": 50,
+    "desc": "Reverb Titan is massive — not muscular but swollen with energy. Every movement sends delayed ripple copies outward. Violet echo silhouettes trailing behind.",
+    "title": "Amplifies All Damage"
+  },
+  {
+    "slug": "static-hydra",
+    "name": "Static Hydra",
+    "faction": "Sick 52",
+    "role": "The Hydra",
+    "rank": 51,
+    "desc": "Static Hydra has multiple distorted echo heads forming behind the primary head — not literal heads but frequency projections. Sharp glitch lines everywhere.",
+    "title": "Multi-Headed Echo Form"
+  },
+  {
+    "slug": "final-drop",
+    "name": "Final Drop",
+    "faction": "Sick 52",
+    "role": "The End",
+    "rank": 52,
+    "desc": "Final Drop contains all tier colors fractured inside — black base, cracked violet core, small fragments of red, green, blue, white. Every experiment fused. Sound rings collapsing inward instead of outward. The final drop before silence.",
+    "title": "The Ultimate Mutation"
+  }
+]
