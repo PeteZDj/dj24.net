@@ -2,8 +2,6 @@
 
 > **An epic multimedia universe spanning anime, video games, comics, and manga**
 
-![DJ24 Logo](./images/logos/logo_dj24.png)
-
 ## 🌟 About This Project
 
 **DJ24: War of Sound** is a comprehensive multimedia franchise created by **petezdj**, featuring an expansive universe where music is weaponized and sound shapes reality itself. This wiki serves as the central hub for all lore, characters, factions, and world-building across multiple media formats.
@@ -22,42 +20,22 @@ On **Planet Ongaku**, music isn't just art—it's power. The **Frequency Grid** 
 
 ### Major Locations
 
-<table>
-<tr>
-<td width="33%" align="center">
-<img src="./images/cities/classic_city_1.png" width="200"/><br/>
-<b>Classic City</b><br/>
-<i>The Conservatory Capital</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/cities/electric_city_1.png" width="200"/><br/>
-<b>Electric City</b><br/>
-<i>Neon Pulse Metropolis</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/cities/rock_city_1.png" width="200"/><br/>
-<b>Rock City</b><br/>
-<i>Amplified Stronghold</i>
-</td>
-</tr>
-<tr>
-<td width="33%" align="center">
-<img src="./images/cities/blue_city_1.png" width="200"/><br/>
-<b>Blue City</b><br/>
-<i>Jazz Quarter Haven</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/cities/pop_city_1.png" width="200"/><br/>
-<b>Pop City</b><br/>
-<i>Commercial Paradise</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/cities/urban_city_1.png" width="200"/><br/>
-<b>Urban City</b><br/>
-<i>Hip-Hop Heartland</i>
-</td>
-</tr>
-</table>
+| Location | Description |
+|----------|-------------|
+| **Classic City** | The Conservatory Capital - Home of the Sacred Conservatory |
+| **Electric City** | Neon Pulse Metropolis - Cyberpunk electronic music hub |
+| **Rock City** | Amplified Stronghold - Heavy metal fortress |
+| **Blue City** | Jazz Quarter Haven - Smooth improvisation district |
+| **Pop City** | Commercial Paradise - Mainstream music capital |
+| **Urban City** | Hip-Hop Heartland - Underground rap battleground |
+| **Cloud City** | Sky-High Electronic Paradise |
+| **Rose City** | Romantic Ballad District |
+| **Hall of Laughter** | Komedian Territory |
+| **Joke City** | Absurdist Reality Zone |
+| **Clown Country** | Comedic Chaos Realm |
+| **Intro: The Dream** | The Beginning Zone |
+
+**🖼️ View Location Artwork:** All city artwork is included in `public/images/cities/` (24 high-quality images)
 
 ---
 
@@ -65,60 +43,38 @@ On **Planet Ongaku**, music isn't just art—it's power. The **Frequency Grid** 
 
 ### 🛡️ DJ24 - The Elite Guardians
 
-![DJ24 Logo](./images/logos/logo_dj24.png)
-
 **"Structure, Unity, Control."**
 
 The elite 24-hour guardian unit protecting Planet Ongaku. Each member represents one hour of the day, forming a living failsafe against chaos.
 
 #### Featured Members
 
-<table>
-<tr>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24- Dj24.png" width="150"/><br/>
-<b>General 24</b><br/>
-<i>Hour 1 - Supreme Commander</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24 - Sync.png" width="150"/><br/>
-<b>Sync</b><br/>
-<i>Hour 2 - The Protagonist</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24 - Molly 2.png" width="150"/><br/>
-<b>Molly</b><br/>
-<i>Hour 3 - Shockwave Prima</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24 - Ninja.png" width="150"/><br/>
-<b>Ninja Nagazaki</b><br/>
-<i>Hour 4 - Silent Executioner</i>
-</td>
-</tr>
-<tr>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24 - Nova.png" width="150"/><br/>
-<b>Nova</b><br/>
-<i>Hour 5 - Frequency Queen</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24 - Striker 2.png" width="150"/><br/>
-<b>Striker</b><br/>
-<i>Hour 6 - Drum God</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24 - KingJ.png" width="150"/><br/>
-<b>King J</b><br/>
-<i>Hour 7 - Royal Commander</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/dj24/Dj24 - Maya2.png" width="150"/><br/>
-<b>Maya</b><br/>
-<i>Hour 8 - Harmonic Manipulator</i>
-</td>
-</tr>
-</table>
+| Hour | Name | Role |
+|------|------|------|
+| **1** | **General 24** | Supreme Commander |
+| **2** | **Sync** | The Protagonist / Reality Vanguard |
+| **3** | **Molly** | Shockwave Prima |
+| **4** | **Ninja Nagazaki** | Silent Executioner |
+| **5** | **Nova** | Frequency Queen |
+| **6** | **Striker** | Drum God |
+| **7** | **King J** | Royal Commander |
+| **8** | **Maya** | Harmonic Manipulator |
+| **9** | **MasterBass** | Sub-Frequency Enforcer |
+| **10** | **Crossfade** | Tactical Transition Architect |
+| **11** | **SubZ** | Anti-Bass Raider |
+| **12** | **4Serj** | Quad-Channel Sync Architect |
+| **13** | **GhostLoop** | Psychological Warfare Specialist |
+| **14** | **Breakline** | Counter-Insurgency Beat Disruptor |
+| **15** | **Afterimage** | Tempo Assassin |
+| **16** | **Mr Genge** | Urban Percussion Commander |
+| **17** | **LiquidB** | Flow Manipulator |
+| **18** | **Backspin** | Reversal Specialist |
+| **19** | **Sidechain** | Power Compression Operator |
+| **20** | **Distort** | Overload Assault |
+| **21** | **Moombah** | Rhythmic Shockwave Brawler |
+| **22** | **d.O.P** | Battlefield Sound Architect |
+| **23** | **WBoy** | Founder Frequency |
+| **24** | **AfroG** | Final Drop Protocol |
 
 **Full Roster:** 24 active guardians + 54 reserves across multiple squads:
 - Prime Command Unit
@@ -128,77 +84,47 @@ The elite 24-hour guardian unit protecting Planet Ongaku. Each member represents
 - Disruption Unit
 - Special Operations
 
+**🖼️ View Character Art:** All DJ24 character artwork is included in `public/images/dj24/` (30+ character images)
+
 ---
 
 ### 💀 The Sick 52 - Exiled Masters
-
-![Sick 52 Logo](./images/logos/logo_sick_52.png)
 
 **"They exiled us. They erased us. Now we erase them."**
 
 Once the 52 greatest musicians in the galaxy, betrayed by the Harmony Council 200 years ago. Now mutated, powerful, and seeking revenge.
 
-#### The Founding Dissonants (Tier I)
+#### The Founding Dissonants (Tier I - Ranks 1-12)
 
-<table>
-<tr>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52- Red Silence.png" width="150"/><br/>
-<b>Red Silence</b><br/>
-<i>#1 - The Leader</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52- Bass Phantom.png" width="150"/><br/>
-<b>Bass Phantom</b><br/>
-<i>#2 - Sub-Bass Titan</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52- Echo Requiem.png" width="150"/><br/>
-<b>Echo Requiem</b><br/>
-<i>#3 - The Mirror</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52 - Static Prophet.png" width="150"/><br/>
-<b>Static Prophet</b><br/>
-<i>#4 - Oracle of Corruption</i>
-</td>
-</tr>
-<tr>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52 - Tremor King.png" width="150"/><br/>
-<b>Tremor King</b><br/>
-<i>#5 - The Earthquake</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52 - Void Vocalist.png" width="150"/><br/>
-<b>Void Vocalist</b><br/>
-<i>#6 - Hollow Voice</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52 Pulse Tyrant.png" width="150"/><br/>
-<b>Pulse Tyrant</b><br/>
-<i>#7 - Master of Pulse</i>
-</td>
-<td width="25%" align="center">
-<img src="./images/sick52/Sick52 - Black Vinyl.png" width="150"/><br/>
-<b>Black Vinyl</b><br/>
-<i>#9 - The Eraser</i>
-</td>
-</tr>
-</table>
+| Rank | Name | Title | Role |
+|------|------|-------|------|
+| **#1** | **Red Silence** | Master of Frequency Suppression | Founder & Leader |
+| **#2** | **Bass Phantom** | Nuclear Artillery Conductor | Living Sub-Bass Titan |
+| **#3** | **Echo Requiem** | Reflection & Sound Cloning | The Mirror |
+| **#4** | **Static Prophet** | Distortion Seer | Oracle of Corruption |
+| **#5** | **Tremor King** | Seismic Beat Manipulator | The Earthquake |
+| **#6** | **Void Vocalist** | Void Vocalist | The Hollow Voice |
+| **#7** | **Pulse Tyrant** | Heartbeat Controller | Master of Pulse |
+| **#8** | **Rift Cadence** | Reality Skip via Rhythm | The Phase Shifter |
+| **#9** | **Black Vinyl** | Memory Corruption | The Eraser |
+| **#10** | **Crescendo Wraith** | Power Scaling Through Conflict | The Escalator |
+| **#11** | **Chorus Tyrant** | Supreme War Conductor | Field Marshal |
+| **#12** | **Final Drop** | The Demon of the Abyss | The Final Hour |
+
+#### Additional Tiers
 
 **52 Total Members** organized in 5 tiers:
-- **Tier I:** The Founding Dissonants (1-12) - Original ideological rebels
-- **Tier II:** The War Conductors (13-24) - Elite field generals
-- **Tier III:** The Elemental Etudes (25-36) - Elemental mutations
-- **Tier IV:** The Psychological Choir (37-44) - Mind manipulators
+- **Tier I:** The Founding Dissonants (1-12) - Original ideological rebels with black + red cloaks
+- **Tier II:** The War Conductors (13-24) - Elite field generals with emerald accents
+- **Tier III:** The Elemental Etudes (25-36) - Elemental sound mutations
+- **Tier IV:** The Psychological Choir (37-44) - Mind-based manipulators
 - **Tier V:** The Mutated Prototypes (45-52) - Experimental evolutions
+
+**🖼️ View Character Art:** All Sick 52 character artwork is included in `public/images/sick52/` (65+ character images)
 
 ---
 
 ### 🏛️ Harmony Council
-
-![Harmony Council Logo](./images/logos/logo_harmony_council.png)
 
 **"One sound, one rhythm, one world."**
 
@@ -206,80 +132,42 @@ The authoritarian rulers enforcing the **Single Beat System (SBS)** across Plane
 
 #### Council Members
 
-<table>
-<tr>
-<td width="33%" align="center">
-<img src="./images/harmony-council/grand-composer-veyra.png" width="150"/><br/>
-<b>Grand Composer Veyra</b><br/>
-<i>Public Face of Control</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/harmony-council/the-conductor.png" width="150"/><br/>
-<b>The Conductor</b><br/>
-<i>Elite Enforcer</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/harmony-council/maestro-noctis.png" width="150"/><br/>
-<b>Maestro Noctis</b><br/>
-<i>Shadow Leader</i>
-</td>
-</tr>
-</table>
+- **Grand Composer Veyra** - Public Face of Control
+- **The Conductor** - Elite Enforcer
+- **Maestro Noctis** - Shadow Leader
+- **Minister Lyra** - Diplomatic Voice
+- **Warden Forte** - Prison Overseer
+- **Arbiter Shen** - Justice Enforcer
+- **Auditor Kane** - Resource Controller
+
+**🖼️ View Character Art:** Council member artwork in `public/images/harmony-council/` (7 images)
 
 ---
 
 ### 🏢 NexaGen Harmonics
 
-![NexaGen Logo](./images/logos/logo_nexagen_harmonics.png)
-
 **"Power belongs to those who control it."**
 
 A cybernetic megacorporation weaponizing music through technology and cloning.
 
-<table>
-<tr>
-<td width="33%" align="center">
-<img src="./images/extended/lysander-coda.png" width="150"/><br/>
-<b>Lysander Coda</b><br/>
-<i>CEO / Industrialist</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/extended/synth-09.png" width="150"/><br/>
-<b>Synth-09</b><br/>
-<i>AI DJ Masterpiece</i>
-</td>
-<td width="33%" align="center">
-<img src="./images/extended/unit-omega.png" width="150"/><br/>
-<b>Unit Omega</b><br/>
-<i>Mass-Produced Enforcer</i>
-</td>
-</tr>
-</table>
+#### Key Figures
+
+- **Lysander Coda** - CEO / Industrialist
+- **Synth-09** - AI DJ Masterpiece (unstable but perfect)
+- **Unit Omega** - Mass-Produced Enforcer
+
+**🖼️ View Character Art:** NexaGen characters in `public/images/extended/` (22 images)
 
 ---
 
 ### 🤡 The Komedians
 
-![Komedians Logo](./images/logos/logo_komedians.png)
-
 **"Reality is just a setup. We are the punchline."**
 
 Interdimensional invaders from Planet Joke who rewrite reality into absurdist nightmares.
 
-<table>
-<tr>
-<td width="50%" align="center">
-<img src="./images/cities/hall_of_laughter_1.png" width="250"/><br/>
-<b>Hall of Laughter</b><br/>
-<i>Their Twisted Domain</i>
-</td>
-<td width="50%" align="center">
-<img src="./images/cities/joke_city_1.png" width="250"/><br/>
-<b>Joke City</b><br/>
-<i>Where Logic Dies</i>
-</td>
-</tr>
-</table>
+- **The Grand Punchline** - Ruling power plotting the Eternal Laughtrack
+- **Joke Warriors** - Reality-bending soldiers of farce
 
 ---
 
@@ -390,13 +278,13 @@ dj24.net/
 │   ├── characters/
 │   ├── cities/
 │   └── wiki/
-├── images/             # Character art and assets
-│   ├── dj24/          # DJ24 member portraits
-│   ├── sick52/        # Sick 52 member portraits
-│   ├── extended/      # Extended cast
-│   ├── harmony-council/
-│   ├── cities/        # Location artwork
-│   └── logos/         # Faction logos
+├── public/images/      # Character art and assets (200+ images)
+│   ├── dj24/          # DJ24 member portraits (30+ images)
+│   ├── sick52/        # Sick 52 member portraits (65+ images)
+│   ├── extended/      # Extended cast (22 images)
+│   ├── harmony-council/ # Council members (7 images)
+│   ├── cities/        # Location artwork (24 images)
+│   └── logos/         # Faction logos (17 images)
 └── public/            # Static assets
 ```
 
@@ -411,6 +299,23 @@ dj24.net/
 - **Faction System** - Organized character rosters
 - **Timeline View** - Chronological story progression
 - **Wiki Links** - Internal linking between related content
+- **200+ Character Images** - Full artwork for all major characters
+- **24 City Artworks** - Stunning location illustrations
+
+---
+
+## 🖼️ Artwork & Assets
+
+This repository contains **200+ high-quality images** including:
+
+- **30+ DJ24 Character Portraits** - Full roster artwork
+- **65+ Sick 52 Character Portraits** - Complete villain gallery
+- **24 City Location Artworks** - 2 images per major city
+- **22 Extended Cast Images** - Elite Command, Operatives, Mythic characters
+- **7 Harmony Council Portraits** - All council members
+- **17 Faction Logos** - Professional branding for all factions
+
+**Note:** All images are stored in `public/images/` and are used by the live wiki application. To view the artwork, either run the development server or visit the live site.
 
 ---
 
@@ -454,7 +359,8 @@ The code is available for reference and learning purposes.
 
 **Creator:** petezdj  
 **Project:** DJ24: War of Sound  
-**Wiki:** [dj24.net](http://dj24.net)
+**Wiki:** [dj24.net](http://dj24.net)  
+**GitHub:** [github.com/petezdj](https://github.com/petezdj)
 
 ---
 
@@ -462,8 +368,8 @@ The code is available for reference and learning purposes.
 
 ### 🎵 "In a world where music is power, who will control the sound?" 🎵
 
-![DJ24 Squad](./images/dj24/Dj24 Squad 1.png)
-
 **DJ24: War of Sound** - An epic multimedia universe
+
+*Featuring 24 elite guardians, 52 exiled masters, and a war that spans dimensions*
 
 </div>

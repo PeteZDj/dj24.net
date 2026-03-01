@@ -20,6 +20,14 @@ dist-ssr
 # Backup files
 *.backup
 
+# Large image files (use external hosting or Git LFS)
+public/images/**/*.png
+public/images/**/*.jpg
+public/images/**/*.jpeg
+images/**/*.png
+images/**/*.jpg
+images/**/*.jpeg
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -30,3 +38,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+config.bat

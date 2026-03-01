@@ -34,7 +34,9 @@
         "name": "Blue Screen of Death",
         "desc": "Ultimate: Traps the enemy in a system crash, disabling them completely."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Special Sweeper"
   },
   "sync": {
     "name": "Sync (Phantom)",
@@ -71,7 +73,9 @@
         "name": "Sync Override",
         "desc": "ULTIMATE: Hijacks the opponent's internal rhythm, forcing them to move in slow motion."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Fighter"
   },
   "molly": {
     "name": "Molly",
@@ -108,7 +112,9 @@
         "name": "Thunder Allegro",
         "desc": "ULTIMATE: A full choreographed sequence of lightning-charged strikes at blinding speed."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Assassin"
   },
   "ninja-nagazaki": {
     "name": "Ninja Nagazaki",
@@ -145,7 +151,9 @@
         "name": "Umbral Evisceration",
         "desc": "Ultimate: A single, fatal blow from the darkness."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Assassin"
   },
   "nova": {
     "name": "Nova",
@@ -182,7 +190,9 @@
         "name": "Supernova Crescendo",
         "desc": "ULTIMATE: Detonates a miniature star of compressed frequency, devastating the battlefield."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "striker": {
     "name": "Striker",
@@ -219,7 +229,9 @@
         "name": "Percussion Storm",
         "desc": "ULTIMATE: Summons a barrage of rhythmic shockwaves that pummel the entire battlefield."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Tank"
   },
   "king-j": {
     "name": "King J",
@@ -256,7 +268,9 @@
         "name": "King's Anthem",
         "desc": "ULTIMATE: Broadcasts an overwhelming frequency that forces all enemies to kneel, paralyzed."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Fighter"
   },
   "maya": {
     "name": "Maya",
@@ -293,7 +307,9 @@
         "name": "Gaia's Wrath",
         "desc": "Ultimate: The very ground erupts to attack your foe."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Mystic"
   },
   "masterbass": {
     "name": "MasterBass",
@@ -330,7 +346,9 @@
         "name": "Frequency Floor",
         "desc": "ULTIMATE: Drops the bass so low it destabilizes gravity in the area, crushing everything to the ground."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "crossfade": {
     "name": "Crossfade",
@@ -367,7 +385,9 @@
         "name": "Seamless Override",
         "desc": "ULTIMATE: Transitions the entire battlefield from one state to another — allies heal, enemies weaken."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Fighter"
   },
   "subz": {
     "name": "SubZ",
@@ -404,7 +424,9 @@
         "name": "Absolute Sub-Zero",
         "desc": "ULTIMATE: Drops temperature and frequency to zero — freezing time, sound, and motion."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Fighter"
   },
   "4serj": {
     "name": "4Serj",
@@ -441,7 +463,9 @@
         "name": "Fourfold Fury",
         "desc": "ULTIMATE: Unleashes four devastating attacks simultaneously from all angles."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Fighter"
   },
   "ghostloop": {
     "name": "GhostLoop",
@@ -478,7 +502,9 @@
         "name": "Psycho Break",
         "desc": "Ultimate: Shatters the target's will to fight."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Mystic"
   },
   "breakline": {
     "name": "Breakline",
@@ -515,7 +541,9 @@
         "name": "Shatter Point",
         "desc": "ULTIMATE: Finds the structural weakness in any defense and breaks it completely."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Fighter"
   },
   "afterimage": {
     "name": "Afterimage",
@@ -552,7 +580,9 @@
         "name": "Infinite Echo",
         "desc": "ULTIMATE: Fills the arena with afterimages, each capable of dealing real damage."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Speedster"
   },
   "mr-genge": {
     "name": "Mr Genge",
@@ -589,7 +619,9 @@
         "name": "Shutdown Frequency",
         "desc": "ULTIMATE: Broadcasts an overwhelming grime frequency that silences and stuns all enemies."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "All-Rounder"
   },
   "liquidb": {
     "name": "LiquidB",
@@ -626,7 +658,9 @@
         "name": "Flood Gate",
         "desc": "ULTIMATE: Unleashes a torrent of liquid bass energy that drowns the battlefield."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Fighter"
   },
   "backspin": {
     "name": "Backspin",
@@ -663,7 +697,9 @@
         "name": "Full Revolution",
         "desc": "ULTIMATE: Spins with such force that reality itself warps, deflecting everything."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "All-Rounder"
   },
   "sidechain": {
     "name": "Sidechain",
@@ -700,7 +736,9 @@
         "name": "Total Compression",
         "desc": "ULTIMATE: Compresses all sound in the area into a single devastating point of impact."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Special Attacker"
   },
   "distort": {
     "name": "Distort",
@@ -737,7 +775,9 @@
         "name": "Total Distortion",
         "desc": "ULTIMATE: Warps all frequencies in the area, making reality itself glitch and crack."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "All-Rounder"
   },
   "moombah": {
     "name": "Moombah",
@@ -773,7 +813,9 @@
         "name": "Fiesta Inferno",
         "desc": "ULTIMATE: Erupts in a whirlwind of tropical energy and devastating bass."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Bruiser"
   },
   "dop": {
     "name": "d.O.P",
@@ -809,7 +851,9 @@
         "name": "Red-Blue Shift",
         "desc": "ULTIMATE: Simultaneously attacks from the past and future, unavoidable."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Mystic"
   },
   "wboy": {
     "name": "WBoy",
@@ -846,7 +890,9 @@
         "name": "Maximum Wobble",
         "desc": "ULTIMATE: The wobble frequency resonates with everything, shaking apart all structures and defenses."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Fighter"
   },
   "afrog": {
     "name": "AfroG",
@@ -883,7 +929,9 @@
         "name": "Funk Supreme",
         "desc": "ULTIMATE: Channels pure groove energy into an unstoppable dance of devastating attacks."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Fighter"
   },
   "general-meter": {
     "name": "General Meter",
@@ -919,7 +967,9 @@
         "name": "Grand Conductor",
         "desc": "ULTIMATE: Takes total control of the battlefield's tempo, allies speed up, enemies freeze."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "admiral-flux": {
     "name": "Admiral Flux",
@@ -955,7 +1005,9 @@
         "name": "Total Flux",
         "desc": "ULTIMATE: Destabilizes all frequencies in range, causing catastrophic energy chain reactions."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "major-rift": {
     "name": "Major Rift",
@@ -992,7 +1044,9 @@
         "name": "Reality Schism",
         "desc": "ULTIMATE: Tears open a massive rift that splits the battlefield in two, isolating enemies."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Bruiser"
   },
   "commander-vale": {
     "name": "Commander Vale",
@@ -1029,7 +1083,9 @@
         "name": "Absolute Authority",
         "desc": "ULTIMATE: Broadcasts an overwhelming psychic command — all enemies surrender for 10 seconds."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Mystic"
   },
   "captain-onyx": {
     "name": "Captain Onyx",
@@ -1066,7 +1122,9 @@
         "name": "Obsidian Cataclysm",
         "desc": "ULTIMATE: Rains shards of onyx frequency from above, devastating the field."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Bruiser"
   },
   "dr-tempo": {
     "name": "Dr. Tempo",
@@ -1103,7 +1161,9 @@
         "name": "Cardiac Override",
         "desc": "ULTIMATE: Takes control of every heartbeat in range, stopping enemies cold."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Mystic"
   },
   "echo-blaze": {
     "name": "Echo Blaze",
@@ -1140,7 +1200,9 @@
         "name": "Conflagration Echo",
         "desc": "ULTIMATE: A single fire attack that echoes infinitely, burning hotter each time."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "All-Rounder"
   },
   "vanta-lux": {
     "name": "Vanta Lux",
@@ -1177,7 +1239,9 @@
         "name": "Vanta Supernova",
         "desc": "ULTIMATE: Simultaneously erupts in blinding light AND absolute darkness."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Glass Cannon"
   },
   "torque-titan": {
     "name": "Torque Titan",
@@ -1214,7 +1278,9 @@
         "name": "Titan's Revolution",
         "desc": "ULTIMATE: Spins with planet-cracking force, everything in range is obliterated."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Tank"
   },
   "cipher-rae": {
     "name": "Cipher Rae",
@@ -1251,7 +1317,9 @@
         "name": "Zero-Day Exploit",
         "desc": "ULTIMATE: Finds and exploits the fatal flaw in any defense, one-shotting barriers."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Special Attacker"
   },
   "nova-kid": {
     "name": "Nova Kid",
@@ -1288,7 +1356,9 @@
         "name": "Big Bang Jr.",
         "desc": "ULTIMATE: Channels raw cosmic power for a mini Big Bang explosion."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Special Attacker"
   },
   "seraph-kairo": {
     "name": "Seraph Kairo",
@@ -1325,7 +1395,9 @@
         "name": "Heaven's Chord",
         "desc": "ULTIMATE: Broadcasts the divine frequency, healing all allies and smiting all enemies."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Assassin"
   },
   "lyric-storm": {
     "name": "Lyric Storm",
@@ -1362,7 +1434,9 @@
         "name": "Anthem Apocalypse",
         "desc": "ULTIMATE: The ultimate lyric — a world-shaking verse that rewrites the battlefield."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Assassin"
   },
   "prime-sync": {
     "name": "Prime Sync",
@@ -1399,7 +1473,9 @@
         "name": "Omega Sync",
         "desc": "ULTIMATE: Achieves perfect synchronization with reality, becoming untouchable for 8 seconds."
       }
-    ]
+    ],
+    "rarity": "Legendary",
+    "class": "Bruiser"
   },
   "zero-molly": {
     "name": "Zero Molly",
@@ -1436,7 +1512,9 @@
         "name": "Absolute Nothing",
         "desc": "ULTIMATE: Reduces everything in range to zero — zero energy, zero motion, zero resistance."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Bruiser"
   },
   "ronin-nagazaki": {
     "name": "Ronin Nagazaki",
@@ -1473,7 +1551,9 @@
         "name": "Fallen Blade",
         "desc": "ULTIMATE: A single devastating katana stroke that cuts through dimensions."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Assassin"
   },
   "emperor-j": {
     "name": "Emperor J",
@@ -1510,7 +1590,9 @@
         "name": "Empire's End",
         "desc": "ULTIMATE: Declares dominion — enemies are suppressed, allies ascend, the battlefield bows."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Bruiser"
   },
   "the-broker": {
     "name": "The Broker",
@@ -1547,7 +1629,9 @@
         "name": "Hostile Takeover",
         "desc": "ULTIMATE: Seizes control of all enemy buffs, stealing them for allies."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Mystic"
   },
   "the-spectator": {
     "name": "The Spectator",
@@ -1584,7 +1668,9 @@
         "name": "Omniscient Gaze",
         "desc": "ULTIMATE: Sees all possible futures, gaining perfect dodge for 10 seconds."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Mystic"
   },
   "lysander-coda": {
     "name": "Lysander Coda",
@@ -1621,7 +1707,9 @@
         "name": "The Last Note",
         "desc": "ULTIMATE: The concluding note of existence — an attack that ends everything."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Mystic"
   },
   "synth-09": {
     "name": "Synth-09",
@@ -1658,7 +1746,9 @@
         "name": "Total Synthesis",
         "desc": "ULTIMATE: Synthesizes the perfect counter-frequency for every enemy, neutralizing them all."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Glass Cannon"
   },
   "unit-omega": {
     "name": "Unit Omega",
@@ -1695,7 +1785,9 @@
         "name": "Omega Protocol",
         "desc": "ULTIMATE: Initiates the end sequence — an extinction-level energy release."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Tank"
   },
   "red-silence": {
     "name": "Red Silence",
@@ -1732,7 +1824,9 @@
         "name": "Absolute Silence",
         "desc": "ULTIMATE: The frequency of nothing. An expanding sphere of pure suppression that nullifies all sound, movement, and thought within range."
       }
-    ]
+    ],
+    "rarity": "Legendary",
+    "class": "Special Sweeper"
   },
   "bass-phantom": {
     "name": "Bass Phantom",
@@ -1769,7 +1863,9 @@
         "name": "Phantom's Requiem",
         "desc": "ULTIMATE: Unleashes the sound of the unseen — a bass drop that erases physical barriers."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Tank"
   },
   "echo-requiem": {
     "name": "Echo Requiem",
@@ -1806,7 +1902,9 @@
         "name": "Eternal Requiem",
         "desc": "ULTIMATE: A funeral hymn made of pure sound that brings silence eternal."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Special Sweeper"
   },
   "static-prophet": {
     "name": "Static Prophet",
@@ -1843,7 +1941,9 @@
         "name": "Revelation Static",
         "desc": "ULTIMATE: Overloads all enemies with prophetic visions, paralyzing them with knowledge."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Special Sweeper"
   },
   "tremor-king": {
     "name": "Tremor King",
@@ -1880,7 +1980,9 @@
         "name": "Continental Crush",
         "desc": "ULTIMATE: Shifts tectonic plates with authority, reshaping the entire battlefield."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Physical Sweeper"
   },
   "void-vocalist": {
     "name": "Void Vocalist",
@@ -1917,7 +2019,9 @@
         "name": "Song of Nothing",
         "desc": "ULTIMATE: Sings the universe's absence into existence — a void that swallows everything."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Glass Cannon"
   },
   "pulse-tyrant": {
     "name": "Pulse Tyrant",
@@ -1954,7 +2058,9 @@
         "name": "Dictator's Frequency",
         "desc": "ULTIMATE: Broadcasts an all-consuming pulse — obey or be destroyed."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Bruiser"
   },
   "rift-cadence": {
     "name": "Rift Cadence",
@@ -1991,7 +2097,9 @@
         "name": "Cadence Collapse",
         "desc": "ULTIMATE: The rhythm of reality breaks, collapsing all rifts into a devastating singularity."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Assassin"
   },
   "black-vinyl": {
     "name": "Black Vinyl",
@@ -2028,7 +2136,9 @@
         "name": "Broken Record",
         "desc": "ULTIMATE: Shatters into razor-sharp vinyl fragments that lacerate everything in range."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Special Sweeper"
   },
   "crescendo-wraith": {
     "name": "Crescendo Wraith",
@@ -2065,7 +2175,9 @@
         "name": "Maximum Volume",
         "desc": "ULTIMATE: The crescendo peaks — a blast of sound at 999 DB that shatters reality."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Bruiser"
   },
   "chorus-tyrant": {
     "name": "Chorus Tyrant",
@@ -2102,7 +2214,9 @@
         "name": "Voice of Tyranny",
         "desc": "ULTIMATE: The tyrant speaks — all enemies are silenced, stunned, and crushed beneath the weight of sound."
       }
-    ]
+    ],
+    "rarity": "Pseudo-Legendary",
+    "class": "Bruiser"
   },
   "final-drop": {
     "name": "Final Drop",
@@ -2139,7 +2253,9 @@
         "name": "The Final Drop",
         "desc": "ULTIMATE: The last sound before silence. Every frequency in existence converges into a single note — then nothing. Irreversible. Total annihilation."
       }
-    ]
+    ],
+    "rarity": "Legendary",
+    "class": "Bruiser"
   },
   "harmonic-abomination": {
     "name": "Harmonic Abomination",
@@ -2176,7 +2292,9 @@
         "name": "Harmonic Devastation",
         "desc": "ULTIMATE: Corrupts all harmony in range — beautiful sounds become weapons of destruction."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Bruiser"
   },
   "frequency-parasite": {
     "name": "Frequency Parasite",
@@ -2213,7 +2331,9 @@
         "name": "Total Parasitism",
         "desc": "ULTIMATE: Drains ALL frequency from ALL enemies simultaneously, feeding it to the Parasite."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Glass Cannon"
   },
   "dead-air-revenant": {
     "name": "Dead Air Revenant",
@@ -2250,7 +2370,9 @@
         "name": "Final Broadcast",
         "desc": "ULTIMATE: The last broadcast ever — a signal so powerful it overwrites all other frequencies permanently."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Mystic"
   },
   "lullaby-widow": {
     "name": "Lullaby Widow",
@@ -2287,7 +2409,9 @@
         "name": "Eternal Lullaby",
         "desc": "ULTIMATE: The final lullaby — enemies fall into a sleep from which they may never wake."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Glass Cannon"
   },
   "pulse-devourer": {
     "name": "Pulse Devourer",
@@ -2324,7 +2448,9 @@
         "name": "Infinite Hunger",
         "desc": "ULTIMATE: Devours ALL energy in range — attacks, defenses, and life force."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Physical Sweeper"
   },
   "rage-cantata": {
     "name": "Rage Cantata",
@@ -2361,7 +2487,9 @@
         "name": "Cantata of Annihilation",
         "desc": "ULTIMATE: Maximum rage — an uncontrollable explosion of pure fury energy."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Bruiser"
   },
   "silence-bishop": {
     "name": "Silence Bishop",
@@ -2398,7 +2526,9 @@
         "name": "Cathedral of Silence",
         "desc": "ULTIMATE: Erects a massive silent cathedral — all sound abilities are nullified permanently."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Mystic"
   },
   "sonic-vicar": {
     "name": "Sonic Vicar",
@@ -2435,7 +2565,9 @@
         "name": "Divine Resonance",
         "desc": "ULTIMATE: Channels the voice of the divine, annihilating impurity from the battlefield."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "static-hydra": {
     "name": "Static Hydra",
@@ -2472,7 +2604,9 @@
         "name": "Hydra Storm",
         "desc": "ULTIMATE: Grows unlimited heads, each firing electrical blasts in all directions."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "thunder-dropper": {
     "name": "Thunder Dropper",
@@ -2509,7 +2643,9 @@
         "name": "Gigavolt Havoc",
         "desc": "Ultimate: Calls down a massive lightning strike."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Tank"
   },
   "tidal-lament": {
     "name": "Tidal Lament",
@@ -2546,7 +2682,9 @@
         "name": "Tsunami Crash",
         "desc": "Ultimate: Summons a colossal wave to crush everything."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "toxic-vibrato": {
     "name": "Toxic Vibrato",
@@ -2583,7 +2721,9 @@
         "name": "Pandemic Frequency",
         "desc": "ULTIMATE: Releases a frequency that turns the air itself toxic throughout the battlefield."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "frost-echo": {
     "name": "Frost Echo",
@@ -2619,7 +2759,9 @@
         "name": "Glacial Resonance",
         "desc": "ULTIMATE: Freezes sound itself — echoes become permanent frozen structures that explode."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Fighter"
   },
   "storm-sustain": {
     "name": "Storm Sustain",
@@ -2655,7 +2797,9 @@
         "name": "Perpetual Storm",
         "desc": "ULTIMATE: Summons an unending storm — lightning, wind, and rain that never stops."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Glass Cannon"
   },
   "sand-shuffle": {
     "name": "Sand Shuffle",
@@ -2692,7 +2836,9 @@
         "name": "Sahara Surge",
         "desc": "ULTIMATE: Summons an entire desert's worth of sand in a devastating storm."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Fighter"
   },
   "ember-pulse": {
     "name": "Ember Pulse",
@@ -2729,7 +2875,9 @@
         "name": "Inferno Overload",
         "desc": "Ultimate: Engulfs the area in an unstoppable firestorm."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Fighter"
   },
   "mist-cadence": {
     "name": "Mist Cadence",
@@ -2766,7 +2914,9 @@
         "name": "Infinite Haze",
         "desc": "ULTIMATE: An impenetrable fog descends — only allies can navigate."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Glass Cannon"
   },
   "stone-resonance": {
     "name": "Stone Resonance",
@@ -2803,7 +2953,9 @@
         "name": "Gaia's Wrath",
         "desc": "Ultimate: The very ground erupts to attack your foe."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Tank"
   },
   "acid-reverie": {
     "name": "Acid Reverie",
@@ -2839,7 +2991,9 @@
         "name": "Psychedelic Meltdown",
         "desc": "ULTIMATE: Reality itself dissolves into an acid trip — enemies can't tell real from fake."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Glass Cannon"
   },
   "magma-mezzo": {
     "name": "Magma Mezzo",
@@ -2855,7 +3009,9 @@
     "spDef": 60,
     "spd": 45,
     "total": 480,
-    "moves": []
+    "moves": [],
+    "rarity": "Elite",
+    "class": "Bruiser"
   },
   "aero-aria": {
     "name": "Aero Aria",
@@ -2871,7 +3027,9 @@
     "spDef": 85,
     "spd": 120,
     "total": 470,
-    "moves": []
+    "moves": [],
+    "rarity": "Standard",
+    "class": "Assassin"
   },
   "blight-beat": {
     "name": "Blight Beat",
@@ -2887,7 +3045,9 @@
     "spDef": 80,
     "spd": 40,
     "total": 460,
-    "moves": []
+    "moves": [],
+    "rarity": "Standard",
+    "class": "Mystic"
   },
   "crystal-coda": {
     "name": "Crystal Coda",
@@ -2903,7 +3063,9 @@
     "spDef": 90,
     "spd": 40,
     "total": 475,
-    "moves": []
+    "moves": [],
+    "rarity": "Standard",
+    "class": "Special Sweeper"
   },
   "gravity-groove": {
     "name": "Gravity Groove",
@@ -2919,7 +3081,9 @@
     "spDef": 90,
     "spd": 40,
     "total": 490,
-    "moves": []
+    "moves": [],
+    "rarity": "Elite",
+    "class": "Special Sweeper"
   },
   "panic-symphony": {
     "name": "Panic Symphony",
@@ -2956,7 +3120,9 @@
         "name": "Symphony of Terror",
         "desc": "ULTIMATE: A full orchestral symphony of pure dread that breaks all enemy will."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Mystic"
   },
   "memory-static": {
     "name": "Memory Static",
@@ -2993,7 +3159,9 @@
         "name": "Total Amnesia",
         "desc": "ULTIMATE: Erases all short-term memory in range — enemies forget how to fight."
       }
-    ]
+    ],
+    "rarity": "Common",
+    "class": "Mystic"
   },
   "mirage-anthem": {
     "name": "Mirage Anthem",
@@ -3030,7 +3198,9 @@
         "name": "Anthem of Illusions",
         "desc": "ULTIMATE: The entire battlefield becomes a mirage — nothing anyone sees is real."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Mystic"
   },
   "grief-sonata": {
     "name": "Grief Sonata",
@@ -3067,7 +3237,9 @@
         "name": "Sonata of Despair",
         "desc": "ULTIMATE: A devastating symphony of grief that crushes enemy spirit entirely."
       }
-    ]
+    ],
+    "rarity": "Common",
+    "class": "Mystic"
   },
   "whisper-choir": {
     "name": "Whisper Choir",
@@ -3104,7 +3276,9 @@
         "name": "Whispered Doom",
         "desc": "ULTIMATE: A thousand whispers converge into a single word — and it breaks minds."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "Mystic"
   },
   "split-tempo": {
     "name": "Split Tempo",
@@ -3141,7 +3315,9 @@
         "name": "Temporal Schism",
         "desc": "ULTIMATE: Splits time itself — exists in two timelines simultaneously, attacking from both."
       }
-    ]
+    ],
+    "rarity": "Standard",
+    "class": "All-Rounder"
   },
   "reverb-titan": {
     "name": "Reverb Titan",
@@ -3178,7 +3354,9 @@
         "name": "Infinite Reverb",
         "desc": "ULTIMATE: An attack that never stops echoing, dealing damage forever."
       }
-    ]
+    ],
+    "rarity": "Elite",
+    "class": "Bruiser"
   },
   "maestro-noctis": {
     "name": "Maestro Noctis",
@@ -3215,7 +3393,9 @@
         "name": "Final Composition",
         "desc": "ULTIMATE: Attempts to freeze all sound in range. Effective only against civilians."
       }
-    ]
+    ],
+    "rarity": "Weak",
+    "class": "Special Attacker"
   },
   "grand-composer-veyra-hc": {
     "name": "Grand Composer Veyra",
@@ -3251,7 +3431,9 @@
         "name": "Execution Order",
         "desc": "ULTIMATE: Summons Harmonic Guards to fight on her behalf. She does not fight directly."
       }
-    ]
+    ],
+    "rarity": "Weak",
+    "class": "Special Attacker"
   },
   "the-conductor-hc": {
     "name": "The Conductor",
@@ -3288,7 +3470,9 @@
         "name": "Harmonic Suppression",
         "desc": "ULTIMATE: Activates the local Grid node to dampen all sound. Only works near Grid infrastructure."
       }
-    ]
+    ],
+    "rarity": "Common",
+    "class": "All-Rounder"
   },
   "arbiter-shen": {
     "name": "Arbiter Shen",
@@ -3325,7 +3509,9 @@
         "name": "Summary Judgment",
         "desc": "ULTIMATE: Declares the opponent guilty. Has no actual combat effect."
       }
-    ]
+    ],
+    "rarity": "Weak",
+    "class": "Special Attacker"
   },
   "warden-forte": {
     "name": "Warden Forte",
@@ -3362,7 +3548,9 @@
         "name": "Solitary Confinement",
         "desc": "ULTIMATE: Traps a weakened target in a temporary sound-null bubble. Breaks immediately against strong foes."
       }
-    ]
+    ],
+    "rarity": "Weak",
+    "class": "Fighter"
   },
   "minister-lyra": {
     "name": "Minister Lyra",
@@ -3399,7 +3587,9 @@
         "name": "Harmony is Freedom",
         "desc": "ULTIMATE: A mass-suggestion broadcast. Devastating to civilians, meaningless to trained fighters."
       }
-    ]
+    ],
+    "rarity": "Weak",
+    "class": "Special Attacker"
   },
   "auditor-kane": {
     "name": "Auditor Kane",
@@ -3436,6 +3626,8 @@
         "name": "Total Monitoring",
         "desc": "ULTIMATE: Activates the FCB surveillance network. Useful for intelligence, useless in battle."
       }
-    ]
+    ],
+    "rarity": "Weak",
+    "class": "Special Attacker"
   }
 }

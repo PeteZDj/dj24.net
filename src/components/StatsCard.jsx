@@ -55,6 +55,17 @@ export default function StatsCard({ stats }) {
   const types = stats.type || [];
   const maxStat = 255; // Pokémon-style max
 
+  const rarityStyles = {
+    'Legendary': { bg: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#fff' },
+    'Pseudo-Legendary': { bg: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', color: '#fff' },
+    'Elite': { bg: 'linear-gradient(135deg, #3b82f6, #2563eb)', color: '#fff' },
+    'Standard': { bg: 'linear-gradient(135deg, #14b8a6, #0d9488)', color: '#fff' },
+    'Common': { bg: '#6b7280', color: '#fff' },
+    'Weak': { bg: '#9ca3af', color: '#fff' },
+  };
+
+  const rs = rarityStyles[stats.rarity] || rarityStyles['Common'];
+
   return (
     <div className="stats-card-container">
       <div className="stats-header">
@@ -68,6 +79,17 @@ export default function StatsCard({ stats }) {
           ))}
           <div className="level-badge">LVL {stats.level}</div>
           <div className="power-total-badge">⚡ {total}</div>
+        </div>
+        <div className="stats-meta" style={{ marginTop: '0.4rem' }}>
+          {stats.rarity && (
+            <span className="rarity-badge" style={{
+              background: rs.bg,
+              color: rs.color
+            }}>{stats.rarity}</span>
+          )}
+          {stats.class && (
+            <span className="class-badge">{stats.class}</span>
+          )}
         </div>
       </div>
 
