@@ -14,6 +14,19 @@
 
 ---
 
+## 📚 Project Knowledge Base
+
+A full, structured, verifiable knowledge base lives in [`docs/`](docs/README.md):
+
+- **`docs/lore/`** — the dissected canon: world & science, the galaxy, factions, the DJ24 roster,
+  the canonical Sick 52, the timeline & seasons, and games & media.
+- **`docs/source/`** — faithful Markdown conversions of the original lore pages (the source of truth).
+- **`docs/CANON-NOTES.md`** — canon status, decisions, and source-vs-site discrepancies.
+
+Start at [`docs/README.md`](docs/README.md).
+
+---
+
 ## 🌍 The World of Planet Ongaku
 
 On **Planet Ongaku**, music isn't just art—it's power. The **Frequency Grid** controls reality itself, and those who master sound control the fate of the world.

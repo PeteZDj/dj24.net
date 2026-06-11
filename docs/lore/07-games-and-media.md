@@ -1,0 +1,47 @@
+# 07 · Games & Media
+
+> Sources: `source/17-the-dj24-game-universe-timeline-game-design.md`,
+> `source/16-games-from-dj24-franchise.md`, `source/12-game-djbattle-1-...md`,
+> `source/dj-battle-2025-update.md`, `source/11-...webcomic...`, `source/20-...webcomic-preview...`,
+> `source/14-...weekly-radio-show...`, `source/11-dj-battle-radio-show-mix-concept-idea.md`,
+> `source/27-...official-dj-mixes-for-character-fights.md`, `source/57-planet-ongaku-stages-...md`.
+
+## The 5-Game Franchise (one connected timeline)
+
+| Game | Era | Genre / Focus |
+| --- | --- | --- |
+| **DJ Battle** | Low-Res (Pre-HD) | Tactical rhythm combat, fighting, dojo-building, tournaments. Pure sound combat, genre-based styles. Ends when the LFO destabilizes and Scientifica tech arrives. |
+| **DJ VIP** | Early-HD | Narrative social sim; fame, corruption, industry politics; early cyber-enhancements. Ends with the Council imposing the SBS. |
+| **DJ24** | XD (start, ~10 lifecycles after HD) | Open-world cyberpunk RPG; city-building + real-time sound combat; first interdimensional breaches. The flagship. |
+| **DJ24: The Sick 52** | Mid-XD | Squad-based tactical sound combat + city-control warfare; play as DJ24 **or** the Sick 52. |
+| **Planet Ongaku** | Post-XD / Galactic | Space 4X: exploration, diplomacy, music-based civilization management. |
+
+> **DJ Battle (2025 update)** — `source/dj-battle-2025-update.md` is the largest single design doc
+> (~25k chars) and the most detailed game-design reference; treat it as the deep-dive for DJ Battle's
+> story flow and systems.
+
+## Stages & Arenas
+
+`source/57-planet-ongaku-stages-...md` lists **57 Planet Ongaku stages** intended to be turned into
+3D points / handed to an AI for level generation. This is the master location list for game levels
+(complements the site's city pages: Classic, Electric, Rock, Blue, Pop, Urban, Cloud, Rose, Hall of
+Laughter, Joke City, Clown Country, Intro: The Dream).
+
+## Media experience
+
+- **FREQ: The War of Sound (Radio Show)** — a serialized weekly podcast/radio show mixing EDM,
+  anime-style narration, and immersive soundscapes that simulate DJ24 vs. Sick 52 battles.
+  Strategy/format: `source/14-...weekly-radio-show...`, `source/11-dj-battle-radio-show-mix-concept-idea.md`.
+- **Webcomic** — ongoing bi-weekly visual storytelling that complements the radio show; creation plan
+  and the first 5–10 preview pages: `source/11-...webcomic...`, `source/20-...webcomic-preview...`.
+- **Official character-fight DJ mixes** — each major fight gets a bespoke mix defining its sound:
+  `source/27-...official-dj-mixes-for-character-fights.md`.
+- **Dual content strategy** — balancing the radio show and the comic: `source/13-balancing-the-dj-show-comic-...md`.
+
+## Design & reference notes
+
+- **Combat & military strategy:** `source/19-evolving-dj24-...full-combat-military-strategy.md`.
+- **Cyberpunk × Naruto blend** (visual/tone target): `source/25-blending-cyberpunk-naruto-...md`.
+- **Character designs (FREQ):** `source/21-character-designs-for-freq-the-war-of-sound.md`.
+- **Races of Planet Ongaku:** `source/1-races-of-planet-ongaku.md`.
+- **Reference / inspirations from other stories:** `source/10-reference-what-other-stories-use.md`.
