@@ -33,6 +33,8 @@ export default function Sidebar() {
           <li><Link to="/wiki/dj-battle-game" className={isActive('/wiki/dj-battle-game') ? 'active' : ''}>🎮 DJ Battle Game</Link></li>
           <li><Link to="/wiki/webcomic" className={isActive('/wiki/webcomic') ? 'active' : ''}>📖 Webcomic</Link></li>
           <li><Link to="/games" className={isActive('/games') ? 'active' : ''}>🕹️ All Games</Link></li>
+          <li><Link to="/wiki/dj24-the-sick-52" className={isActive('/wiki/dj24-the-sick-52') ? 'active' : ''}>↳ DJ24: The Sick 52</Link></li>
+          <li><Link to="/missions" className={isActive('/missions') ? 'active' : ''}>↳ Missions (Deck of 52)</Link></li>
         </ul>
       </div>
 
@@ -81,6 +83,9 @@ export default function Sidebar() {
         <h3 className="sidebar-heading">💀 Sick 52</h3>
         <ul>
           <li><Link to="/sick52" className={isActive('/sick52') && location.pathname === '/sick52' ? 'active' : ''}>Full Roster Gallery</Link></li>
+          <li><Link to="/sick-deck" className={isActive('/sick-deck') ? 'active' : ''}>🂡 The Sick Deck</Link></li>
+          <li><Link to="/wiki/the-sick-deck" className={isActive('/wiki/the-sick-deck') ? 'active' : ''}>↳ Deck of 52 system</Link></li>
+          <li><Link to="/missions" className={isActive('/missions') ? 'active' : ''}>↳ Bounty Missions</Link></li>
         </ul>
       </div>
 

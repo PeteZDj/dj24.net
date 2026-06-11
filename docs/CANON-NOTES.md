@@ -19,6 +19,20 @@ decisions. It is the "verifiable" layer: nothing is silently reconciled.
   stays the chaotic Maverick foil. Reflected in `content/characters/sync.md`, `general-24.md`, lore `03`.
 - **Guardian aliases** — Clear alt-names from the source's earlier roster passes are attached as
   `alias` on `dj24Roster` (shown as "Also known as", and resolvable as wiki links). See lore `04`.
+- **Deck of 52 (Sick 52)** — The 52 are dealt into **4 houses (suits)** of 13. Card-strength ladder is
+  inverted (`10` weakest → `A` strongest); every Queen is female; **A♠ = Final Drop**. Houses are
+  *enemy internal divisions*, **not** military branches. See `content/wiki/the-sick-deck.md`,
+  `sick52Suits` / `sick52Deck` in code, and the `/sick-deck` page.
+- **DJ24 military branches** — Creator decision: **Army / Navy / Airforce / Space Force belong to
+  DJ24, not the Sick 52.** They are a *combat-doctrine* axis (6 guardians each) parallel to the 6
+  strength squads, and each counters one Sick 52 house: Space Force→♠, Army→♣, Navy→♦, Airforce→♥.
+  Defined in `dj24Branches` / `dj24BranchMap`; shown on `/missions` and the game page.
+- **The game = `DJ24: The Sick 52`** — chosen as the Deck-of-52 bounty game (it already stars the Sick
+  52, Mid-XD era). Design doc `content/wiki/dj24-the-sick-52.md`; missions live data on `/missions`
+  (`storyMissions` campaign + per-card `getBounties()` tied to cities + difficulty + reward).
+- **Game folder** — The Unity project lives in repo `game/` and is **git-ignored**; the tracked
+  reference (data export + C# scripts + integration guide) lives in `docs/game/`. JSON is generated
+  from `src/contentLoader.js` via `node scripts/export-game-data.mjs`. Engine: **Unity 6000.4.8f1**.
 
 ## ⚠️ Known multi-version areas (need a creator decision)
 

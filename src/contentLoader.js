@@ -466,6 +466,95 @@ export const extendedCharacters = [
   { slug: 'unit-omega', name: 'Unit Omega', faction: 'NexaGen Harmonics', role: 'Mass-Produced Enforcer', color: 'red', rank: 'Corporate', image: '/images/extended/unit-omega.png', desc: 'The peak of NexaGen’s synthetic soldier project. No soul, only output.' },
 ];
 
+// ===== THE SICK DECK — Deck of 52 (playing-card system) =====
+// Each Sick 52 member is one card in a 4-house deck (13 per suit). Inspired by the
+// "Deck of 52" most-wanted system from Mercenaries: Playground of Destruction.
+// Houses ≈ power tiers; Ace = house boss (A♠ = Final Drop, the ultimate); every
+// Queen is female. Card-strength ladder (strongest→weakest): A, K, Q, J, 2, 3 … 10.
+export const sick52Suits = {
+  spades:   { key: 'spades',   name: 'Spades',   symbol: '♠', color: '#0F172A', house: 'The Founding Spades',    branch: 'High Command',       desc: 'The original Founding Dissonants and the ultimate mutation. The oldest, the leadership, the endgame.' },
+  hearts:   { key: 'hearts',   name: 'Hearts',   symbol: '♥', color: '#DC2626', house: 'The Choir of Hearts',    branch: 'The Dissonant Choir', desc: 'Mind, emotion and unstable experiments — they break the soul before the body.' },
+  clubs:    { key: 'clubs',    name: 'Clubs',    symbol: '♣', color: '#15803D', house: 'The War Clubs',          branch: 'The War Conductors', desc: 'Brute force and specialized combat mutants — the field generals of the underground war.' },
+  diamonds: { key: 'diamonds', name: 'Diamonds', symbol: '♦', color: '#2563EB', house: 'The Elemental Diamonds', branch: 'The Elemental Corps', desc: 'The Elemental Etudes — walking natural disasters bound to one elemental sound mutation.' },
+};
+
+// Card-strength order: 1 = strongest (Ace) … 13 = weakest (10). Pips run 2 (strong) → 10 (weak).
+export const SICK52_RANK_ORDER = { 'A': 1, 'K': 2, 'Q': 3, 'J': 4, '2': 5, '3': 6, '4': 7, '5': 8, '6': 9, '7': 10, '8': 11, '9': 12, '10': 13 };
+
+// slug -> { suit, rank }. A♠ = Final Drop (the strongest). Queens are all female.
+export const sick52Deck = {
+  // ♠ SPADES — Founding Dissonants + Final Drop
+  'final-drop': { suit: 'spades', rank: 'A' },
+  'red-silence': { suit: 'spades', rank: 'K' },
+  'hollow-aria': { suit: 'spades', rank: 'Q' },
+  'bass-phantom': { suit: 'spades', rank: 'J' },
+  'crescendo-wraith': { suit: 'spades', rank: '2' },
+  'echo-requiem': { suit: 'spades', rank: '3' },
+  'static-prophet': { suit: 'spades', rank: '4' },
+  'tremor-king': { suit: 'spades', rank: '5' },
+  'pulse-tyrant': { suit: 'spades', rank: '6' },
+  'rift-cadence': { suit: 'spades', rank: '7' },
+  'black-vinyl': { suit: 'spades', rank: '8' },
+  'sonic-vicar': { suit: 'spades', rank: '9' },
+  'nocturne-prime': { suit: 'spades', rank: '10' },
+  // ♣ CLUBS — War Conductors (+ Reverb Titan)
+  'chorus-tyrant': { suit: 'clubs', rank: 'A' },
+  'sync-destroyer': { suit: 'clubs', rank: 'K' },
+  'melody-hex': { suit: 'clubs', rank: 'Q' },
+  'glitch-monarch': { suit: 'clubs', rank: 'J' },
+  'reverb-titan': { suit: 'clubs', rank: '2' },
+  'harmony-eater': { suit: 'clubs', rank: '3' },
+  'drumline-juggernaut': { suit: 'clubs', rank: '4' },
+  'feedback-executioner': { suit: 'clubs', rank: '5' },
+  'downbeat-reaper': { suit: 'clubs', rank: '6' },
+  'overdrive-apostle': { suit: 'clubs', rank: '7' },
+  'trap-revenant': { suit: 'clubs', rank: '8' },
+  'acid-reverie': { suit: 'clubs', rank: '9' },
+  'breakbeat-marauder': { suit: 'clubs', rank: '10' },
+  // ♦ DIAMONDS — Elemental Etudes (+ Static Hydra)
+  'stone-resonance': { suit: 'diamonds', rank: 'A' },
+  'thunder-dropper': { suit: 'diamonds', rank: 'K' },
+  'tidal-lament': { suit: 'diamonds', rank: 'Q' },
+  'storm-sustain': { suit: 'diamonds', rank: 'J' },
+  'static-hydra': { suit: 'diamonds', rank: '2' },
+  'ember-pulse': { suit: 'diamonds', rank: '3' },
+  'void-tremolo': { suit: 'diamonds', rank: '4' },
+  'frost-echo': { suit: 'diamonds', rank: '5' },
+  'toxic-vibrato': { suit: 'diamonds', rank: '6' },
+  'iron-tempo': { suit: 'diamonds', rank: '7' },
+  'sand-shuffle': { suit: 'diamonds', rank: '8' },
+  'mist-cadence': { suit: 'diamonds', rank: '9' },
+  'blaze-riff': { suit: 'diamonds', rank: '10' },
+  // ♥ HEARTS — Psychological Choir (+ Prototypes)
+  'pulse-devourer': { suit: 'hearts', rank: 'A' },
+  'harmonic-abomination': { suit: 'hearts', rank: 'K' },
+  'lullaby-widow': { suit: 'hearts', rank: 'Q' },
+  'whisper-choir': { suit: 'hearts', rank: 'J' },
+  'silence-bishop': { suit: 'hearts', rank: '2' },
+  'dead-air-revenant': { suit: 'hearts', rank: '3' },
+  'frequency-parasite': { suit: 'hearts', rank: '4' },
+  'split-tempo': { suit: 'hearts', rank: '5' },
+  'rage-cantata': { suit: 'hearts', rank: '6' },
+  'mirage-anthem': { suit: 'hearts', rank: '7' },
+  'memory-static': { suit: 'hearts', rank: '8' },
+  'grief-sonata': { suit: 'hearts', rank: '9' },
+  'panic-symphony': { suit: 'hearts', rank: '10' },
+};
+
+function deckInfo(slug) {
+  const d = sick52Deck[slug];
+  if (!d) return {};
+  const suitInfo = sick52Suits[d.suit];
+  return {
+    suit: d.suit,
+    card: d.rank,
+    suitInfo,
+    suitSymbol: suitInfo.symbol,
+    cardLabel: `${d.rank}${suitInfo.symbol}`,
+    cardValue: SICK52_RANK_ORDER[d.rank], // 1 = strongest
+  };
+}
+
 // Get all characters for the index
 export function getSick52Roster() {
   return Object.entries(sick52MemberData)
@@ -477,6 +566,7 @@ export function getSick52Roster() {
         name: slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
         image: filename ? `/images/sick52/${encodeURIComponent(filename)}` : null,
         ...data,
+        ...deckInfo(slug),
         tierInfo: sick52Tiers[data.tier],
       };
     });
@@ -491,6 +581,7 @@ export function getSick52Member(slug) {
     name: slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
     image: filename ? `/images/sick52/${encodeURIComponent(filename)}` : null,
     ...data,
+    ...deckInfo(slug),
     tierInfo: sick52Tiers[data.tier],
   };
 }
@@ -502,6 +593,173 @@ export function getSick52ByTier() {
     byTier[key] = { ...info, members: roster.filter(m => m.tier === key) };
   }
   return byTier;
+}
+
+// Group the roster into the four card-houses, each ordered strongest (Ace) → weakest (10).
+export function getSick52ByHouse() {
+  const roster = getSick52Roster();
+  const byHouse = {};
+  for (const [key, info] of Object.entries(sick52Suits)) {
+    byHouse[key] = {
+      ...info,
+      members: roster.filter(m => m.suit === key).sort((a, b) => a.cardValue - b.cardValue),
+    };
+  }
+  return byHouse;
+}
+
+// Flat roster sorted by overall card strength (Aces first → 10s last).
+export function getSick52ByPower() {
+  const suitRank = { spades: 0, hearts: 1, clubs: 2, diamonds: 3 };
+  return getSick52Roster().sort((a, b) =>
+    (a.cardValue - b.cardValue) || (suitRank[a.suit] - suitRank[b.suit])
+  );
+}
+
+// ===== MISSIONS / DECK-OF-52 BOUNTY SYSTEM =====
+// Cities of Ongaku used as mission locations (slug matches /planet_ongaku/cities/<slug>).
+export const ongakuCities = {
+  intro_the_dream:  { slug: 'intro_the_dream',  name: 'Intro: The Dream' },
+  classic_city:     { slug: 'classic_city',     name: 'Classic City' },
+  blue_city:        { slug: 'blue_city',        name: 'Blue City' },
+  rock_city:        { slug: 'rock_city',        name: 'Rock City' },
+  pop_city:         { slug: 'pop_city',         name: 'Pop City' },
+  rose_city:        { slug: 'rose_city',        name: 'Rose City' },
+  urban_city:       { slug: 'urban_city',       name: 'Urban City' },
+  cloud_city:       { slug: 'cloud_city',       name: 'Cloud City' },
+  electric_city:    { slug: 'electric_city',    name: 'Electric City' },
+  hall_of_laughter: { slug: 'hall_of_laughter', name: 'Hall of Laughter' },
+  joke_city:        { slug: 'joke_city',        name: 'Joke City' },
+  clown_country:    { slug: 'clown_country',     name: 'Clown Country' },
+};
+
+// Each Sick 52 house holds territory in a set of cities (its "home turf").
+const houseCities = {
+  spades:   ['intro_the_dream', 'classic_city', 'cloud_city'],
+  clubs:    ['rock_city', 'urban_city'],
+  diamonds: ['electric_city', 'blue_city'],
+  hearts:  ['pop_city', 'rose_city', 'joke_city', 'hall_of_laughter'],
+};
+
+// Difficulty band from card strength (1 = Ace = hardest).
+function bountyDifficulty(cardValue) {
+  if (cardValue === 1) return { label: 'Apex', key: 'apex' };
+  if (cardValue <= 4)  return { label: 'Elite', key: 'elite' };
+  if (cardValue <= 7)  return { label: 'Hard', key: 'hard' };
+  if (cardValue <= 10) return { label: 'Medium', key: 'medium' };
+  return { label: 'Standard', key: 'standard' };
+}
+
+// Derive a repeatable bounty for every one of the 52 cards, grouped by house.
+// Within a house you work the ladder 10 -> ... -> 2 -> J -> Q -> K -> A.
+export function getBounties() {
+  const houses = getSick52ByHouse();
+  const result = {};
+  for (const [key, house] of Object.entries(houses)) {
+    const cities = houseCities[key] || ['classic_city'];
+    const counterBranch = Object.values(dj24Branches).find(b => b.counters === key) || null;
+    // ladder order: weakest pip (10) first -> Ace last
+    const ladder = [...house.members].sort((a, b) => b.cardValue - a.cardValue);
+    result[key] = {
+      ...house,
+      counterBranch: counterBranch || null,
+      bounties: ladder.map((m, i) => {
+        const cityKey = cities[i % cities.length];
+        return {
+          ...m,
+          city: ongakuCities[cityKey],
+          difficulty: bountyDifficulty(m.cardValue),
+          reward: (14 - m.cardValue) * 5000,
+          order: i + 1,
+        };
+      }),
+    };
+  }
+  return result;
+}
+
+// Hand-authored campaign spine — the "missions list" that threads the deck together.
+export const storyMissions = [
+  {
+    id: 'm1', act: 'Act I — First Contact', no: 1, title: 'The Dream Breaks',
+    city: 'intro_the_dream', branch: 'space-force', boss: false, targets: [],
+    objective: 'Survive the awakening and learn bass / treble combat.',
+    brief: 'A Scientifica probe trips a frequency anomaly and Sync wakes mid-alignment. Tutorial drop: learn the two-stance combat — heavy BASS for control, sharp TREBLE for speed — before the Sick 52 notice you exist.',
+    reward: 0,
+  },
+  {
+    id: 'm2', act: 'Act I — First Contact', no: 2, title: 'Working the Streets',
+    city: 'urban_city', branch: 'army', boss: false,
+    targets: ['breakbeat-marauder', 'acid-reverie'],
+    objective: 'Take down your first two bounties to open the War Clubs ladder.',
+    brief: 'Field targets first. The 10♣ and 9♣ run protection rackets out of Urban City. Clear them with the Army branch and the deck starts dealing you intel on the cards above.',
+    reward: 14000,
+  },
+  {
+    id: 'm3', act: 'Act II — The Four Houses', no: 3, title: 'Elemental Storm',
+    city: 'electric_city', branch: 'navy', boss: true,
+    targets: ['blaze-riff', 'storm-sustain'],
+    objective: 'Climb the Elemental Diamonds and break the Jack of Diamonds.',
+    brief: 'Electric City is locked under a permanent glitch-storm generated by the Diamonds. Work up from Blaze Riff (10♦) and bring Navy sub-bass pressure to ground Storm Sustain (J♦).',
+    reward: 40000,
+  },
+  {
+    id: 'm4', act: 'Act II — The Four Houses', no: 4, title: 'Mind Games',
+    city: 'joke_city', branch: 'airforce', boss: true,
+    targets: ['whisper-choir'],
+    objective: 'Resist the Choir of Hearts and silence the Jack of Hearts.',
+    brief: 'The Hearts attack your mind before your body. Run high-tempo Airforce loadouts to stay clear-headed long enough to corner Whisper Choir (J♥) before mass suggestion turns the city on you.',
+    reward: 42000,
+  },
+  {
+    id: 'm5', act: 'Act II — The Four Houses', no: 5, title: 'War Drums',
+    city: 'rock_city', branch: 'army', boss: true,
+    targets: ['glitch-monarch', 'chorus-tyrant'],
+    objective: 'Storm the War Clubs and defeat the Ace of Clubs.',
+    brief: 'Rock City is the Sick 52 war foundry. Smash through Glitch Monarch (J♣) and meet Chorus Tyrant (A♣) — the Supreme War Conductor — in the first Ace duel of the campaign.',
+    reward: 65000,
+  },
+  {
+    id: 'm6', act: 'Act III — The Joker', no: 6, title: 'Enter the Komedian',
+    city: 'hall_of_laughter', branch: 'airforce', boss: true,
+    targets: [],
+    objective: 'Escape the Joke Arena after Sync is captured.',
+    brief: 'The Joker is not part of the 52. The Komedians drag Sync to the Hall of Laughter and force him to fight for laughs. No deck rules here — survive the wildcard and break out.',
+    reward: 50000,
+  },
+  {
+    id: 'm7', act: 'Act IV — High Command', no: 7, title: 'The Void Sings',
+    city: 'cloud_city', branch: 'space-force', boss: true,
+    targets: ['hollow-aria'],
+    objective: 'Ascend Cloud City and break the Queen of Spades.',
+    brief: 'Above the clouds, Hollow Aria (Q♠) — the Void Vocalist — unwrites sound itself. Only Space Force reality-anchoring keeps your music from being erased mid-drop.',
+    reward: 70000,
+  },
+  {
+    id: 'm8', act: 'Act IV — High Command', no: 8, title: 'Red Silence',
+    city: 'classic_city', branch: 'space-force', boss: true,
+    targets: ['red-silence'],
+    objective: 'Defeat the King of Spades, founder of the Sick 52.',
+    brief: 'Classic City, where it all began. Red Silence (K♠) founded the Sick 52 out of the silenced and erased. Beating him is the last step before the deck deals its final card.',
+    reward: 90000,
+  },
+  {
+    id: 'm9', act: 'Act IV — High Command', no: 9, title: 'The Final Drop',
+    city: 'intro_the_dream', branch: 'space-force', boss: true,
+    targets: ['final-drop'],
+    objective: 'Face the Ace of Spades — the ultimate mutation.',
+    brief: 'The deck is empty but one card. Final Drop (A♠) is the war made flesh — every frequency the Sick 52 ever stole, dropped at once. Win, and Ongaku decides what silence means.',
+    reward: 250000,
+  },
+];
+
+export function getStoryMissions() {
+  return storyMissions.map(m => ({
+    ...m,
+    cityInfo: ongakuCities[m.city] || null,
+    branchInfo: m.branch ? dj24Branches[m.branch] : null,
+    targetMembers: (m.targets || []).map(slug => getSick52Member(slug)).filter(Boolean),
+  }));
 }
 
 // ===== DJ24 ACTIVE ROSTER =====
@@ -628,15 +886,73 @@ export const dj24Roster = [
   },
 ];
 
+// ===== DJ24 MILITARY BRANCHES (Army / Navy / Airforce / Space Force) =====
+// A second organizational axis, separate from the 6 strength-squads. Where the
+// squads rank the guardians by tactical authority, the four branches sort them
+// by COMBAT DOCTRINE — which is how a player fields them against the Sick 52.
+export const dj24Branches = {
+  'space-force': {
+    key: 'space-force', name: 'Space Force', icon: '🛰️', color: '#7C3AED',
+    domain: 'Reality, Time & Command',
+    desc: 'Reality-benders and architects. Time, sync and waveform-math — the branch that decides the shape of the battle before it starts.',
+    counters: 'spades',
+  },
+  army: {
+    key: 'army', name: 'Army', icon: '🪖', color: '#DC2626',
+    domain: 'Ground Assault & Percussion',
+    desc: 'Front-line shock troops. Drums, distortion and raw percussive force — they take ground and hold it.',
+    counters: 'clubs',
+  },
+  navy: {
+    key: 'navy', name: 'Navy', icon: '⚓', color: '#2563EB',
+    domain: 'Sub-Bass, Flow & Pressure',
+    desc: 'Sub-bass enforcers and flow-controllers. Pressure, compression and reversal — they drown the enemy in low end.',
+    counters: 'diamonds',
+  },
+  airforce: {
+    key: 'airforce', name: 'Airforce', icon: '✈️', color: '#06B6D4',
+    domain: 'Speed, Tempo & the Mind',
+    desc: 'High-BPM strike specialists. Speed, evasion and clean blades — they out-tempo the enemy and resist mind games.',
+    counters: 'hearts',
+  },
+};
+
+// slug -> branch key. 6 guardians per branch (24 total).
+export const dj24BranchMap = {
+  // 🛰️ Space Force — reality, time, architects
+  'general-24': 'space-force', 'sync': 'space-force', '4serj': 'space-force',
+  'dop': 'space-force', 'wboy': 'space-force', 'afrog': 'space-force',
+  // 🪖 Army — ground assault & percussion
+  'striker': 'army', 'nova': 'army', 'king-j': 'army',
+  'distort': 'army', 'mr-genge': 'army', 'breakline': 'army',
+  // ⚓ Navy — sub-bass, flow & pressure
+  'masterbass': 'navy', 'liquidb': 'navy', 'subz': 'navy',
+  'sidechain': 'navy', 'crossfade': 'navy', 'backspin': 'navy',
+  // ✈️ Airforce — speed, tempo & mind
+  'molly': 'airforce', 'ninja-nagazaki': 'airforce', 'afterimage': 'airforce',
+  'moombah': 'airforce', 'maya': 'airforce', 'ghostloop': 'airforce',
+};
+
 // ===== DJ24 ROSTER WITH IMAGES =====
 export function getDJ24Roster() {
   return dj24Roster.map(member => {
     const filename = dj24Images[member.slug];
+    const branchKey = dj24BranchMap[member.slug];
     return {
       ...member,
       image: filename ? `/images/dj24/${encodeURIComponent(filename)}` : null,
+      branch: branchKey || null,
+      branchInfo: branchKey ? dj24Branches[branchKey] : null,
     };
   });
+}
+
+export function getDJ24ByBranch() {
+  const roster = getDJ24Roster();
+  return Object.values(dj24Branches).map(branch => ({
+    ...branch,
+    members: roster.filter(m => m.branch === branch.key).sort((a, b) => a.hour - b.hour),
+  }));
 }
 
 // ===== DJ24 STRENGTH GROUPS (6 squads of 4, ordered by hour/strength) =====
@@ -753,6 +1069,25 @@ export const wikiLinkMap = {
   'sick 52': '/factions/sick52',
   'sick52': '/factions/sick52',
   'the sick 52': '/factions/sick52',
+  'the sick deck': '/wiki/the-sick-deck',
+  'sick deck': '/sick-deck',
+  'deck of 52': '/sick-deck',
+  'the deck of 52': '/sick-deck',
+  // Game & missions
+  'dj24: the sick 52': '/wiki/dj24-the-sick-52',
+  'dj24 the sick 52': '/wiki/dj24-the-sick-52',
+  'the sick 52 game': '/wiki/dj24-the-sick-52',
+  'missions': '/missions',
+  'the missions': '/missions',
+  'bounty board': '/missions',
+  'games': '/games',
+  'the games': '/games',
+  'dj24 roster': '/dj24-roster',
+  'the dj24 roster': '/dj24-roster',
+  'seasons': '/seasons',
+  'story arcs': '/seasons',
+  'season 2': '/seasons',
+  'timeline': '/timeline',
   'harmony council': '/factions/harmony-council',
   'the harmony council': '/factions/harmony-council',
   'nexagen harmonics': '/factions/nexagen',

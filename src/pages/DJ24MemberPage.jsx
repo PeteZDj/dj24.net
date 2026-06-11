@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { loadMarkdown, dj24Roster, dj24Images } from '../contentLoader';
+import { loadMarkdown, dj24Roster, dj24Images, dj24Branches, dj24BranchMap } from '../contentLoader';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import Breadcrumbs from '../components/Breadcrumbs';
 import StatsCard from '../components/StatsCard';
@@ -23,6 +23,7 @@ export default function DJ24MemberPage() {
 
   const filename = dj24Images[member.slug];
   const imageUrl = filename ? `/images/dj24/${encodeURIComponent(filename)}` : null;
+  const branch = dj24Branches[dj24BranchMap[member.slug]];
 
   const idx = dj24Roster.findIndex(m => m.slug === slug);
   const prev = idx > 0 ? dj24Roster[idx - 1] : null;
@@ -59,6 +60,9 @@ export default function DJ24MemberPage() {
                 <tr><td>Hour</td><td>{member.hour} of 24</td></tr>
                 <tr><td>Role</td><td>{member.role}</td></tr>
                 <tr><td>Squad</td><td>{member.squad}</td></tr>
+                {branch && (
+                  <tr><td>Branch</td><td><Link to="/missions" className="wiki-link">{branch.icon} {branch.name}</Link></td></tr>
+                )}
                 {member.alias && member.alias.length > 0 && (
                   <tr><td>Also known as</td><td>{member.alias.join(', ')}</td></tr>
                 )}

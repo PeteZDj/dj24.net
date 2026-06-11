@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "intro_the_dream",
+    "name": "Intro: The Dream"
+  },
+  {
+    "slug": "classic_city",
+    "name": "Classic City"
+  },
+  {
+    "slug": "blue_city",
+    "name": "Blue City"
+  },
+  {
+    "slug": "rock_city",
+    "name": "Rock City"
+  },
+  {
+    "slug": "pop_city",
+    "name": "Pop City"
+  },
+  {
+    "slug": "rose_city",
+    "name": "Rose City"
+  },
+  {
+    "slug": "urban_city",
+    "name": "Urban City"
+  },
+  {
+    "slug": "cloud_city",
+    "name": "Cloud City"
+  },
+  {
+    "slug": "electric_city",
+    "name": "Electric City"
+  },
+  {
+    "slug": "hall_of_laughter",
+    "name": "Hall of Laughter"
+  },
+  {
+    "slug": "joke_city",
+    "name": "Joke City"
+  },
+  {
+    "slug": "clown_country",
+    "name": "Clown Country"
+  }
+]

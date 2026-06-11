@@ -33,9 +33,14 @@ Cyberpunk city-building, real-time sound combat, and interdimensional warfare. P
 ---
 
 ## DJ24: The Sick 52
-**Mid-XD Era · Squad Tactics**
+**Mid-XD Era · Deck-of-52 Bounty War**
 
-City-control warfare. Play as [[DJ24]] or the [[Sick 52]] in this tactical showdown. Command squads, capture territories, and wage the war that defines a generation.
+A most-wanted **bounty war** built on the [[The Sick Deck|Deck of 52]]. Hunt all 52 enemies — dealt
+as a four-house deck — across the cities of [[Planet Ongaku]], fielding the four [[DJ24]] branches
+(Army, Navy, Airforce, Space Force). Work each house from the **10 → Ace**.
+
+→ Read the full design on **[[DJ24: The Sick 52]]** · browse the **[Missions board](/missions)** and
+the **[Sick Deck](/sick-deck)**.
 
 ---
 

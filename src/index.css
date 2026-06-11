@@ -2438,3 +2438,332 @@ a {
 .move-desc {
   color: var(--text-muted, #475569);
 }
+
+/* ===== SORT / VIEW TOOLBAR ===== */
+.sort-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin: 1rem 0 1.75rem;
+  padding: .6rem .75rem;
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: var(--radius-sm, 10px);
+}
+.sort-bar-label {
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted, #64748b);
+  margin-right: .25rem;
+}
+.sort-btn {
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: .4rem .8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border, #e2e8f0);
+  background: transparent;
+  color: var(--text, #1e293b);
+  transition: all .15s ease;
+}
+.sort-btn:hover { border-color: var(--accent, #7c3aed); }
+.sort-btn.active {
+  background: var(--accent, #7c3aed);
+  border-color: var(--accent, #7c3aed);
+  color: #fff;
+}
+.sort-btn-link {
+  margin-left: auto;
+  text-decoration: none;
+  color: var(--accent, #7c3aed);
+}
+
+/* ===== CARD PIP BADGE (on gallery thumbnails) ===== */
+.sick52-card-pip {
+  position: absolute;
+  top: .4rem;
+  right: .4rem;
+  min-width: 1.5rem;
+  padding: .12rem .35rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .94);
+  font-weight: 800;
+  font-size: .8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+}
+.sick52-card-pip .pip-suit { font-size: .9rem; }
+.pip-red { color: #DC2626; }
+.pip-dark { color: #0f172a; }
+
+/* member-page card chip */
+.deck-card-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .25rem .6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .9);
+  border: 1px solid var(--border, #e2e8f0);
+  font-weight: 700;
+  font-size: .8rem;
+}
+.deck-card-chip .pip-suit { font-size: 1rem; }
+
+/* ===== THE SICK DECK PAGE ===== */
+.deck-suit-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .6rem;
+  margin: 1.25rem 0;
+}
+.deck-suit-tab {
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .15rem;
+  padding: .7rem .5rem;
+  border-radius: 12px;
+  background: var(--bg-card, #fff);
+  border: 2px solid var(--border, #e2e8f0);
+  transition: all .15s ease;
+}
+.deck-suit-tab:hover { transform: translateY(-2px); }
+.deck-suit-tab.active {
+  border-color: var(--suit-color, #7c3aed);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+}
+.deck-suit-symbol { font-size: 1.6rem; line-height: 1; }
+.deck-suit-name { font-size: .8rem; font-weight: 700; }
+
+.deck-house { margin-top: 1rem; }
+.deck-house-header h2 { font-size: 1.5rem; margin-bottom: .25rem; }
+.deck-section-label {
+  margin: 1.5rem 0 .6rem;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted, #64748b);
+}
+.deck-row {
+  display: grid;
+  gap: .75rem;
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+}
+.deck-row-faces { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+
+/* Playing card */
+.deck-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 5 / 7;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .14);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.deck-card:hover { transform: translateY(-5px) rotate(-1deg); box-shadow: 0 12px 28px rgba(0, 0, 0, .25); }
+.deck-card-featured { border-width: 2px; border-color: #facc15; }
+.deck-card-red .deck-corner { color: #DC2626; }
+.deck-card-dark .deck-corner { color: #0f172a; }
+.deck-corner {
+  position: absolute;
+  z-index: 2;
+  font-weight: 800;
+  font-size: .8rem;
+  line-height: .85;
+  text-align: center;
+  background: rgba(255, 255, 255, .85);
+  padding: 1px 3px;
+  border-radius: 4px;
+}
+.deck-corner.tl { top: 4px; left: 4px; }
+.deck-corner.br { bottom: 28px; right: 4px; transform: rotate(180deg); }
+.deck-card-art {
+  flex: 1;
+  background: #eef2f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.deck-card-art img { width: 100%; height: 100%; object-fit: cover; }
+.deck-card-suit-big { font-size: 2.5rem; opacity: .5; }
+.deck-card-name {
+  padding: .35rem .3rem;
+  font-size: .72rem;
+  font-weight: 700;
+  text-align: center;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.deck-row-ace { grid-template-columns: minmax(150px, 200px); }
+
+.deck-joker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2.5rem 0 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--border, #cbd5e1);
+  border-radius: 12px;
+  background: var(--bg-alt, #f8fafc);
+}
+.deck-joker-symbol { font-size: 2.5rem; }
+
+@media (max-width: 600px) {
+  .deck-suit-tabs { grid-template-columns: repeat(2, 1fr); }
+  .deck-row { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); }
+}
+
+/* ===== MISSIONS / BRANCHES / BOUNTY BOARD ===== */
+.missions-page .section-title { margin-top: 2.75rem; }
+
+/* DJ24 branch cards */
+.branch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 1rem;
+}
+.branch-card {
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--branch-color, var(--accent));
+  border-radius: 14px;
+  background: var(--bg-card);
+  padding: 1.1rem 1.1rem 1rem;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+}
+.branch-card-head { display: flex; align-items: center; gap: 0.7rem; }
+.branch-card-icon { font-size: 1.9rem; line-height: 1; }
+.branch-card-head h3 { margin: 0; color: var(--branch-color, var(--text)); font-size: 1.15rem; }
+.branch-domain { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.branch-desc { font-size: 0.9rem; color: var(--text-muted); margin: 0.6rem 0 0.6rem; }
+.branch-counter {
+  font-size: 0.82rem; color: var(--text); background: var(--bg-alt);
+  border-radius: 8px; padding: 0.35rem 0.6rem; margin-bottom: 0.7rem; display: inline-block;
+}
+.branch-members { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.branch-member {
+  display: flex; align-items: center; gap: 0.35rem;
+  font-size: 0.78rem; text-decoration: none; color: var(--text);
+  background: var(--bg-alt); border-radius: 20px; padding: 0.2rem 0.6rem 0.2rem 0.2rem;
+  border: 1px solid var(--border); transition: transform 0.12s, border-color 0.12s;
+}
+.branch-member:hover { transform: translateY(-1px); border-color: var(--branch-color, var(--accent)); }
+.branch-member img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
+
+/* Branch chip (inline) */
+.branch-chip {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.75rem; font-weight: 600; color: #fff;
+  background: var(--branch-color, var(--accent));
+  border-radius: 20px; padding: 0.15rem 0.6rem; white-space: nowrap;
+}
+.branch-chip-icon { font-size: 0.85rem; }
+
+/* Story mission timeline */
+.mission-timeline { margin: 1.25rem 0; }
+.mission-act { margin-bottom: 1.5rem; }
+.mission-act-title {
+  font-size: 1.05rem; color: var(--accent); margin: 0 0 0.6rem;
+  border-bottom: 2px solid var(--border); padding-bottom: 0.35rem;
+}
+.mission-row {
+  display: flex; gap: 0.9rem; align-items: flex-start;
+  border: 1px solid var(--border); border-radius: 12px;
+  background: var(--bg-card); padding: 0.9rem 1rem; margin-bottom: 0.65rem;
+}
+.mission-row.mission-boss { border-left: 4px solid var(--accent); }
+.mission-no {
+  flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 800;
+  background: var(--text); color: #fff; font-size: 0.95rem;
+}
+.mission-boss .mission-no { background: var(--accent); }
+.mission-body { flex: 1; min-width: 0; }
+.mission-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; justify-content: space-between; }
+.mission-head h4 { margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+.boss-tag {
+  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em;
+  background: var(--accent); color: #fff; border-radius: 4px; padding: 0.1rem 0.35rem;
+}
+.mission-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+.mission-city { font-size: 0.8rem; text-decoration: none; color: var(--text-muted); }
+.mission-city:hover { color: var(--accent); }
+.mission-reward { font-size: 0.8rem; font-weight: 700; color: #15803D; }
+.mission-objective { font-size: 0.88rem; margin: 0.55rem 0 0.3rem; }
+.mission-brief { font-size: 0.86rem; color: var(--text-muted); margin: 0 0 0.5rem; }
+.mission-targets { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.mission-target {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-size: 0.78rem; text-decoration: none; color: var(--text);
+  background: var(--bg-alt); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.2rem 0.55rem;
+}
+.mission-target:hover { border-color: var(--accent); }
+.mission-target-card { font-weight: 800; }
+
+/* Bounty board */
+.bounty-house {
+  border: 1px solid var(--border); border-top: 4px solid var(--house-color, var(--accent));
+  border-radius: 14px; background: var(--bg-card); padding: 1rem 1rem 0.6rem; margin-top: 1rem;
+}
+.bounty-house-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
+.bounty-house-head h3 { margin: 0; font-size: 1.2rem; }
+.bounty-counter { font-size: 0.8rem; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.4rem; }
+.bounty-list { display: flex; flex-direction: column; gap: 0.3rem; }
+.bounty-row {
+  display: grid;
+  grid-template-columns: 34px 44px 40px 1fr auto auto auto;
+  align-items: center; gap: 0.6rem;
+  text-decoration: none; color: var(--text);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 0.35rem 0.6rem; transition: transform 0.1s, border-color 0.1s, background 0.1s;
+}
+.bounty-row:hover { transform: translateX(2px); border-color: var(--house-color, var(--accent)); background: var(--bg-alt); }
+.bounty-order { font-size: 0.75rem; color: var(--text-light); font-weight: 700; }
+.bounty-card {
+  font-weight: 800; text-align: center; border-radius: 6px; padding: 0.15rem 0;
+  border: 1px solid var(--border); font-size: 0.9rem;
+}
+.bounty-card.red { color: #DC2626; }
+.bounty-card.dark { color: #0F172A; }
+.bounty-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+.bounty-thumb-empty { display: grid; place-items: center; background: var(--bg-alt); font-size: 1.1rem; }
+.bounty-name { font-weight: 600; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bounty-city { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+.bounty-diff {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+  border-radius: 6px; padding: 0.18rem 0.5rem; white-space: nowrap;
+}
+.bounty-diff.diff-apex     { background: #7c3aed; color: #fff; }
+.bounty-diff.diff-elite    { background: #dc2626; color: #fff; }
+.bounty-diff.diff-hard     { background: #ea580c; color: #fff; }
+.bounty-diff.diff-medium   { background: #ca8a04; color: #fff; }
+.bounty-diff.diff-standard { background: #64748b; color: #fff; }
+.bounty-reward { font-size: 0.82rem; font-weight: 700; color: #15803D; white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .bounty-row { grid-template-columns: 28px 40px 36px 1fr; grid-row-gap: 0.2rem; }
+  .bounty-city, .bounty-diff, .bounty-reward { grid-column: 4; justify-self: start; }
+  .mission-head { flex-direction: column; align-items: flex-start; }
+}

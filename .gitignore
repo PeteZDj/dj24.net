@@ -28,6 +28,11 @@ images/**/*.png
 images/**/*.jpg
 images/**/*.jpeg
 
+# Unity game project — pasted in locally, never committed (huge: Library/, Temp/, etc.)
+# The tracked reference scaffolding lives in docs/game/ instead.
+# Leading slash anchors this to the repo root so docs/game/ stays tracked.
+/game/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

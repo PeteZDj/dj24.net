@@ -1,0 +1,238 @@
+[
+  {
+    "key": "space-force",
+    "name": "Space Force",
+    "icon": "🛰️",
+    "color": "#7C3AED",
+    "domain": "Reality, Time & Command",
+    "desc": "Reality-benders and architects. Time, sync and waveform-math — the branch that decides the shape of the battle before it starts.",
+    "counters": "spades",
+    "members": [
+      {
+        "slug": "general-24",
+        "name": "General 24",
+        "hour": 1,
+        "role": "Supreme Commander of Time",
+        "squad": "Prime Command Unit",
+        "image": "/images/dj24/Dj24-%20Dj24.png"
+      },
+      {
+        "slug": "sync",
+        "name": "Sync (Phantom)",
+        "hour": 2,
+        "role": "Reality Alignment Vanguard",
+        "squad": "Prime Command Unit",
+        "image": "/images/dj24/Dj24%20-%20Sync.png"
+      },
+      {
+        "slug": "4serj",
+        "name": "4Serj",
+        "hour": 12,
+        "role": "Quad-Channel Sync Architect",
+        "squad": "Control Unit",
+        "image": "/images/dj24/dj24%20-%204Serj.png"
+      },
+      {
+        "slug": "dop",
+        "name": "d.O.P",
+        "hour": 22,
+        "role": "Battlefield Sound Architect",
+        "squad": "Special Operations",
+        "image": "/images/dj24/Dj24%20-%20d.O.P.png"
+      },
+      {
+        "slug": "wboy",
+        "name": "WBoy",
+        "hour": 23,
+        "role": "Founder Frequency — The Origin Signal",
+        "squad": "Special Operations",
+        "image": "/images/dj24/Dj24%20-%20WBoy.png"
+      },
+      {
+        "slug": "afrog",
+        "name": "AfroG",
+        "hour": 24,
+        "role": "Final Drop Protocol — Planetary Failsafe",
+        "squad": "Special Operations",
+        "image": "/images/dj24/Dj24%20-%20AfroG.png"
+      }
+    ]
+  },
+  {
+    "key": "army",
+    "name": "Army",
+    "icon": "🪖",
+    "color": "#DC2626",
+    "domain": "Ground Assault & Percussion",
+    "desc": "Front-line shock troops. Drums, distortion and raw percussive force — they take ground and hold it.",
+    "counters": "clubs",
+    "members": [
+      {
+        "slug": "nova",
+        "name": "Nova",
+        "hour": 5,
+        "role": "Frequency Queen",
+        "squad": "Assault Unit",
+        "image": "/images/dj24/Dj24%20-%20Nova.png"
+      },
+      {
+        "slug": "striker",
+        "name": "Striker",
+        "hour": 6,
+        "role": "Drum God",
+        "squad": "Assault Unit",
+        "image": "/images/dj24/Dj24%20-%20Striker%202.png"
+      },
+      {
+        "slug": "king-j",
+        "name": "King J",
+        "hour": 7,
+        "role": "Royal Rhythm Commander",
+        "squad": "Assault Unit",
+        "image": "/images/dj24/Dj24%20-%20KingJ.png"
+      },
+      {
+        "slug": "breakline",
+        "name": "Breakline",
+        "hour": 14,
+        "role": "Counter-Insurgency Beat Disruptor",
+        "squad": "Shadow Operations",
+        "image": "/images/dj24/Dj24%20-%20Breakline.png"
+      },
+      {
+        "slug": "mr-genge",
+        "name": "Mr Genge",
+        "hour": 16,
+        "role": "Urban Percussion Commander",
+        "squad": "Shadow Operations",
+        "image": "/images/dj24/Dj24%20-%20Mr%20Genge.png"
+      },
+      {
+        "slug": "distort",
+        "name": "Distort",
+        "hour": 20,
+        "role": "Overload Assault",
+        "squad": "Disruption Unit",
+        "image": "/images/dj24/Dj24%20-%20Distort.png"
+      }
+    ]
+  },
+  {
+    "key": "navy",
+    "name": "Navy",
+    "icon": "⚓",
+    "color": "#2563EB",
+    "domain": "Sub-Bass, Flow & Pressure",
+    "desc": "Sub-bass enforcers and flow-controllers. Pressure, compression and reversal — they drown the enemy in low end.",
+    "counters": "diamonds",
+    "members": [
+      {
+        "slug": "masterbass",
+        "name": "MasterBass",
+        "hour": 9,
+        "role": "Sub-Frequency Enforcer",
+        "squad": "Control Unit",
+        "image": "/images/dj24/Dj24%20-%20MasterBass.png"
+      },
+      {
+        "slug": "crossfade",
+        "name": "Crossfade",
+        "hour": 10,
+        "role": "Tactical Transition Architect",
+        "squad": "Control Unit",
+        "image": "/images/dj24/Dj24%20-%20Crossfade.png"
+      },
+      {
+        "slug": "subz",
+        "name": "SubZ",
+        "hour": 11,
+        "role": "Anti-Bass Raider",
+        "squad": "Control Unit",
+        "image": "/images/dj24/Dj24%20-%20Subz.png"
+      },
+      {
+        "slug": "liquidb",
+        "name": "LiquidB",
+        "hour": 17,
+        "role": "Flow Manipulator",
+        "squad": "Disruption Unit",
+        "image": "/images/dj24/Dj24%20-%20LiquidB.png"
+      },
+      {
+        "slug": "backspin",
+        "name": "Backspin",
+        "hour": 18,
+        "role": "Reversal Specialist",
+        "squad": "Disruption Unit",
+        "image": "/images/dj24/Dj24%20-%20Backspin.png"
+      },
+      {
+        "slug": "sidechain",
+        "name": "Sidechain",
+        "hour": 19,
+        "role": "Power Compression Operator",
+        "squad": "Disruption Unit",
+        "image": "/images/dj24/Dj24%20-%20Sidechain.png"
+      }
+    ]
+  },
+  {
+    "key": "airforce",
+    "name": "Airforce",
+    "icon": "✈️",
+    "color": "#06B6D4",
+    "domain": "Speed, Tempo & the Mind",
+    "desc": "High-BPM strike specialists. Speed, evasion and clean blades — they out-tempo the enemy and resist mind games.",
+    "counters": "hearts",
+    "members": [
+      {
+        "slug": "molly",
+        "name": "Molly",
+        "hour": 3,
+        "role": "Shockwave Prima",
+        "squad": "Prime Command Unit",
+        "image": "/images/dj24/Dj24%20-%20Molly%202.png"
+      },
+      {
+        "slug": "ninja-nagazaki",
+        "name": "Ninja Nagazaki",
+        "hour": 4,
+        "role": "Silent Frequency Executioner",
+        "squad": "Prime Command Unit",
+        "image": "/images/dj24/Dj24%20-%20Ninja.png"
+      },
+      {
+        "slug": "maya",
+        "name": "Maya",
+        "hour": 8,
+        "role": "Spiritual Harmonic Manipulator",
+        "squad": "Assault Unit",
+        "image": "/images/dj24/Dj24%20-%20Maya2.png"
+      },
+      {
+        "slug": "ghostloop",
+        "name": "GhostLoop",
+        "hour": 13,
+        "role": "Psychological Warfare Specialist",
+        "squad": "Shadow Operations",
+        "image": "/images/dj24/Dj24-%20GhostLoop.png"
+      },
+      {
+        "slug": "afterimage",
+        "name": "Afterimage",
+        "hour": 15,
+        "role": "Tempo Assassin",
+        "squad": "Shadow Operations",
+        "image": "/images/dj24/Dj24%20-%20Afterimage.png"
+      },
+      {
+        "slug": "moombah",
+        "name": "Moombah",
+        "hour": 21,
+        "role": "Rhythmic Shockwave Brawler",
+        "squad": "Special Operations",
+        "image": "/images/dj24/Dj24%20-%20Moombah.png"
+      }
+    ]
+  }
+]

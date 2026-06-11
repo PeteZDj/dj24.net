@@ -20,6 +20,36 @@
 > (~25k chars) and the most detailed game-design reference; treat it as the deep-dive for DJ Battle's
 > story flow and systems.
 
+## DJ24: The Sick 52 — the Deck-of-52 build (NEW)
+
+`DJ24: The Sick 52` is the franchise's **most-wanted bounty game**, built on the
+[Deck of 52](../../content/wiki/the-sick-deck.md) system. Live pages: `/wiki/dj24-the-sick-52`,
+`/missions`, `/sick-deck`.
+
+**Core loop:** pick a Sick 52 house (suit) → work its ladder from the **10 → Ace** (lower cards are
+the higher cards' bodyguards) → field the DJ24 branch that counters that house → liberate the city.
+
+**Two organizational axes — keep them distinct:**
+
+- **Sick 52 → 4 Houses (suits):** Spades (High Command), Clubs (War Conductors), Diamonds (Elemental
+  Corps), Hearts (Dissonant Choir). These are the *enemy* divisions. *Not* military branches.
+- **DJ24 → 4 Branches:** **Space Force** (reality/time, counters ♠), **Army** (ground/percussion,
+  counters ♣), **Navy** (sub-bass/flow, counters ♦), **Airforce** (speed/mind, counters ♥). 6
+  guardians each (24 total). This is the *player's* force structure and sits beside the 6 strength
+  squads (which rank authority, not doctrine).
+
+**Combat:** two-stance (BASS area-control / TREBLE single-target); transitioning *on the beat* primes
+a combo multiplier — Sync's alignment and Crossfade's mixing become literal mechanics.
+
+**Missions:** a hand-authored campaign spine (`missions.json`) + one repeatable bounty per card
+(`bounties.json`, city + difficulty + reward). The Joker (Komedian) is a wildcard outside the deck.
+
+### Game integration kit
+The data + Unity scripts live in `docs/game/` (tracked); the Unity project itself lives in the repo's
+git-ignored `game/` folder. JSON is generated from `src/contentLoader.js` via
+`node scripts/export-game-data.mjs`, so the game can never drift from the website. Target engine:
+**Unity 6000.4.8f1**.
+
 ## Stages & Arenas
 
 `source/57-planet-ongaku-stages-...md` lists **57 Planet Ongaku stages** intended to be turned into

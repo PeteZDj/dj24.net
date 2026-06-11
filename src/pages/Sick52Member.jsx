@@ -45,6 +45,11 @@ export default function Sick52Member() {
               {member.tierInfo.name.split('—')[0].trim()}
             </span>
             <span className="sick52-member-rank">Rank #{member.rank} of 52</span>
+            {member.card && (
+              <span className={`deck-card-chip ${member.suit === 'hearts' || member.suit === 'diamonds' ? 'pip-red' : 'pip-dark'}`}>
+                {member.card}<span className="pip-suit">{member.suitSymbol}</span> · {member.suitInfo.house}
+              </span>
+            )}
           </div>
 
           <div className="sick52-member-infobox">
@@ -52,6 +57,8 @@ export default function Sick52Member() {
             <table>
               <tbody>
                 <tr><td>Rank</td><td>#{member.rank}</td></tr>
+                {member.card && <tr><td>Card</td><td><Link to="/wiki/the-sick-deck" className="wiki-link">{member.card} of {member.suitInfo.name} {member.suitSymbol}</Link></td></tr>}
+                {member.suitInfo && <tr><td>House</td><td>{member.suitInfo.house} · {member.suitInfo.branch}</td></tr>}
                 <tr><td>Tier</td><td><span style={{ color: member.tierInfo.color }}>{member.tierInfo.name}</span></td></tr>
                 <tr><td>Title</td><td>{member.title}</td></tr>
                 <tr><td>Role</td><td>{member.role}</td></tr>
