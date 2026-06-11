@@ -35,9 +35,9 @@ export const sick52MemberData = {
     desc: "A legendary percussionist who could make the planet's tectonic plates dance. He was the Council's favorite enforcer until he refused to crush a rebel jazz club. They broke his hands; he responded by learning to 'play' the earth with his footsteps. Every step he takes is a rhythmic execution.",
     prompt: "Full body anime villain, broad powerful build. Long dark brown cloak with heavy stone-textured trim and red inner lining. Thick belt sash. Hands wrapped in bandages. Boots cracked and rugged. Stance wide and grounded. Small debris floating around fists. Stern dominant expression. Cloth-focused design. Naruto war arc energy. Clean background."
   },
-  "void-vocalist": {
+  "hollow-aria": {
     rank: 6, tier: "founders", title: "Void Vocalist", role: "The Hollow Voice",
-    desc: "Once the 'Voice of Heaven,' her singing could heal physical wounds. During the Purge, the Council used a sonic vacuum to 'extract' her gift. They left her a hollow shell. Now, her voice doesn't heal; it opens rifts to the XD-Dimension, draining the life force of anything that hears her mournful notes.",
+    desc: "Once the 'Voice of Heaven,' her singing could heal any wound. During the Purge the Council used a sonic vacuum to 'extract' her gift, leaving a hollow shell. Now her voice no longer heals — it opens rifts to the XD-Dimension, draining the life force of anything that hears her mournful notes.",
     prompt: "Full body anime antagonist, feminine silhouette. Long flowing black and deep violet cloak. High collar framing face. Pale skin, long dark hair drifting in silent wind. Eyes empty black void. Hands gently open at sides. Dark mist rising from feet. Elegant and haunting. Cloth-based simplicity. Bleach Arrancar elegance. Neutral background."
   },
   "pulse-tyrant": {
@@ -60,175 +60,223 @@ export const sick52MemberData = {
     desc: "He was the master of the 'Infinite Build.' He believed music should never end, only grow. The Council feared the energy output of an infinite crescendo and tried to dampen his soul with lead-frequency blankets. It only made his internal pressure higher. In a fight, he doesn't just attack—he grows exponentially until his opponent's reality shatters.",
     prompt: "Full body anime antagonist. Extremely tall and very lean, long-limbed. Dark-skinned African descent with sharp refined Japanese facial features. Long straight black hair. Long black high-collared cloak with deep crimson interior lining, slightly frayed at hem. Eyes glowing faint crimson. Thin vertical scar across one eyebrow. Subtle upward energy distortion rising from feet. Bleach captain stance. Cinematic dramatic lighting from above. Neutral background. High detail anime style."
   },
-  "chorus-tyrant": {
-    rank: 11, tier: "founders", title: "Supreme War Conductor", role: "Field Marshal",
-    desc: "A former choir director who believed in perfect unity. The Council used his 'Unison Protocol' to mind-control the early DJ24 units. When he saw what they had done to his art, he revolted. He now leads a choir of mutated shadows, their voices overlapping into a singular, mind-shattering scream.",
-    prompt: "Full body anime main arc villain concept art. Extremely tall imposing male with mixed Japanese and African heritage. Dark skin with visible mechanical augmentation along shoulders and spine. Long straight black hair tied back. Long matte black cloak with deep emerald interior lining. Large fractured waveform crest spanning entire back. Left arm fully cybernetic with emerald vein-like engravings. Holds massive two-handed greatblade shaped like shattered soundwave arc. Upright dominant stance. Cloth-dominant. Bleach captain-level presence. Cinematic lighting. Clean neutral background."
-  },
-  "final-drop": {
-    rank: 12, tier: "founders", title: "The Demon of the Abyss", role: "The Final Hour",
-    desc: "",
-    prompt: ""
-  },
-  "harmonic-abomination": {
-    rank: 13, tier: "warConductors", title: "Flesh Architect", role: "Organic Acoustic Monster",
-    desc: "",
-    prompt: ""
-  },
-  "frequency-parasite": {
-    rank: 14, tier: "warConductors", title: "The Leech", role: "Frequency Predator",
-    desc: "",
-    prompt: ""
-  },
-  "dead-air-revenant": {
-    rank: 15, tier: "warConductors", title: "The Reanimated", role: "Radio Interference Wraith",
-    desc: "",
-    prompt: ""
-  },
-  "lullaby-widow": {
-    rank: 16, tier: "warConductors", title: "The Glass Scream", role: "Shattered Soprano",
-    desc: "",
-    prompt: ""
-  },
-  "pulse-devourer": {
-    rank: 17, tier: "warConductors", title: "The Heart-Eater", role: "Pulse Predator",
-    desc: "",
-    prompt: ""
-  },
-  "rage-cantata": {
-    rank: 18, tier: "warConductors", title: "The Combustion", role: "Pressurized Rage",
-    desc: "",
-    prompt: ""
-  },
-  "silence-bishop": {
-    rank: 19, tier: "warConductors", title: "The Zealot", role: "Anti-Sound Priest",
-    desc: "",
-    prompt: ""
-  },
   "sonic-vicar": {
-    rank: 20, tier: "warConductors", title: "The Agony-Pipe", role: "Organist of Misery",
-    desc: "A former priest of the Sacred Conservatory who went mad after seeing the Council's secret torture rooms. He decided that if the world was built on pain, the music should reflect it. He replaced his ribs with hollow brass pipes and his lungs with industrial bellows. He is a walking church organ of misery. He doesn't fight for territory; he fights to 'convert' others by forcing his agonizing 'Sermons of the Shattered Note' into their ears via high-pressure acoustic tubes.",
-    prompt: "Full body anime character. Ribs replaced by brass pipes. Cinematic industrial organ."
+    rank: 11, tier: "founders", title: "Religious Manipulator of Sound Doctrine", role: "The Doctrine of Pain",
+    desc: "A former High Priest of the Sacred Conservatory who turned the Council's own scripture against it. He preaches that sound is the only true god and that suffering is its purest hymn. He replaced his ribs with hollow brass pipes and his lungs with industrial bellows, broadcasting agonizing 'Sermons of the Shattered Note' that convert congregations by force.",
+    prompt: "Full body anime antagonist. Tall priestly figure, ribs replaced by brass organ pipes, black-and-crimson clerical cloak, swinging a censer of sound. Cinematic industrial-cathedral lighting. Clean background. High detail anime style."
   },
-  "static-hydra": {
-    rank: 21, tier: "warConductors", title: "The Multi-Glitch", role: "Tri-Temporal Horror",
-    desc: "",
-    prompt: ""
+  "nocturne-prime": {
+    rank: 12, tier: "founders", title: "Night-Frequency Specialist", role: "Lord of the Nocturne",
+    desc: "Keeper of the Nocturne — the forbidden night-frequencies the Single Beat System outlawed for inducing dreams the Council could not monitor. Exiled for playing after curfew, he became one with the dark register. Beneath his low, velvet lullaby entire districts fall into a waking sleep while he moves through them unseen and unopposed.",
+    prompt: "Full body anime antagonist. Elegant tall figure in a midnight-black cloak lined with deep indigo, crescent-moon sound crest, faint starlight motes drifting around him. Calm nocturnal menace. Cinematic moonlit lighting. Clean background. High detail anime style."
   },
-  "thunder-dropper": {
-    rank: 22, tier: "warConductors", title: "The Gravity-Crush", role: "Sub-Atomic Drummer",
-    desc: "A giant of a man who was used by the Council to test 'Atmospheric Bass-Bombs.' The tests permanently altered his density. He weighs six tons, but sound waves keep him upright. He uses a pair of massive, gravity-well gauntlets to 'drop the floor.' When he strikes the ground, he doesn't just make a noise—he creates a localized gravity collapse that pulls enemies into the earth, crushing them into a compact, silent mass of meat and metal.",
-    prompt: "Full body anime villain. Massive build, gravity-well gauntlets. Cinematic heavy enforcer."
+
+  // ===== TIER II — THE WAR CONDUCTORS (13–24) =====
+  "breakbeat-marauder": {
+    rank: 13, tier: "warConductors", title: "The Broken-Beat Raider", role: "Underground Raid Commander",
+    desc: "A battle-drummer of the old Sonic Order who weaponized the broken beat. He leads lightning raids on Council sound-towers, shattering disciplined rhythm-formations with chaotic syncopation before the enemy can form a line. Where his breakbeat lands, order falls apart.",
+    prompt: "Full body anime villain, lean and armored, dual break-blades, emerald-lined black raider coat, fractured beat-glyphs in the air. Cinematic raid lighting. Clean background. High detail anime style."
+  },
+  "acid-reverie": {
+    rank: 14, tier: "warConductors", title: "The Solvent", role: "Acid Conductor",
+    desc: "A chemist obsessed with the 'pH of Sound' who was thrown into a waste-treatment vat and became the solvent. A melting, translucent-green horror whose acidic vibrato dissolves instruments, armor and hands into a single agonizing pool of slag.",
+    prompt: "Full body anime villain. Melting translucent-green horror dripping acid, emerald undertones. Cinematic dissolve. Clean background. High detail anime style."
+  },
+  "trap-revenant": {
+    rank: 15, tier: "warConductors", title: "The Ensnarer", role: "Sonic Trapper",
+    desc: "Returned from a Council execution wired into a trap-music feedback loop, he lays sonic snares across the battlefield — hi-hat mines and 808 sinkholes. Slow, patient, inevitable; he never chases, he traps.",
+    prompt: "Full body anime villain. Gaunt revenant trailing rattling hi-hat chains and bass-trap rings, emerald glow. Cinematic ambush lighting. Clean background. High detail anime style."
+  },
+  "drumline-juggernaut": {
+    rank: 16, tier: "warConductors", title: "The Marching Wall", role: "Percussion Juggernaut",
+    desc: "A former marching-corps captain reinforced into a living drumline. Each thunderous step is a coordinated war-cadence that flattens formations and crumbles cover. He does not break stride for anything.",
+    prompt: "Full body anime villain. Massive armored juggernaut strapped with war-drums, emerald-lit cadence shockwaves. Cinematic heavy enforcer. Clean background. High detail anime style."
+  },
+  "feedback-executioner": {
+    rank: 17, tier: "warConductors", title: "The Screaming Edge", role: "Feedback Executioner",
+    desc: "He stands silent until the enemy makes a sound, then folds every frequency back on itself into a screaming feedback spike that ruptures eardrums and detonates equipment. The louder you are, the faster you die.",
+    prompt: "Full body anime villain. Executioner wielding a feedback-greatsword wreathed in howling soundwaves, emerald cloak. Cinematic execution lighting. Clean background. High detail anime style."
+  },
+  "melody-hex": {
+    rank: 18, tier: "warConductors", title: "The Cursed Composer", role: "Hex-Melody Weaver",
+    desc: "Every tune she writes is a hex — a catchy, inescapable phrase that loops in the victim's mind, slowly rewriting their loyalties or stopping their heart on the final bar. Humming along is already too late.",
+    prompt: "Full body anime villainess. Composer trailing glowing cursed staff-notation, emerald hex-sigils, black-and-green sorceress cloak. Cinematic occult lighting. Clean background. High detail anime style."
+  },
+  "overdrive-apostle": {
+    rank: 19, tier: "warConductors", title: "Saint of Distortion", role: "Overdrive Preacher",
+    desc: "A preacher who believes clean sound is a lie. He overdrives his own body past safe limits — a saint of clipping and saturation whose sermons melt speakers and overload the nervous systems of the faithful and the damned alike.",
+    prompt: "Full body anime villain. Zealot preacher crackling with overdriven distortion energy, emerald-and-black vestments, blown-speaker halo. Cinematic sermon lighting. Clean background. High detail anime style."
+  },
+  "glitch-monarch": {
+    rank: 20, tier: "warConductors", title: "King of Corrupted Sound", role: "Glitch Sovereign",
+    desc: "The self-crowned king of the broken data between stations. He stutters reality, freezing and skipping his enemies like a damaged record, reigning over the no-go zones the Council's signal can no longer reach.",
+    prompt: "Full body anime villain. Regal figure flickering with datamosh glitches and pixel-shatter, emerald corrupted crown. Cinematic throne-room lighting. Clean background. High detail anime style."
+  },
+  "harmony-eater": {
+    rank: 21, tier: "warConductors", title: "The Devourer of Concord", role: "Harmony Predator",
+    desc: "He feeds on the resonance of others' music, growing stronger as the battlefield falls silent and out of tune. The more beautiful the sound around him, the hungrier — and the more monstrous — he becomes.",
+    prompt: "Full body anime villain. Hulking maw-chested devourer inhaling glowing harmony-threads, emerald hunger-aura. Cinematic horror lighting. Clean background. High detail anime style."
+  },
+  "downbeat-reaper": {
+    rank: 22, tier: "warConductors", title: "Death on the One", role: "Rhythmic Executioner",
+    desc: "A scythe-wielder who strikes only on the downbeat. He counts his victims in bars, and when the measure resolves, so do they. You can always hear him coming — that is the cruelty of it.",
+    prompt: "Full body anime villain. Cloaked reaper with a metronome-scythe, emerald beat-pulse rings, hood shadowing the face. Cinematic ominous lighting. Clean background. High detail anime style."
+  },
+  "sync-destroyer": {
+    rank: 23, tier: "warConductors", title: "The Anti-Sync", role: "Synchronization Breaker",
+    desc: "Built to hunt the Syncopate. He severs synchronization — between allies, between mind and body, between a fighter and the beat itself. In his presence coordinated units fall apart and even Sync's alignment begins to fray.",
+    prompt: "Full body anime villain. Sharp anti-hero counterpart to Sync, asymmetrical black-emerald combat coat, desync glitch-fractures around him. Cinematic rival lighting. Clean background. High detail anime style."
+  },
+  "chorus-tyrant": {
+    rank: 24, tier: "warConductors", title: "Supreme War Conductor", role: "Field Marshal",
+    desc: "A former choir director who believed in perfect unity. The Council used his 'Unison Protocol' to mind-control the early DJ24 units. When he saw what they had done to his art, he revolted. He now leads a choir of mutated shadows whose overlapping voices form a single, mind-shattering scream.",
+    prompt: "Full body anime main arc villain concept art. Extremely tall imposing male with mixed Japanese and African heritage. Dark skin with mechanical augmentation along shoulders and spine. Long black hair tied back. Matte black cloak with deep emerald interior lining. Fractured waveform crest across the back. Left arm fully cybernetic with emerald engravings. Massive two-handed greatblade shaped like a shattered soundwave. Cinematic lighting. Clean neutral background."
+  },
+
+  // ===== TIER III — THE ELEMENTAL ETUDES (25–36) =====
+  "blaze-riff": {
+    rank: 25, tier: "elementals", title: "The Firestorm Solo", role: "Fire Mutation",
+    desc: "A guitarist whose riffs ignite the air. Every shredded note trails flame; his solos become firestorms, raising the temperature of a room until instruments warp and enemies cook inside their own armor.",
+    prompt: "Full body anime villain. Wild guitarist wielding a flaming axe-guitar, molten-orange riffs trailing fire, cobalt-blue underlight. Cinematic inferno lighting. Clean background. High detail anime style."
+  },
+  "stone-resonance": {
+    rank: 26, tier: "elementals", title: "The Obsidian Behemoth", role: "Stone Mutation",
+    desc: "A miner who merged with sound-sensitive quartz; a ten-foot behemoth of jagged obsidian and glowing blue crystal whose grinding stone plates emit a subsonic frequency that liquefies the earth.",
+    prompt: "Full body anime villain. Ten-foot obsidian-and-blue-crystal behemoth, grinding stone plates. Cinematic colossus."
   },
   "tidal-lament": {
-    rank: 23, tier: "warConductors", title: "The Drowner", role: "Oscillating Fluid Monster",
-    desc: "A 'Water-Acoustician' from the Intro-Dream era. She was exiled to the desert wastes of Ongaku, where she nearly died of thirst. She survived by learning to condense the moisture in the air using high-frequency vibration. She now travels inside a floating sphere of 'Sonic Water'—liquid that is kept in a state of permanent, violent oscillation. She 'drowns' her victims by forcing this vibrating water into their lungs, where the frequency tears them apart from the inside out.",
-    prompt: "Full body anime antagonist. Floating inside oscillating water sphere. Cinematic water horror."
+    rank: 27, tier: "elementals", title: "The Drowner", role: "Oscillating Fluid Monster",
+    desc: "A water-acoustician who travels inside a floating sphere of violently oscillating 'sonic water,' drowning victims by forcing the vibrating liquid into their lungs until they tear apart from within.",
+    prompt: "Full body anime antagonist. Floating inside oscillating water sphere, cobalt-blue glow. Cinematic water horror."
+  },
+  "iron-tempo": {
+    rank: 28, tier: "elementals", title: "The Industrial Beat", role: "Metal Mutation",
+    desc: "A blacksmith-drummer whose tempo magnetizes and commands metal. To his relentless industrial beat, shards of iron march, blades bend, and the enemy's own weapons turn against them.",
+    prompt: "Full body anime villain. Towering blacksmith-drummer ringed with floating iron shards and chains, cobalt-blue magnetic arcs. Cinematic forge lighting. Clean background. High detail anime style."
+  },
+  "thunder-dropper": {
+    rank: 29, tier: "elementals", title: "The Gravity-Crush", role: "Sub-Atomic Drummer",
+    desc: "A six-ton giant fitted with gravity-well gauntlets who 'drops the floor,' collapsing local gravity to crush enemies into the earth as a silent mass of meat and metal.",
+    prompt: "Full body anime villain. Massive build, gravity-well gauntlets, cobalt-blue shock-rings. Cinematic heavy enforcer."
+  },
+  "frost-echo": {
+    rank: 30, tier: "elementals", title: "Absolute Zero", role: "Ice Mutation",
+    desc: "He replaced his blood with liquid nitrogen after the Council froze his family; a jagged translucent-blue monster who freezes the air so brittle that a snap of his fingers shatters the atmosphere.",
+    prompt: "Full body anime villain. Jagged translucent blue ice-monster exhaling absolute cold, cobalt aura. Cinematic frost horror."
+  },
+  "sand-shuffle": {
+    rank: 31, tier: "elementals", title: "Granular Synthesis", role: "Sand Mutation",
+    desc: "An archaeologist buried alive in vibration-sand who learned to vibrate his cells into a granular state; a shifting mass of abrasive sound-sand that slips through any defense and grinds organs into dry silt.",
+    prompt: "Full body anime villain. Shifting figure of abrasive sound-sand, cobalt-blue glow at the seams. Cinematic granular horror."
   },
   "toxic-vibrato": {
-    rank: 32, tier: "founders", title: "Venomous Corruption", role: "Poison Mutation",
-    desc: "",
-    prompt: ""
+    rank: 32, tier: "elementals", title: "Chemical Resonance", role: "Poison Mutation",
+    desc: "A chemist who survived an acid execution by vibrating his body to neutralize it, scarring his skin into a shifting liquid state; he emits a constant shimmer-sound that dissolves any material it touches.",
+    prompt: "Full body anime villain. Figure of shifting liquid-scarred skin emitting a dissolving shimmer, cobalt-blue glow. Cinematic toxic horror."
   },
   "storm-sustain": {
-    rank: 33, tier: "founders", title: "Hurricane Incarnate", role: "Wind Mutation",
-    desc: "",
-    prompt: ""
+    rank: 33, tier: "elementals", title: "Hurricane Incarnate", role: "Lightning Mutation",
+    desc: "Struck by a solar-frequency bolt and charred into conductive carbon, he is a living capacitor who sewed copper wire through his muscles to sustain a million-volt current.",
+    prompt: "Full body anime villain. Blackened body wreathed in cobalt-blue lightning, copper-wired muscles. Cinematic storm titan."
   },
   "ember-pulse": {
-    rank: 34, tier: "founders", title: "Volcanic Core Mutation", role: "Magma Mutation",
-    desc: "",
-    prompt: ""
+    rank: 34, tier: "elementals", title: "Volcanic Core", role: "Magma Mutation",
+    desc: "A human battery kept in perpetual near-combustion who finally synced with the fire; a charred, glowing entity with a core of white-hot plasma pulsing at a 140 BPM kick-drum.",
+    prompt: "Full body anime villain. Charred figure with a glowing plasma core, magma cracks, cobalt-blue accents. Cinematic ember horror."
   },
   "mist-cadence": {
-    rank: 35, tier: "founders", title: "Phantom Vapor Form", role: "Illusion Mutation",
-    desc: "",
-    prompt: ""
+    rank: 35, tier: "elementals", title: "Phantom Vapor", role: "Gas Mutation",
+    desc: "A perfumer-therapist locked in with her own toxic gas who learned to vibrate it to her frequency; a semi-liquid neon-blue phantom who drifts into the mind and vibrates memories into beautiful nightmares.",
+    prompt: "Full body anime villain. Semi-liquid neon-blue mist-phantom smelling of ozone and rot. Cinematic vapor wraith."
   },
   "void-tremolo": {
-    rank: 36, tier: "founders", title: "Abyssal Mutation", role: "Dark Element",
-    desc: "",
-    prompt: ""
+    rank: 36, tier: "elementals", title: "The Shivering Absence", role: "Void Mutation",
+    desc: "A tremolo of pure absence. His vibrating dark-frequency eats light and matter at the edges — a shivering void that flickers between existence and nothing, unraveling whatever it touches one oscillation at a time.",
+    prompt: "Full body anime villain. Flickering figure of vibrating darkness devouring light at its edges, cobalt-blue void shimmer. Cinematic abyssal lighting. Clean background. High detail anime style."
   },
+
+  // ===== TIER IV — THE PSYCHOLOGICAL CHOIR (37–44) =====
   "lullaby-widow": {
-    rank: 37, tier: "founders", title: "Induced Sleep Paralysis", role: "The Sandwoman",
-    desc: "",
-    prompt: ""
+    rank: 37, tier: "psychological", title: "Induced Sleep Paralysis", role: "The Sandwoman",
+    desc: "A jawless soprano who grafted the shards of broken instruments into her throat. Her lullaby drops victims into waking sleep-paralysis — conscious, frozen, and unable to scream as the glass in her voice cuts through armor and bone.",
+    prompt: "Full body anime villainess. Elegant soprano with glass shards fused into a ruined throat, white-and-black mourning veil, drifting dream-motes. Cinematic eerie lighting. Clean background. High detail anime style."
   },
   "panic-symphony": {
-    rank: 38, tier: "founders", title: "Fear Frequency Conductor", role: "The Dread",
-    desc: "",
-    prompt: ""
+    rank: 38, tier: "psychological", title: "Fear Frequency Conductor", role: "The Dread",
+    desc: "He conducts an orchestra of pure terror, tuning each note to the exact pitch of his victims' deepest fears. A single bar can empty a battlefield as soldiers flee horrors only they can hear.",
+    prompt: "Full body anime villain. Gaunt conductor in white-and-black robes raising a baton of pure dread, pale fear-aura. Cinematic psychological horror."
   },
   "memory-static": {
-    rank: 39, tier: "founders", title: "Recollection Corruptor", role: "The Glitch",
-    desc: "",
-    prompt: ""
+    rank: 39, tier: "psychological", title: "Recollection Corruptor", role: "The Glitch",
+    desc: "His sound scrambles short-term memory into white noise. Enemies forget why they came, who they fight and which side they're on, looping through one broken moment until he lets them go.",
+    prompt: "Full body anime villain. Flickering figure in white robes shedding fragments of stolen memory, glitch-static aura. Cinematic mind horror."
   },
   "mirage-anthem": {
-    rank: 40, tier: "founders", title: "Illusion Projection", role: "The Phantom",
-    desc: "",
-    prompt: ""
+    rank: 40, tier: "psychological", title: "Illusion Projection", role: "The Phantom",
+    desc: "A composer of false realities whose anthems paint armies, walls and monsters out of thin air, turning the battlefield into a stage where nothing the eye sees can be trusted.",
+    prompt: "Full body anime villain. Phantom conductor projecting translucent illusory armies, white robes, shimmering mirage aura. Cinematic illusion."
   },
   "grief-sonata": {
-    rank: 41, tier: "founders", title: "Emotional Drain", role: "The Mourner",
-    desc: "",
-    prompt: ""
+    rank: 41, tier: "psychological", title: "Emotional Drain", role: "The Mourner",
+    desc: "Her sonata plays back every loss the listener has ever known, all at once. Warriors lay down their weapons and weep, drained of the will to fight by a sorrow that is not their own.",
+    prompt: "Full body anime villain. Veiled mourner playing a sorrowful instrument, white funereal robes, draining grey aura. Cinematic melancholy."
   },
   "rage-cantata": {
-    rank: 42, tier: "founders", title: "Berserk Inducer", role: "The Fury",
-    desc: "",
-    prompt: ""
+    rank: 42, tier: "psychological", title: "Induces Berserk States", role: "The Fury",
+    desc: "His cantata floods the listener with uncontrollable rage, turning disciplined soldiers into frothing berserkers who turn on each other. He simply conducts — and lets the slaughter compose itself.",
+    prompt: "Full body anime villain. Manic conductor wreathed in red-hot rage-frequencies over white-and-black robes. Cinematic fury lighting. Clean background. High detail anime style."
   },
   "whisper-choir": {
-    rank: 43, tier: "founders", title: "Mass Suggestion Architect", role: "The Puppeteer",
-    desc: "",
-    prompt: ""
+    rank: 43, tier: "psychological", title: "Mass Suggestion Architect", role: "The Puppeteer",
+    desc: "A choir of overlapping whispers that slips suggestions beneath conscious thought. Whole crowds move to his command, each certain the orders were their own idea.",
+    prompt: "Full body anime villain. Robed figure surrounded by spectral whispering mouths, white-and-black vestments. Cinematic puppeteer."
   },
   "silence-bishop": {
-    rank: 44, tier: "founders", title: "Area-Wide Sound Nullification", role: "The Void",
-    desc: "",
-    prompt: ""
+    rank: 44, tier: "psychological", title: "Area-Wide Sound Nullification", role: "The Void Priest",
+    desc: "A self-blinded, self-silenced zealot who wields a 'Censer of De-Resolution,' deleting all sound within a fifty-meter radius as he 'cleans' the world of the filth of music.",
+    prompt: "Full body anime villain. Blind priest with silver-wired lips swinging an anti-sound censer, white-and-black robes, dead-silent aura. Cinematic cult lighting. Clean background. High detail anime style."
   },
+
+  // ===== TIER V — THE MUTATED PROTOTYPES (45–52) =====
   "split-tempo": {
-    rank: 45, tier: "founders", title: "Dual-Body Combatant", role: "The Divided",
-    desc: "",
-    prompt: ""
+    rank: 45, tier: "prototypes", title: "Dual-Body Combatant", role: "The Divided",
+    desc: "A prototype split across two synchronized bodies that strike on alternating beats — an unending call-and-response no single opponent can answer.",
+    prompt: "Full body anime villain. Two mirrored synchronized bodies attacking on offbeats, violet split aura. Cinematic dual combatant."
   },
   "frequency-parasite": {
-    rank: 46, tier: "founders", title: "Feeds on Music Energy", role: "The Leech",
-    desc: "",
-    prompt: ""
+    rank: 46, tier: "prototypes", title: "Feeds on Music Energy", role: "The Leech",
+    desc: "A host for interdimensional sound-leeches who eats the rhythm of others, leaving them brain-dead husks that can no longer perceive the passage of time.",
+    prompt: "Full body anime villain. Gaunt host riddled with bioluminescent leeches and sensor-eyes, violet glow. Cinematic parasite horror."
   },
   "harmonic-abomination": {
-    rank: 47, tier: "founders", title: "Multi-Genre Hybrid", role: "The Fusion",
-    desc: "",
-    prompt: ""
+    rank: 47, tier: "prototypes", title: "Multi-Genre Hybrid", role: "The Fusion",
+    desc: "A mass of twitching, singing flesh grafted from a hundred stolen voices and a dozen clashing genres, he conducts dissonant choirs straight from his own mutated body.",
+    prompt: "Full body anime villain. Towering mass of grafted flesh and stitched vocal cords, violet mutation glow. Cinematic body-horror conductor."
   },
   "pulse-devourer": {
-    rank: 48, tier: "founders", title: "Absorbs DJ Attacks", role: "The Counter",
-    desc: "",
-    prompt: ""
+    rank: 48, tier: "prototypes", title: "Absorbs DJ Attacks", role: "The Counter",
+    desc: "He tethers his heartbeat to his enemies and absorbs their sonic attacks, accelerating the tempo until their hearts burst from sympathetic resonance, drumming endlessly on his exposed chest cavity.",
+    prompt: "Full body anime villain. Exposed vibrating chest cavity, drumming hands, violet absorption aura. Cinematic predator."
   },
   "dead-air-revenant": {
-    rank: 49, tier: "founders", title: "Erases Sound Zones", role: "The Eraser",
-    desc: "",
-    prompt: ""
+    rank: 49, tier: "prototypes", title: "Erases Sound Zones", role: "The Eraser",
+    desc: "Killed in the first Purge and reanimated by static scripting itself into his decaying neurons, he is a creature of pure radio-interference who erases all sound in a zone and is obsessed with 'completing the signal.'",
+    prompt: "Full body anime villain. Decaying corpse wreathed in radio static and transmitter antennae, violet dead-air glow. Cinematic glitch wraith."
   },
   "reverb-titan": {
-    rank: 50, tier: "founders", title: "Amplifies All Damage", role: "The Echoing Mountain",
-    desc: "",
-    prompt: ""
+    rank: 50, tier: "prototypes", title: "Amplifies All Damage", role: "The Echoing Mountain",
+    desc: "A living amplifier who echoes every blow back tenfold. The longer a battle rages, the louder and more unstoppable he becomes, until the air itself caves in.",
+    prompt: "Full body anime villain. Mountainous armored figure ringed with stacked speaker-cones, violet glow. Cinematic colossus."
   },
   "static-hydra": {
-    rank: 51, tier: "founders", title: "Multi-Headed Echo Form", role: "The Hydra",
-    desc: "",
-    prompt: ""
+    rank: 51, tier: "prototypes", title: "Multi-Headed Echo Form", role: "The Hydra",
+    desc: "Split across three timelines by a teleportation accident, a flickering three-headed horror whose subsonic, ultrasonic and audible heads overlap into an organ-liquefying Tri-Tone Collapse.",
+    prompt: "Full body anime villain. Flickering three-headed figure phasing across timelines, violet distortion. Cinematic glitch horror."
   },
   "final-drop": {
-    rank: 52, tier: "founders", title: "The Ultimate Mutation", role: "The End",
-    desc: "",
-    prompt: ""
+    rank: 52, tier: "prototypes", title: "The Ultimate Mutation", role: "The End",
+    desc: "The Sick 52's ultimate success and final hour. After decades chasing the 'Primal Note,' he injected the Pure Void of the XD-Dimension into his own heart and transcended humanity. His skin drinks light, skeletal wings carry him in total silence, and a prehensile tail tipped with absolute zero freezes time on contact. The Demon of the Abyss views all existence as a bad song he was born to end.",
+    prompt: "Full body anime final-boss concept art. Towering demon with light-eating matte-black skin, skeletal wings, a prehensile absolute-zero stinger-tail, violet void aura. Cinematic apocalyptic lighting. Clean background. High detail anime style."
   },
 };
 
@@ -238,7 +286,7 @@ export const previousSick52MemberData = {
   "echo-requiem": "A prodigy of the Dual-Tone Era. He believed music was a conversation, not a command. The Council called this heresy. They trapped him in a room of infinite mirrors for a decade. He didn't go mad; he just learned to talk to his reflections so well that they stepped out of the glass to fight for him.",
   "static-prophet": "The first to predict the 'Collapse.' He claimed the Frequency Grid was a cage, not a shield. The Council labeled him 'Distorted' and threw him into the white-noise wastes. He survived by eating the radio interference of the stars. Now, he sees the future in the static between stations.",
   "tremor-king": "A legendary percussionist who could make the planet's tectonic plates dance. He was the Council's favorite enforcer until he refused to crush a rebel jazz club. They broke his hands; he responded by learning to 'play' the earth with his footsteps. Every step he takes is a rhythmic execution.",
-  "void-vocalist": "Once the 'Voice of Heaven,' her singing could heal physical wounds. During the Purge, the Council used a sonic vacuum to 'extract' her gift. They left her a hollow shell. Now, her voice doesn't heal; it opens rifts to the XD-Dimension, draining the life force of anything that hears her mournful notes.",
+  "hollow-aria": "Once the 'Voice of Heaven,' her singing could heal physical wounds. During the Purge, the Council used a sonic vacuum to 'extract' her gift. They left her a hollow shell. Now, her voice doesn't heal; it opens rifts to the XD-Dimension, draining the life force of anything that hears her mournful notes.",
   "pulse-tyrant": "A master of physiological tempo. He used to regulate the biological rhythms of Ongaku's citizens to ensure health. The Council weaponized his research into the 'Single Beat System' and then discarded him. He now controls the heartbeats of his enemies, forcing them to sync with his own murderous BPM.",
   "rift-cadence": "A theorist of 'Invisible Intervals.' He discovered that sound has 'gaps' where time doesn't exist. He was exiled for trying to teach others how to hide in these gaps. Now, he exists between the ticks of the clock, appearing and disappearing mid-measure like a ghost in the machine.",
   "black-vinyl": "The Order's historian. He kept the 'Master Records' of Ongaku's history. When the Council began rewriting history to favor the SBS, he tried to hide the true records. They burned his library and scarred his mind. Now, he uses sound to 'scratch' the memories of others, deleting their past just as his was deleted.",
@@ -288,41 +336,63 @@ export const previousSick52MemberData = {
 };
 // ===== SICK52 IMAGE MAPPING =====
 export const sick52Images = {
+  // Tier I — The Founding Dissonants (1–12)
   'red-silence': 'Sick52- Red Silence.png',
   'bass-phantom': 'Sick52- Bass Phantom.png',
   'echo-requiem': 'Sick52- Echo Requiem.png',
   'static-prophet': 'Sick52 - Static Prophet.png',
   'tremor-king': 'Sick52 - Tremor King.png',
-  'void-vocalist': 'Sick52 - Void Vocalist.png',
+  'hollow-aria': 'Sick52 - Void Vocalist.png',
   'pulse-tyrant': 'Sick52 Pulse Tyrant.png',
   'rift-cadence': 'Sick52 - Rift Cadence.png',
   'black-vinyl': 'Sick52 - Black Vinyl.png',
   'crescendo-wraith': 'Sick52 - Crecendo Wraith.png',
-  'chorus-tyrant': 'Sick52 - Chorus Tyrant.png',
-  'final-drop': 'Sick52 - Final Drop .png',
-  'harmonic-abomination': 'Sick52 - Harmonic Abomination .png',
-  'frequency-parasite': 'Sick52 - Frequency Parasite.png',
-  'dead-air-revenant': 'Sick52 - Dead Air Revenant .png',
-  'lullaby-widow': 'Sick52 - Lullaby Widow .png',
-  'pulse-devourer': 'Sick52 - Pulse Devourer.png',
-  'rage-cantata': 'Sick52 - Rage Cantata .png',
-  'silence-bishop': 'Sick52 - Silence Bishop.png',
   'sonic-vicar': 'Sick52 - Sonic Vicar.png',
-  'static-hydra': 'Sick52 - Static Hydra.png',
-  'thunder-dropper': 'Sick52 - Thunder Dropper.png',
+  'nocturne-prime': 'Sick52 Nocture Prime.png',
+  // Tier II — The War Conductors (13–24)
+  'breakbeat-marauder': 'Sick52 - BreakBeat Maruader.png',
+  'acid-reverie': 'Sick52 - Acid Reverie.png',
+  'trap-revenant': 'Sick52 - Trap Revenant.png',
+  'drumline-juggernaut': 'Sick52 - Drumline Juggernaut.png',
+  'feedback-executioner': 'Sick52 - Feedback Executioner.png',
+  'melody-hex': 'Sick52 - Melody Hex.png',
+  'overdrive-apostle': 'Sick52 - Overdrive Apostle.png',
+  'glitch-monarch': 'Sick52 - Glitch Monarch.png',
+  'harmony-eater': 'Sic52 - Harmony Eater.png',
+  'downbeat-reaper': 'Sick52 - Downbeat Reaper .png',
+  'sync-destroyer': 'Sick52 - Sync Destroyer.png',
+  'chorus-tyrant': 'Sick52 - Chorus Tyrant.png',
+  // Tier III — The Elemental Etudes (25–36)
+  'blaze-riff': 'Sick52 - Blaze Riff.png',
+  'stone-resonance': 'Sick52 - Stone Resonance.png',
   'tidal-lament': 'Sick52 - Tidal Lament.png',
+  'iron-tempo': 'Sick52 - Iron Tempo.png',
+  'thunder-dropper': 'Sick52 - Thunder Dropper.png',
+  'frost-echo': 'Sick52 - Frost Echo.png',
+  'sand-shuffle': 'Sick52 - Sand Shuffle.png',
   'toxic-vibrato': 'Sick52 - Toxic Vibrato.png',
   'storm-sustain': 'Sick52 - Storm Sustain.png',
   'ember-pulse': 'Sick52 -Ember Pulse.png',
   'mist-cadence': 'Sick52 - Mist Cadence.png',
   'void-tremolo': 'Sick52 - Void Tremolo.png',
+  // Tier IV — The Psychological Choir (37–44)
+  'lullaby-widow': 'Sick52 - Lullaby Widow .png',
   'panic-symphony': 'Sick52 -Panic Symphony.png',
   'memory-static': 'Sick52 -Memory Static.png',
   'mirage-anthem': 'Sick52 - Mirage Anthem.png',
   'grief-sonata': 'Sick52 -Grief Sonata .png',
+  'rage-cantata': 'Sick52 - Rage Cantata .png',
   'whisper-choir': 'Sick52 - Whisper Choir.png',
+  'silence-bishop': 'Sick52 - Silence Bishop.png',
+  // Tier V — The Mutated Prototypes (45–52)
   'split-tempo': 'Sick52 - Split Tempo.png',
+  'frequency-parasite': 'Sick52 - Frequency Parasite.png',
+  'harmonic-abomination': 'Sick52 - Harmonic Abomination .png',
+  'pulse-devourer': 'Sick52 - Pulse Devourer.png',
+  'dead-air-revenant': 'Sick52 - Dead Air Revenant .png',
   'reverb-titan': 'Sick52 - Reverb Titan.png',
+  'static-hydra': 'Sick52 - Static Hydra.png',
+  'final-drop': 'Sick52 - Final Drop .png',
 };
 
 // ===== DJ24 IMAGE MAPPING =====
@@ -569,6 +639,53 @@ export function getDJ24Roster() {
   });
 }
 
+// ===== DJ24 STRENGTH GROUPS (6 squads of 4, ordered by hour/strength) =====
+// The 24 active guardians are split into six four-member squads. They are
+// arranged in descending tactical authority — Squad I (Hours 01–04) is the
+// command core, Squad VI (Hours 21–24) the final failsafe protocols.
+export const dj24Groups = [
+  {
+    squad: 'Prime Command Unit', numeral: 'I', name: 'The Prime Command',
+    range: 'Hours 01–04', color: '#FFD700',
+    desc: 'The supreme tactical core of DJ24 — command authority, the Syncopate, and the silent blade. The four who decide how reality itself is scheduled.',
+  },
+  {
+    squad: 'Assault Unit', numeral: 'II', name: 'The Assault Vanguard',
+    range: 'Hours 05–08', color: '#DC2626',
+    desc: 'Heavy assault and area dominance. The headliners of war who overwhelm the battlefield with raw spectacle and overwhelming force.',
+  },
+  {
+    squad: 'Control Unit', numeral: 'III', name: 'The Control Division',
+    range: 'Hours 09–12', color: '#2563EB',
+    desc: 'Frequency enforcers who bend tempo, sub-bass and synchronization to lock down and reshape any battlefield.',
+  },
+  {
+    squad: 'Shadow Operations', numeral: 'IV', name: 'The Shadow Choir',
+    range: 'Hours 13–16', color: '#7C3AED',
+    desc: 'Stealth, loops and psychological warfare. They fight in the gaps between beats — unseen, looping, and impossible to predict.',
+  },
+  {
+    squad: 'Disruption Unit', numeral: 'V', name: 'The Disruption Line',
+    range: 'Hours 17–20', color: '#F59E0B',
+    desc: 'Flow-breakers and power-benders who reverse, compress and overload the enemy\'s rhythm until it collapses in on itself.',
+  },
+  {
+    squad: 'Special Operations', numeral: 'VI', name: 'The Final Protocols',
+    range: 'Hours 21–24', color: '#06B6D4',
+    desc: 'Architects and failsafes. The last four hours of the day, ending with AfroG — the doomsday slot, the end of a war before silence.',
+  },
+];
+
+export function getDJ24ByGroup() {
+  const roster = getDJ24Roster();
+  return dj24Groups.map(group => ({
+    ...group,
+    members: roster
+      .filter(m => m.squad === group.squad)
+      .sort((a, b) => a.hour - b.hour),
+  }));
+}
+
 // ===== GENRE RELIGIONS =====
 export const religionIndex = [
   { slug: 'rock', name: 'The Crimson Amplified Order', genre: 'Rock', color: '#DC2626', icon: '🎸' },
@@ -657,7 +774,8 @@ export const wikiLinkMap = {
   'echo requiem': '/sick52/echo-requiem',
   'static prophet': '/sick52/static-prophet',
   'tremor king': '/sick52/tremor-king',
-  'void vocalist': '/sick52/void-vocalist',
+  'hollow aria': '/sick52/hollow-aria',
+  'void vocalist': '/sick52/hollow-aria',
   'pulse tyrant': '/sick52/pulse-tyrant',
   'rift cadence': '/sick52/rift-cadence',
   'black vinyl': '/sick52/black-vinyl',

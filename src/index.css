@@ -976,6 +976,12 @@ a {
   font-size: 1.4rem;
 }
 
+.tier-range {
+  font-size: .85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .tier-desc {
   color: var(--text-muted);
   font-size: .9rem;
