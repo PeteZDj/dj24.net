@@ -2,6 +2,10 @@
 
 > *A weekly manga-style webcomic bringing the DJ battles to life.*
 
+> 📖 **Read it now:** the opening run is fully scripted and illustrated — start at
+> **[Chapter 1: The First Drop](/comics/ch01-the-first-drop)** or browse all 50 chapters on the
+> **[Webcomic reader](/comics)**.
+
 ## The Concept
 
 DJ24: War of Sound is being developed as an **ongoing webcomic** in the Webtoon/Manhwa vertical-scroll format, designed for mobile reading. The visual style blends **Cyberpunk aesthetics** with **Shonen anime action**.

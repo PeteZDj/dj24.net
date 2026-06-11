@@ -64,6 +64,13 @@ Laughter, Joke City, Clown Country, Intro: The Dream).
   Strategy/format: `source/14-...weekly-radio-show...`, `source/11-dj-battle-radio-show-mix-concept-idea.md`.
 - **Webcomic** — ongoing bi-weekly visual storytelling that complements the radio show; creation plan
   and the first 5–10 preview pages: `source/11-...webcomic...`, `source/20-...webcomic-preview...`.
+  - **Now live on the site.** Season 1 = **4 arcs / 50 chapters** (The First Drop, The Echo Revolt,
+    The Silence War, The Final Remix). Data + full panel scripts in `src/comicsData.js`; pages
+    `ComicsIndex` (`/comics`) and `ComicReader` (`/comics/:slug`). Chapters **1–4 are fully scripted**
+    (panel-by-panel) with cohesive AI cover + splash art in `public/images/comics/` (git-ignored like
+    all art). Ch.1 "The First Drop" is adapted verbatim from `source/20-...webcomic-preview...`;
+    Ch.2–4 extend it from canon (DJ24 command spire, the 24 Hours, bass/treble training, the deck of 52
+    first hunt). Faction-colored speech bubbles, SFX and captions render the action.
 - **Official character-fight DJ mixes** — each major fight gets a bespoke mix defining its sound:
   `source/27-...official-dj-mixes-for-character-fights.md`.
 - **Dual content strategy** — balancing the radio show and the comic: `source/13-balancing-the-dj-show-comic-...md`.

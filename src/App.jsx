@@ -22,6 +22,8 @@ import DJ24Roster from './pages/DJ24Roster';
 import DJ24MemberPage from './pages/DJ24MemberPage';
 import DeckPage from './pages/DeckPage';
 import MissionsPage from './pages/MissionsPage';
+import ComicsIndex from './pages/ComicsIndex';
+import ComicReader from './pages/ComicReader';
 
 /* ===== Scroll to top on route change ===== */
 function ScrollToTop() {
@@ -76,6 +78,7 @@ function Nav() {
         <Link to="/religions" onClick={() => setMenuOpen(false)}>Religions</Link>
         <Link to="/timeline" onClick={() => setMenuOpen(false)}>Timeline</Link>
         <Link to="/seasons" onClick={() => setMenuOpen(false)}>Seasons</Link>
+        <Link to="/comics" onClick={() => setMenuOpen(false)}>Webcomic</Link>
         <Link to="/games" onClick={() => setMenuOpen(false)}>Games</Link>
       </div>
     </nav>
@@ -152,6 +155,8 @@ export default function App() {
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/seasons" element={<SeasonsPage />} />
           <Route path="/games" element={<GamesPage />} />
+          <Route path="/comics" element={<ComicsIndex />} />
+          <Route path="/comics/:slug" element={<ComicReader />} />
           <Route path="/wiki/:slug" element={<WikiPage />} />
           <Route path="/religions" element={<ReligionIndex />} />
           <Route path="/religions/:slug" element={<ReligionPage />} />

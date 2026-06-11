@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { contentIndex, religionIndex, dj24Roster } from '../contentLoader';
+import { getPublishedComics } from '../comicsData';
 
 export default function Sidebar() {
   const location = useLocation();
@@ -29,9 +30,16 @@ export default function Sidebar() {
       <div className="sidebar-section">
         <h3 className="sidebar-heading">📺 Media</h3>
         <ul>
+          <li><Link to="/comics" className={isActive('/comics') && location.pathname === '/comics' ? 'active' : ''}>📖 Webcomic</Link></li>
+          {getPublishedComics().map(c => (
+            <li key={c.slug}>
+              <Link to={`/comics/${c.slug}`} className={isActive(`/comics/${c.slug}`) ? 'active' : ''}>
+                <span className="sidebar-hour">{String(c.number).padStart(2, '0')}</span> {c.title}
+              </Link>
+            </li>
+          ))}
+          <li className="sidebar-more"><Link to="/comics">All chapters →</Link></li>
           <li><Link to="/wiki/freq-radio-show" className={isActive('/wiki/freq-radio-show') ? 'active' : ''}>🎧 FREQ Radio Show</Link></li>
-          <li><Link to="/wiki/dj-battle-game" className={isActive('/wiki/dj-battle-game') ? 'active' : ''}>🎮 DJ Battle Game</Link></li>
-          <li><Link to="/wiki/webcomic" className={isActive('/wiki/webcomic') ? 'active' : ''}>📖 Webcomic</Link></li>
           <li><Link to="/games" className={isActive('/games') ? 'active' : ''}>🕹️ All Games</Link></li>
           <li><Link to="/wiki/dj24-the-sick-52" className={isActive('/wiki/dj24-the-sick-52') ? 'active' : ''}>↳ DJ24: The Sick 52</Link></li>
           <li><Link to="/missions" className={isActive('/missions') ? 'active' : ''}>↳ Missions (Deck of 52)</Link></li>

@@ -9,6 +9,8 @@ const routeLabels = {
   'timeline': 'Timeline',
   'seasons': 'Seasons',
   'games': 'Games',
+  'comics': 'Webcomic',
+  'missions': 'Missions',
 };
 
 export default function Breadcrumbs() {
