@@ -40,6 +40,10 @@ const ch01 = {
   status: 'published', cover: 'ch01-cover.png',
   logline: 'A rookie with no speakers is thrown into the Echo Arena against the deadliest sound-warlord alive.',
   setting: 'Ongaku Prime — The Echo Arena',
+  summaryDoc: 'comics/ch01-the-first-drop.md',
+  debut: ['Sync', 'Red Silence', 'General 24'],
+  moves: ['Sound Erasure', 'Dead Frequency', 'Resonance Sync', 'Bass Drop', 'Null Step'],
+  locations: ['Echo Arena'],
   characters: [
     { name: 'Sync', slug: 'sync', role: 'DJ24 rookie' },
     { name: 'Red Silence', slug: 'red-silence', role: 'Sick 52 leader' },
@@ -117,6 +121,10 @@ const ch02 = {
   status: 'published', cover: 'ch02-cover.png',
   logline: 'Sync is dragged before the commander of DJ24 — and learns the 24 guardians answer to the clock itself.',
   setting: 'Ongaku Prime — The DJ24 Command Spire',
+  summaryDoc: 'comics/ch02-off-the-beat.md',
+  debut: ['General 24', 'Molly'],
+  moves: ['The 24-Hour Schedule', 'Prima Edge', 'Phantom Alignment'],
+  locations: ['DJ24 Command Spire'],
   characters: [
     { name: 'Sync', slug: 'sync', role: 'DJ24 rookie' },
     { name: 'General 24', slug: 'general-24', role: 'Supreme Commander of Time' },
@@ -174,6 +182,10 @@ const ch03 = {
   status: 'published', cover: 'ch03-cover.png',
   logline: 'Training under Molly and Ninja Nagazaki, Sync learns the Frequency Grid is the only thing keeping Ongaku alive.',
   setting: 'Ongaku Prime — DJ24 Rooftop Dojo',
+  summaryDoc: 'comics/ch03-the-twenty-four-hours.md',
+  debut: ['Ninja Nagazaki'],
+  moves: ['Shockwave Pirouette', 'Prima Edge', 'Silent Frequency', 'On-Beat Transition', 'Bass Stance', 'Treble Stance'],
+  locations: ['Frequency Grid', 'DJ24 Rooftop Dojo'],
   characters: [
     { name: 'Sync', slug: 'sync', role: 'DJ24 rookie' },
     { name: 'Molly', slug: 'molly', role: 'Shockwave Prima' },
@@ -233,6 +245,10 @@ const ch04 = {
   status: 'published', cover: 'ch04-cover.png',
   logline: 'Sync\u2019s first bounty introduces the deck of 52 — and the rule that you climb from the 10 to the Ace.',
   setting: 'Ongaku Prime — The Lower Districts',
+  summaryDoc: 'comics/ch04-deck-of-cards.md',
+  debut: ['Deck of 52', 'Ace of Spades'],
+  moves: ['Bass Drop', 'On-Beat Transition', 'Bass Stance'],
+  locations: ['Lower Districts'],
   characters: [
     { name: 'Sync', slug: 'sync', role: 'DJ24 rookie' },
     { name: 'Molly', slug: 'molly', role: 'Shockwave Prima' },
@@ -279,7 +295,79 @@ const ch04 = {
   ],
 };
 
-const scripted = { [ch01.slug]: ch01, [ch02.slug]: ch02, [ch03.slug]: ch03, [ch04.slug]: ch04 };
+const ch05 = {
+  number: 5, slug: 'ch05-silent-streets', arc: 'the-first-drop', title: 'Silent Streets',
+  status: 'published', cover: 'ch05-cover.png',
+  logline: 'A district goes quiet. Sync and Ninja Nagazaki hunt the thing eating the sound block by block.',
+  setting: 'Ongaku — Blue City (the jazz quarter)',
+  summaryDoc: 'comics/ch05-silent-streets.md',
+  debut: ['Dead Air Revenant'],
+  moves: ['Dead Air', 'Resonance Sync', 'Silent Frequency', 'Cutoff', 'Bass Drop', 'On-Beat Transition'],
+  locations: ['Blue City'],
+  characters: [
+    { name: 'Sync', slug: 'sync', role: 'DJ24 guardian' },
+    { name: 'Ninja Nagazaki', slug: 'ninja-nagazaki', role: 'Silent Executioner' },
+    { name: 'Dead Air Revenant', slug: null, role: 'Sick 52 low card' },
+  ],
+  pages: [
+    {
+      n: '1', title: 'The Quarter That Went Quiet',
+      panels: [
+        { type: 'caption', text: 'Blue City — the jazz quarter, where the music never used to stop.' },
+        { type: 'desc', text: 'Rain falls on a half-dead street. One side still glows with neon and saxophone clubs; the other side is grey, silent, switched off.' },
+        { type: 'desc', text: 'People stand frozen in the silent half, staring at nothing, slowly forgetting why they came outside.' },
+        { type: 'line', who: 'Sync', faction: 'dj24', mode: 'speak', text: 'It\u2019s eating the whole block. Sound, color\u2014 all of it, just gone.' },
+      ],
+    },
+    {
+      n: '2', title: 'The Right Partner for the Job',
+      panels: [
+        { type: 'desc', text: 'Ninja Nagazaki steps out of the rain beside him, blade already drawn.' },
+        { type: 'line', who: 'Ninja Nagazaki', faction: 'dj24', mode: 'speak', text: 'The General sent me because this fight has no sound in it. That is where I live.' },
+        { type: 'line', who: 'Sync', faction: 'dj24', mode: 'thought', text: 'My first real mission and they pair me with the scariest man on the roster. Great.' },
+      ],
+    },
+    {
+      n: '3', title: 'Into the Dead Zone',
+      panels: [
+        { type: 'desc', text: 'They cross the line into the silent half. Sync\u2019s gauntlets flicker and cut out, just like in the arena.' },
+        { type: 'line', who: 'Sync', faction: 'dj24', mode: 'shout', text: 'My gear\u2019s dead again\u2014 same as Red Silence!' },
+        { type: 'desc', text: 'Sync drops a hand to the wet pavement, reading the vibrations. He feels his way forward.' },
+        { type: 'sfx', text: 'bum\u2026 bum\u2026' },
+      ],
+    },
+    {
+      n: '4', title: 'The Dead Air Revenant',
+      panels: [
+        { type: 'desc', text: 'At the center of the dead zone stands a hooded, flatlining figure draining the street\u2014 the Dead Air Revenant.' },
+        { type: 'desc', text: 'It spreads a bubble of total silence. Every sound Sync makes is swallowed before it can land.' },
+        { type: 'line', who: 'Sync', faction: 'dj24', mode: 'shout', text: 'I can\u2019t even hear my own bass! It\u2019s bigger than the arena\u2014 colder!' },
+      ],
+    },
+    {
+      n: '5', title: 'Move Inside the Silence',
+      panels: [
+        { type: 'line', who: 'Ninja Nagazaki', faction: 'dj24', mode: 'speak', text: 'Stop fighting the silence. Move inside it. Find the one rhythm still alive in here.' },
+        { type: 'desc', text: 'Sync goes still. Beneath the silence he feels them\u2014 the heartbeats of the trapped people, and one last jazz note still hanging in the air.' },
+        { type: 'desc', text: 'He locks onto the beat, switches stance on the downbeat, and drives a bass drop straight into the Revenant.' },
+        { type: 'sfx', text: 'DOOOM\u2014' },
+        { type: 'desc', text: 'The silence cracks open. Ninja slips in, strips the sound from the creature itself, and ends it with one clean strike.' },
+      ],
+    },
+    {
+      n: '6', title: 'A Card Left Behind',
+      panels: [
+        { type: 'desc', text: 'Sound rushes back all at once. The clubs roar to life, the rain turns loud, the people blink awake.' },
+        { type: 'desc', text: 'Ninja kneels where the creature fell and lifts a single playing card left behind on purpose.' },
+        { type: 'line', who: 'Ninja Nagazaki', faction: 'dj24', mode: 'speak', text: 'This wasn\u2019t a stray. A higher card placed it here\u2014 to see how we\u2019d answer.' },
+        { type: 'line', who: 'General 24', faction: 'dj24', mode: 'speak', text: 'They\u2019re not raiding anymore. They\u2019re measuring us. The climb starts now.' },
+        { type: 'caption', text: 'NEXT: the sub-bass monk.' },
+      ],
+    },
+  ],
+};
+
+const scripted = { [ch01.slug]: ch01, [ch02.slug]: ch02, [ch03.slug]: ch03, [ch04.slug]: ch04, [ch05.slug]: ch05 };
 
 // ---------- FULL CHAPTER ROADMAP (loglines) ----------
 // status: 'published' (full script) | 'scripting' | 'planned'
@@ -289,7 +377,7 @@ const roadmap = [
   { number: 2, arc: 'the-first-drop', title: 'Off the Beat', status: 'published', logline: 'Sync meets General 24 and joins the Prime Command Unit.' },
   { number: 3, arc: 'the-first-drop', title: 'The Twenty-Four Hours', status: 'published', logline: 'Training with Molly and Ninja; the Frequency Grid explained.' },
   { number: 4, arc: 'the-first-drop', title: 'Deck of Cards', status: 'published', logline: 'The first bounty and the rules of the deck of 52.' },
-  { number: 5, arc: 'the-first-drop', title: 'Silent Streets', status: 'scripting', logline: 'A district goes quiet. Something is eating the sound block by block.' },
+  { number: 5, arc: 'the-first-drop', title: 'Silent Streets', status: 'published', logline: 'A district goes quiet. Something is eating the sound block by block.' },
   { number: 6, arc: 'the-first-drop', title: 'The Sub-Bass Monk', status: 'planned', logline: 'Sync trains under MasterBass to survive crushing low-end pressure.' },
   { number: 7, arc: 'the-first-drop', title: 'Frequency Thieves', status: 'planned', logline: 'SubZ and a crew of pirates steal a DJ24 drop mid-mission.' },
   { number: 8, arc: 'the-first-drop', title: 'The Cursed Composer', status: 'planned', logline: 'A Sick 52 Queen turns a whole crowd into her orchestra.' },

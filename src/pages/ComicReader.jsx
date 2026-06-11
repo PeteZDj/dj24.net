@@ -1,5 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { getComic } from '../comicsData';
+import { loadMarkdown, resolveWikiLink } from '../contentLoader';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 const DJ24_SLUGS = new Set(['sync', 'general-24', 'molly', 'ninja-nagazaki']);
@@ -7,6 +9,25 @@ const DJ24_SLUGS = new Set(['sync', 'general-24', 'molly', 'ninja-nagazaki']);
 function charLink(slug) {
   if (!slug) return null;
   return DJ24_SLUGS.has(slug) ? `/dj24-roster/${slug}` : `/sick52/${slug}`;
+}
+
+function RefChip({ name }) {
+  const route = resolveWikiLink(name);
+  return route
+    ? <Link to={route} className="infobox-chip is-link">{name}</Link>
+    : <span className="infobox-chip">{name}</span>;
+}
+
+function InfoboxList({ label, items }) {
+  if (!items || items.length === 0) return null;
+  return (
+    <div className="infobox-block">
+      <div className="infobox-block-label">{label}</div>
+      <div className="infobox-chips">
+        {items.map((it) => <RefChip key={it} name={it} />)}
+      </div>
+    </div>
+  );
 }
 
 function Panel({ p }) {
@@ -36,6 +57,8 @@ export default function ComicReader() {
       </div>
     );
   }
+
+  const summary = comic.summaryDoc ? loadMarkdown(comic.summaryDoc).content : '';
 
   return (
     <div className="wiki-page comic-reader" style={{ '--arc-color': comic.arcInfo?.color || '#06B6D4' }}>
@@ -71,21 +94,72 @@ export default function ComicReader() {
         </div>
       )}
 
-      <div className="comic-strip">
-        {comic.pages.map((page, i) => (
-          <section className="comic-page" key={i}>
-            <div className="comic-page-tab">PAGE {page.n}{page.title ? ` · ${page.title}` : ''}</div>
-            {page.imageUrl && (
-              <div className="comic-page-art">
-                <img src={page.imageUrl} alt={page.title || `Page ${page.n}`} loading="lazy" />
-              </div>
-            )}
-            <div className="comic-panels">
-              {page.panels.map((p, j) => <Panel key={j} p={p} />)}
+      {/* === SUMMARY (article) + CHAPTER INFO (sidebar) === */}
+      <div className="comic-article">
+        <main className="comic-article-main">
+          {summary
+            ? <MarkdownRenderer content={summary} />
+            : <p className="comic-reader-logline">{comic.logline}</p>}
+        </main>
+
+        <aside className="comic-infobox" aria-label="Chapter information">
+          <div className="comic-infobox-head">
+            <span className="comic-infobox-kicker">Chapter Info</span>
+            <span className="comic-infobox-title">{comic.title}</span>
+          </div>
+          <dl className="infobox-rows">
+            <div className="infobox-row"><dt>Series</dt><dd>DJ24: The War of Sound</dd></div>
+            <div className="infobox-row"><dt>Arc</dt><dd>Arc {comic.arcInfo?.no} — {comic.arcInfo?.title}</dd></div>
+            <div className="infobox-row"><dt>Chapter</dt><dd>#{comic.number}</dd></div>
+            <div className="infobox-row"><dt>Setting</dt><dd>{comic.setting}</dd></div>
+            <div className="infobox-row"><dt>Pages</dt><dd>{comic.pages.length} pages</dd></div>
+            <div className="infobox-row"><dt>Format</dt><dd>Vertical scroll (webtoon)</dd></div>
+            <div className="infobox-row">
+              <dt>Previous</dt>
+              <dd>
+                {comic.prev && comic.prev.hasScript
+                  ? <Link to={`/comics/${comic.prev.slug}`} className="infobox-chip is-link">{comic.prev.title}</Link>
+                  : '—'}
+              </dd>
             </div>
-          </section>
-        ))}
+            <div className="infobox-row">
+              <dt>Next</dt>
+              <dd>
+                {comic.next && comic.next.hasScript
+                  ? <Link to={`/comics/${comic.next.slug}`} className="infobox-chip is-link">{comic.next.title}</Link>
+                  : (comic.next ? `${comic.next.title} (soon)` : 'Season finale')}
+              </dd>
+            </div>
+          </dl>
+
+          <InfoboxList label="Debut" items={comic.debut} />
+          <InfoboxList label="Signature Moves" items={comic.moves} />
+          <InfoboxList label="Locations" items={comic.locations} />
+        </aside>
       </div>
+
+      {/* === STORYBOARD (the visual panel-by-panel overview) === */}
+      <section className="comic-storyboard">
+        <h2 className="comic-storyboard-title">Storyboard — Page by Page</h2>
+        <p className="comic-storyboard-note">
+          The shot-by-shot visual breakdown of the chapter: panel descriptions, dialogue and sound effects.
+        </p>
+        <div className="comic-strip">
+          {comic.pages.map((page, i) => (
+            <section className="comic-page" key={i}>
+              <div className="comic-page-tab">PAGE {page.n}{page.title ? ` · ${page.title}` : ''}</div>
+              {page.imageUrl && (
+                <div className="comic-page-art">
+                  <img src={page.imageUrl} alt={page.title || `Page ${page.n}`} loading="lazy" />
+                </div>
+              )}
+              <div className="comic-panels">
+                {page.panels.map((p, j) => <Panel key={j} p={p} />)}
+              </div>
+            </section>
+          ))}
+        </div>
+      </section>
 
       <nav className="comic-nav">
         {comic.prev && comic.prev.hasScript

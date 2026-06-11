@@ -2814,7 +2814,7 @@ a {
 .comic-card-body p { margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.45; }
 
 /* ===== WEBCOMIC — READER ===== */
-.comic-reader { max-width: 820px; }
+.comic-reader { max-width: 1060px; }
 .comic-reader-head { border-bottom: 2px solid var(--arc-color, #38bdf8); padding-bottom: 1rem; margin-bottom: 1.25rem; }
 .comic-reader-kicker { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--arc-color, #38bdf8); }
 .comic-reader-head h1 { margin: 0.25rem 0; }
@@ -2828,6 +2828,39 @@ a.comic-cast-chip:hover { border-color: var(--arc-color); }
 
 .comic-cover-splash { border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 8px 26px rgba(15,23,42,0.2); }
 .comic-cover-splash img { width: 100%; display: block; }
+
+/* ----- Summary article + Chapter Info infobox ----- */
+.comic-article { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.75rem; align-items: start; }
+.comic-article-main { min-width: 0; font-size: 1.02rem; line-height: 1.7; }
+.comic-article-main .wiki-content > h2:first-child { margin-top: 0; }
+.comic-article-main p { line-height: 1.75; }
+
+.comic-infobox {
+  border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card);
+  overflow: hidden; position: sticky; top: 1rem; font-size: 0.85rem;
+}
+.comic-infobox-head { background: var(--arc-color, #0ea5e9); color: #fff; padding: 0.7rem 0.9rem; text-align: center; }
+.comic-infobox-kicker { display: block; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+.comic-infobox-title { display: block; font-size: 1.05rem; font-weight: 800; line-height: 1.2; margin-top: 0.15rem; }
+.infobox-rows { margin: 0; padding: 0.4rem 0.9rem; }
+.infobox-row { display: grid; grid-template-columns: 84px 1fr; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+.infobox-row:last-child { border-bottom: none; }
+.infobox-row dt { font-weight: 800; color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 0.1rem; }
+.infobox-row dd { margin: 0; color: var(--text); }
+.infobox-block { padding: 0.7rem 0.9rem; border-top: 1px solid var(--border); }
+.infobox-block-label { font-weight: 800; color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem; }
+.infobox-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.infobox-chip {
+  display: inline-block; font-size: 0.76rem; line-height: 1.2; padding: 0.28rem 0.6rem;
+  border-radius: 16px; border: 1px solid var(--border); background: var(--bg-alt); color: var(--text); text-decoration: none;
+}
+.infobox-chip.is-link { border-color: var(--arc-color, #0ea5e9); color: var(--arc-color, #0ea5e9); font-weight: 600; }
+a.infobox-chip.is-link:hover { background: var(--arc-color, #0ea5e9); color: #fff; }
+
+/* ----- Storyboard section ----- */
+.comic-storyboard { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 2px dashed var(--border); }
+.comic-storyboard-title { margin: 0 0 0.2rem; }
+.comic-storyboard-note { margin: 0 0 1.2rem; color: var(--text-muted); font-size: 0.9rem; }
 
 .comic-strip { display: flex; flex-direction: column; gap: 2rem; }
 .comic-page { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg-card); }
@@ -2876,6 +2909,11 @@ a.comic-cast-chip:hover { border-color: var(--arc-color); }
 .comic-nav-btn.home { background: var(--arc-color, #0ea5e9); color: #fff; border-color: transparent; }
 a.comic-nav-btn:hover { border-color: var(--arc-color); }
 .comic-nav-btn.disabled { opacity: 0.5; }
+
+@media (max-width: 880px) {
+  .comic-article { grid-template-columns: 1fr; }
+  .comic-infobox { position: static; order: -1; max-width: 520px; }
+}
 
 @media (max-width: 600px) {
   .comic-hero-overlay h2 { font-size: 1.35rem; }
