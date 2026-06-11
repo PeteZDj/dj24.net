@@ -507,12 +507,12 @@ export function getSick52ByTier() {
 // ===== DJ24 ACTIVE ROSTER =====
 export const dj24Roster = [
   {
-    hour: 1, slug: 'general-24', name: 'General 24', role: 'Supreme Commander of Time', color: '#FFD700', squad: 'Prime Command Unit',
+    hour: 1, slug: 'general-24', name: 'General 24', role: 'Supreme Commander of Time', color: '#FFD700', squad: 'Prime Command Unit', alias: ['DJ 24'],
     desc: 'Strategic Overwatch / Final Authority. Tactical, strict commander. Values precise order. He doesn’t fight — he schedules reality.',
     prompt: 'Full body anime hero concept art. Athletic dark-skinned male with calm commanding posture. Sharp intelligent facial features, confident composed expression. Structured long white split-tail military coat with bold gold trim and matching gold shoulder stripe, tailored matte black tactical under-layer in deep green. Massive translucent golden circular time-disc divided into 24 glowing segments slowly rotating behind him.'
   },
   {
-    hour: 2, slug: 'sync', name: 'Sync (Phantom)', role: 'Reality Alignment Vanguard', color: '#06B6D4', squad: 'Prime Command Unit',
+    hour: 2, slug: 'sync', name: 'Sync (Phantom)', role: 'Reality Alignment Vanguard', color: '#06B6D4', squad: 'Prime Command Unit', alias: ['Phantom'],
     desc: 'Rookie Protagonist / XDF anomaly. Rebellious and questions the system. Power he doesn’t understand — he doesn’t glitch, he aligns.',
     prompt: 'Full body anime character concept art. Athletic white male with slightly messy short hair, sharp cheekbones, intense but visibly confused expression. Structured long white split-tail coat with gold trim, matte black combat under-layer with deep red internal lining. Body partially duplicated with multiple faint timeline silhouettes misaligned around him. Electric-blue synchronization lines forming and snapping unpredictably.'
   },
@@ -522,7 +522,7 @@ export const dj24Roster = [
     prompt: 'Full body anime character concept art. Slender athletic female with graceful ballerina build, very light platinum-blonde hair, piercing blue eyes. From each forearm extends a long, ultra-thin straight-edged silver-white blade. Structured long white split-tail coat with bold gold trim, tailored matte black fitted combat under-layer in royal blue. Standing en pointe on one boot mid-pirouette.'
   },
   {
-    hour: 4, slug: 'ninja-nagazaki', name: 'Ninja Nagazaki', role: 'Silent Frequency Executioner', color: '#0F172A', squad: 'Prime Command Unit',
+    hour: 4, slug: 'ninja-nagazaki', name: 'Ninja Nagazaki', role: 'Silent Frequency Executioner', color: '#0F172A', squad: 'Prime Command Unit', alias: ['Ninja'],
     desc: 'Stealth Frequency Assassin. Surgical and minimal. Lethal without spectacle. He creates silence by removal.',
     prompt: 'Full body anime character concept art. Lean Japanese male with long black hair tied low, sharp narrow eyes, emotionless and cold. Structured long white split-tail coat with refined gold trim, matte black stealth-fitted combat under-layer. Ultra-thin straight waveform blades extending from each hand — nearly invisible, razor-clean cyan lines.'
   },
@@ -537,7 +537,7 @@ export const dj24Roster = [
     prompt: 'Full body anime character concept art. Tall muscular Black British male with deep brown skin, sharp jawline, intense focused eyes. Across his back: sleek high-caliber long-range sniper rifle. Structured long white split-tail coat with crimson trim, fitted matte black reinforced combat under-layer. Massive percussion gauntlets on forearms. Red circular drum-wave ripples expanding from ground.'
   },
   {
-    hour: 7, slug: 'king-j', name: 'King J', role: 'Royal Rhythm Commander', color: '#7C3AED', squad: 'Assault Unit',
+    hour: 7, slug: 'king-j', name: 'King J', role: 'Royal Rhythm Commander', color: '#7C3AED', squad: 'Assault Unit', alias: ['King Jack'],
     desc: 'Charismatic Frontline Leader / The Strategist King. Composed and regal. He commands tempo like a king commands armies.',
     prompt: 'Full body anime character concept art. Tall white male with sharp aristocratic features, calm calculating eyes. Structured long white split-tail coat with crimson trim, fitted matte black tailored combat under-layer. Crimson geometric rhythm panels floating symmetrically behind him. Upright commanding posture.'
   },
@@ -557,12 +557,12 @@ export const dj24Roster = [
     prompt: 'Full body anime character concept art. Androgynous appearance — slender build, soft facial features, long straight dark hair. Structured long white split-tail coat with deep blue trim, fitted matte black suit-style under-layer. Illuminated crossfader slider on chest. Left half of body tinted cool deep blue, right half pale silver.'
   },
   {
-    hour: 11, slug: 'subz', name: 'SubZ', role: 'Anti-Bass Raider', color: '#2563EB', squad: 'Control Unit',
+    hour: 11, slug: 'subz', name: 'SubZ', role: 'Anti-Bass Raider', color: '#2563EB', squad: 'Control Unit', alias: ['SubG', 'SubZeroHz'],
     desc: 'Anti-Bass Specialist / Frequency Eraser. Russian Frequency Pirate. Battle-scarred rogue who steals your drop instead of erasing it.',
     prompt: 'Full body anime character concept art. Lean Russian male with pale skin, dark reinforced eyepatch on right side, mechanical prosthetic left foot. Structured long white split-tail coat with deep blue trim, fitted matte black tactical combat under-layer. Curved condensed waveform cutlass. Navy sash with glowing sub-frequency orb capsules.'
   },
   {
-    hour: 12, slug: '4serj', name: '4Serj', role: 'Quad-Channel Sync Architect', color: '#4F46E5', squad: 'Control Unit',
+    hour: 12, slug: '4serj', name: '4Serj', role: 'Quad-Channel Sync Architect', color: '#4F46E5', squad: 'Control Unit', alias: ['4Seri & Coco'],
     desc: 'Dual Sync Specialist / Quad Sync Master. Black male tech billionaire energy. He layers reality like a producer layers tracks — expensive and exact.',
     prompt: 'Full body anime character concept art. Confident Black male with clean fade, multiple rings, luxury timepiece. Structured long white split-tail coat with deep blue trim, fitted tailored matte black suit-style under-layer. Four advanced metallic cyborg exo-suits stand symmetrically behind him in an arc.'
   },
@@ -587,7 +587,7 @@ export const dj24Roster = [
     prompt: 'Full body anime character concept art. Lean wiry black male with long tied-back dreadlocks, bandana with green/gold/red stitching. Structured long white split-tail coat with dark violet trim, fitted matte black tactical under-layer. Striking holographic drum pads in air, green concentric beat ripples expanding outward.'
   },
   {
-    hour: 17, slug: 'liquidb', name: 'LiquidB', role: 'Flow Manipulator', color: '#2563EB', squad: 'Disruption Unit',
+    hour: 17, slug: 'liquidb', name: 'LiquidB', role: 'Flow Manipulator', color: '#2563EB', squad: 'Disruption Unit', alias: ['Liquid Bandit'],
     desc: 'Flow Manipulator. Black female, fluid but dominant presence. House music in combat form — uncatchable smoothness.',
     prompt: 'Full body anime character concept art. Athletic black female with long braids. Structured long white split-tail coat with neon orange trim, fitted matte black tactical combat under-layer. Compact DJ controller at waist. One hand shaping flowing aqua waveform ribbon like liquid sound.'
   },
@@ -612,17 +612,17 @@ export const dj24Roster = [
     prompt: 'Full body anime character concept art. Lean long-limbed male, long textured hair tied loosely. Structured long white split-tail coat with electric cyan trim, fitted matte black tactical under-layer. Body twisted mid-motion between dance and strike. Layered golden circular rhythm waves rippling outward from stomp.'
   },
   {
-    hour: 22, slug: 'dop', name: 'd.O.P', role: 'Battlefield Sound Architect', color: '#4F46E5', squad: 'Special Operations',
+    hour: 22, slug: 'dop', name: 'd.O.P', role: 'Battlefield Sound Architect', color: '#4F46E5', squad: 'Special Operations', alias: ['d.O.P Beatz'],
     desc: 'Battlefield Sound Architect. Strategic control through waveform math. He designs the battlefield.',
     prompt: 'Full body anime character concept art. Calm analytical male with sharp calculating eyes. Structured long white split-tail coat with electric cyan trim, fitted matte black tactical under-layer. Hands manipulating translucent emerald holographic waveform grids suspended in air. Tactical geometric sound-lines dividing space.'
   },
   {
-    hour: 23, slug: 'wboy', name: 'WBoy', role: 'Founder Frequency — The Origin Signal', color: '#06B6D4', squad: 'Special Operations',
+    hour: 23, slug: 'wboy', name: 'WBoy', role: 'Founder Frequency — The Origin Signal', color: '#06B6D4', squad: 'Special Operations', alias: ['W Boy Pete'],
     desc: 'Founder Frequency. Young male prodigy (16-18) — rooted, immovable foundation. Symbolic but restrained.',
     prompt: 'Full body anime character concept art. Young male prodigy, lean athletic build, focused intelligent eyes. Structured long white split-tail coat with electric cyan trim, fitted matte black tactical under-layer. Silver "W" clasp at collar. Compact double-edged frequency baton on back. Subtle silver frequency rings expanding slowly.'
   },
   {
-    hour: 24, slug: 'afrog', name: 'AfroG', role: 'Final Drop Protocol — Planetary Failsafe', color: '#10B981', squad: 'Special Operations',
+    hour: 24, slug: 'afrog', name: 'AfroG', role: 'Final Drop Protocol — Planetary Failsafe', color: '#10B981', squad: 'Special Operations', alias: ['Afrohouse'],
     desc: 'The Final Hour / doomsday slot. Absolute Authority. The end of a war before silence.',
     prompt: 'Full body anime character concept art. Tall imposing male, calm god-level composure. Structured long white split-tail coat with electric cyan trim over reinforced darker inner core. Standing slightly elevated above ground. Massive spiral waveform of electric blue energy behind him like a celestial sigil.'
   },
@@ -714,7 +714,25 @@ export const wikiLinkMap = {
   'the sonic order': '/wiki/sonic-order',
   'races and classes': '/wiki/races-and-classes',
   'power system': '/wiki/power-system',
+  'eras of ongaku': '/wiki/eras-of-ongaku',
   'resonant sons': '/factions/dj24',
+  // Galaxy & planets
+  'the galaxy': '/wiki/the-galaxy',
+  'galaxy': '/wiki/the-galaxy',
+  'planet joke': '/wiki/the-galaxy',
+  'planet scientifica': '/wiki/the-galaxy',
+  'scientifica': '/wiki/the-galaxy',
+  'planet ecomerica': '/wiki/the-galaxy',
+  'planet fabriqua': '/wiki/the-galaxy',
+  'planet chronos': '/wiki/the-galaxy',
+  'terrascripta': '/wiki/the-galaxy',
+  'pixela': '/wiki/the-galaxy',
+  'gastronomica': '/wiki/the-galaxy',
+  'agrisole': '/wiki/the-galaxy',
+  'zenithar': '/wiki/the-galaxy',
+  'harmonia': '/wiki/the-galaxy',
+  'cura': '/wiki/the-galaxy',
+  'infinispace': '/wiki/the-galaxy',
   // Cities
   'intro the dream': '/Planet_Ongaku/cities/intro_the_dream',
   'classic city': '/Planet_Ongaku/cities/classic_city',
@@ -770,6 +788,17 @@ export const wikiLinkMap = {
   'd.o.p': '/dj24-roster/dop',
   'wboy': '/dj24-roster/wboy',
   'afrog': '/dj24-roster/afrog',
+  // DJ24 guardian aliases (alt-names from earlier roster iterations)
+  'phantom': '/dj24-roster/sync',
+  'ninja': '/dj24-roster/ninja-nagazaki',
+  'king jack': '/dj24-roster/king-j',
+  'subg': '/dj24-roster/subz',
+  'subzerohz': '/dj24-roster/subz',
+  '4seri & coco': '/dj24-roster/4serj',
+  'liquid bandit': '/dj24-roster/liquidb',
+  'd.o.p beatz': '/dj24-roster/dop',
+  'w boy pete': '/dj24-roster/wboy',
+  'afrohouse': '/dj24-roster/afrog',
   // Sick 52 Members (key ones)
   'echo requiem': '/sick52/echo-requiem',
   'static prophet': '/sick52/static-prophet',

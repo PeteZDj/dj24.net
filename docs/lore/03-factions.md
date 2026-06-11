@@ -79,11 +79,17 @@ Full roster in `05-sick52-roster.md`.
   Warriors** (often former people twisted into living memes). Weapons: distortion cannons, joke-tech
   hallucinations, reality-erasing reversed-sound fields.
 
-## ⚔️ The Rival — Sync's Personal Enemy
+## ⚔️ The Central Rivalry — Sync vs. General 24
 
-**"You were never meant to be the star. That's my role."**
+**Canon decision:** Sync's true rival is **General 24** — they serve the *same army* but embody
+opposite philosophies of sound (freedom vs. control). It's a same-side rivalry in the tradition of
+**Naruto & Sasuke** / **Dante & Vergil**: mutual respect and collision at once.
 
-- A former ally/competitor who rose in Sync's absence; the **Champion of Ongaku Prime**, the system's
-  perfect weapon. Personal, not ideological — wants to prove Sync was never special.
-- Candidate names from the source: **Vex, Riven, Sonus, Requiem, Drez.** (On the live site, **Drez**
-  is used as the Mavericks' leader — see `CANON-NOTES.md`.)
+- **Sync** — freedom, improvisation, the broken beat. *"He doesn't glitch; he aligns."*
+- **General 24** — structure, unity, discipline. *"Music is the language of war. I am its translator."*
+- The feud sharpens every season (internal friction → S2 city-leveling duel → S3 ideological split as
+  General 24 turns to an AI army → S4 Sync's anti-hero path).
+
+> The `source/7-...villains...` doc floats a *separate* "Champion of Ongaku Prime" rival with
+> candidate names **Vex, Riven, Sonus, Requiem, Drez**. Per creator decision this role is folded into
+> **General 24**; **Drez** remains the chaotic Maverick foil, not the rival.

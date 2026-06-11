@@ -24,6 +24,22 @@ He values precise order above all else, and his leadership style clashes with th
 
 ---
 
+## The Central Rivalry — General 24 vs. Sync
+
+General 24's defining relationship is his rivalry with **[[Sync]]**. They serve the *same army*,
+but embody opposite philosophies of sound — a rivalry in the mold of **Naruto & Sasuke** or
+**Dante & Vergil**: respect and opposition, brotherhood and collision, all at once.
+
+- **General 24** stands for **control** — structure, unity, discipline. *"Music is the language of war. I am its translator."*
+- **Sync** stands for **freedom** — improvisation, feeling, the broken beat.
+
+He sees Sync's gift as both the army's greatest asset and its greatest threat. Their conflict is
+**personal**, not merely tactical — and it only sharpens as the war drives each man toward his
+extreme (General 24 toward an AI army in [[Season 3|Season 3: The AI War]], Sync toward the
+anti-hero's path in [[Season 4|Season 4: The Forgotten Soldiers]]).
+
+---
+
 ## Story Arc
 
 - **[[Season 1|Season 1: The Internal War]]** — Commands DJ24 against the [[Sick 52]], struggling to maintain unity as internal factions emerge.
@@ -35,6 +51,6 @@ He values precise order above all else, and his leadership style clashes with th
 ## Related Pages
 
 - [[DJ24]] — The organization he commands
-- [[Sync]] — His rebellious subordinate
+- [[Sync]] — His rebellious subordinate **and central rival**
 - [[Drez]] — Leader of the opposing Mavericks faction
 - [[NexaGen Harmonics]] — His Season 3 allies

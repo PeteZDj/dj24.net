@@ -69,6 +69,30 @@ Implemented as `extendedCharacters` and shown under Characters / factions:
   Emperor J, The Broker, The Spectator.
 - **NexaGen tie-ins:** Lysander Coda, Synth-09, Unit Omega.
 
+## Aliases (alt-names from earlier roster iterations)
+
+`source/the-dj-24.md` contains several earlier roster passes. Per creator decision, the clearly-
+matching alternate names are treated as **aliases** of the canonical guardians (shown as "Also known
+as" on each member page; they also resolve as wiki links):
+
+| Guardian | Alias(es) |
+| --- | --- |
+| General 24 | DJ 24 |
+| Sync | Phantom |
+| Ninja Nagazaki | Ninja |
+| King J | King Jack |
+| SubZ | SubG, SubZeroHz |
+| 4Serj | 4Seri & Coco |
+| LiquidB | Liquid Bandit |
+| d.O.P | d.O.P Beatz |
+| WBoy | W Boy Pete |
+| AfroG | Afrohouse |
+
+The early **genre-coded** pass (AmaPiano, Lofi, Trapped, Afrobeats, Disco Grindin, NeuroRush,
+Chilled, 6 Side, Hip Hop Mafia, etc.) reads more as "what genre each hour represents" than as clean
+1:1 aliases; it is preserved in the source archive and can later be mapped to specific guardians or
+to the 54 reserves. See `CANON-NOTES.md`.
+
 ## The 54 reserves
 
 Canonically DJ24 also keeps **54 reserve members** who rotate in. They are referenced but not yet

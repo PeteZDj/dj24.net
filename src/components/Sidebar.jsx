@@ -20,6 +20,7 @@ export default function Sidebar() {
           <li><Link to="/wiki/power-system" className={isActive('/wiki/power-system') ? 'active' : ''}>↳ Power System</Link></li>
           <li><Link to="/wiki/combat-styles" className={isActive('/wiki/combat-styles') ? 'active' : ''}>↳ Combat Styles</Link></li>
           <li><Link to="/wiki/eras-of-ongaku" className={isActive('/wiki/eras-of-ongaku') ? 'active' : ''}>↳ Eras of Ongaku</Link></li>
+          <li><Link to="/wiki/the-galaxy" className={isActive('/wiki/the-galaxy') ? 'active' : ''}>↳ The Galaxy</Link></li>
           <li><Link to="/timeline" className={isActive('/timeline') ? 'active' : ''}>Timeline</Link></li>
           <li><Link to="/seasons" className={isActive('/seasons') ? 'active' : ''}>Story Arcs</Link></li>
         </ul>

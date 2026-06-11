@@ -26,6 +26,22 @@ He possesses **Harmonic Disruption**: the ability to break, remix, and reshape s
 
 ---
 
+## The Central Rivalry — Sync vs. General 24
+
+Sync's defining rivalry is with his own commander, **[[General 24]]**. They fight on the *same
+side*, yet stand for opposite truths — a bond and a feud at once, in the tradition of
+**Naruto & Sasuke** or **Dante & Vergil**.
+
+- **Sync** believes sound must be **free** — felt, improvised, alive. He doesn't glitch; he *aligns*.
+- **General 24** believes sound must be **controlled** — structured, disciplined, perfectly ordered.
+
+Each is the other's mirror and measuring stick. Their clash escalates across every season: from
+internal friction in Season 1, to a brutal city-leveling duel in [[Season 2|Season 2: The Komedian Invasion]],
+to ideological divergence as General 24 turns to AI warfare in [[Season 3|Season 3: The AI War]].
+[[Drez]] is Sync's *chaotic* foil among the Mavericks — but General 24 is his true rival.
+
+---
+
 ## Abilities
 
 - **Harmonic Disruption** — Break, remix, and reshape sound waves
@@ -47,7 +63,7 @@ He possesses **Harmonic Disruption**: the ability to break, remix, and reshape s
 ## Related Pages
 
 - [[DJ24]] — His organization
-- [[General 24]] — His commander
-- [[Drez]] — His chaotic rival
+- [[General 24]] — His commander **and central rival** (same side, opposite ideals)
+- [[Drez]] — His chaotic Maverick foil
 - [[Red Silence]] — His nemesis among the Sick 52
 - [[The Komedians]] — His Season 2 captors

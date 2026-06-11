@@ -14,6 +14,11 @@ decisions. It is the "verifiable" layer: nothing is silently reconciled.
 - **Hollow Aria (#6)** — Display name is "Hollow Aria"; slug `hollow-aria`; artwork file is the
   legacy `Sick52 - Void Vocalist.png`. The old slug `void-vocalist` now redirects via `wikiLinkMap`.
 - **DJ24 squads** — The 24 are grouped into six strength-ordered squads of four on the roster page.
+- **The Rival = General 24** — Creator decision: Sync's true rival is **General 24** (same-side rivalry,
+  Naruto/Sasuke style). The separate "Champion of Ongaku Prime" rival concept is folded into him; Drez
+  stays the chaotic Maverick foil. Reflected in `content/characters/sync.md`, `general-24.md`, lore `03`.
+- **Guardian aliases** — Clear alt-names from the source's earlier roster passes are attached as
+  `alias` on `dj24Roster` (shown as "Also known as", and resolvable as wiki links). See lore `04`.
 
 ## ⚠️ Known multi-version areas (need a creator decision)
 
@@ -27,15 +32,15 @@ decisions. It is the "verifiable" layer: nothing is silently reconciled.
   Midday Prime, LowPass, Overtone, FadeOut, NullMeter, NightSignal, Last Drop).
 - **An early genre-named pass** (Moombah, Hip Hop Mafia, AmaPiano, Lofi, Disco Grindin,
   "Cocaine in My Brain" → renamed **NeuroRush**, Liquid Bandit, 6 Side, Afrohouse, etc.).
-- **Decision taken:** keep the canonical hour roster live. The other passes are preserved only in the
-  source archive. _Open question for creator: fold any of these alt names in as reserves/aliases?_
+- **Decision taken (updated):** keep the canonical hour roster live; the clearly-matching alt-names
+  are now attached as **aliases** (see lore `04`). The early **genre-coded** pass remains archived and
+  is a candidate for the future 54-reserve roster.
 
 ### 2. Name collisions
 - **Veyra** appears as both **Grand Composer Veyra** (Harmony Council) and **Veyra "Sonic Knight"**
   (a DJ24 duelist in one roster pass). Site uses Veyra for the Council. _Needs disambiguation._
-- **Drez** is the **Mavericks** leader on-site, but also appears as a candidate **Rival** name in
-  `source/7-...villains...`. _Confirm whether the Rival is Drez or a separate character (Vex/Riven/
-  Sonus/Requiem)._
+- **Drez** is the **Mavericks** leader on-site, and also appeared as a candidate **Rival** name in
+  `source/7-...villains...`. **Resolved:** the Rival role is **General 24**; Drez stays the Maverick foil.
 - **SubZ** (site) = "SubG" / "SubZeroHz" in source variants. Treated as the same guardian (Hour 11).
 
 ### 3. Sick 52 — extra lore beyond the 52

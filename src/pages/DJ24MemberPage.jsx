@@ -59,6 +59,9 @@ export default function DJ24MemberPage() {
                 <tr><td>Hour</td><td>{member.hour} of 24</td></tr>
                 <tr><td>Role</td><td>{member.role}</td></tr>
                 <tr><td>Squad</td><td>{member.squad}</td></tr>
+                {member.alias && member.alias.length > 0 && (
+                  <tr><td>Also known as</td><td>{member.alias.join(', ')}</td></tr>
+                )}
                 <tr><td>Status</td><td>Active Guardian</td></tr>
               </tbody>
             </table>
