@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJ24 — The War of Sound</title>
+  <meta name="description" content="DJ24: The War of Sound — an epic multimedia universe of anime, webcomic, games and lore set on Planet Ongaku, where sound is power." />
+  <meta property="og:title" content="DJ24 — The War of Sound" />
+  <meta property="og:description" content="On Planet Ongaku, sound is power. Meet the 24 guardians of DJ24 and the 52 villains of the Sick 52." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/hero.png" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>" />
+  <style>
+    :root {
+      --cyan: #22d3ee;
+      --gold: #fbbf24;
+      --magenta: #e879f9;
+      --bg: #05070f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: #f8fafc;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .stage {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.25rem 3rem;
+      isolation: isolate;
+    }
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("/hero.png") center/cover no-repeat;
+      filter: saturate(1.1) contrast(1.05);
+      z-index: -2;
+    }
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(120% 90% at 50% 10%, rgba(5,7,15,0.35) 0%, rgba(5,7,15,0.82) 55%, rgba(5,7,15,0.97) 100%),
+        linear-gradient(180deg, rgba(34,211,238,0.08), rgba(232,121,249,0.05));
+      z-index: -1;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      border: 1px solid rgba(34,211,238,0.5);
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      margin-bottom: 1.6rem;
+      background: rgba(34,211,238,0.06);
+      backdrop-filter: blur(4px);
+    }
+    h1 {
+      font-size: clamp(3.5rem, 16vw, 9rem);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      background: linear-gradient(180deg, #ffffff 0%, var(--cyan) 55%, #0891b2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 48px rgba(34,211,238,0.35);
+    }
+    .tagline {
+      font-size: clamp(1rem, 3.4vw, 1.7rem);
+      font-weight: 700;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+      color: var(--gold);
+      text-indent: 0.42em;
+    }
+    .blurb {
+      max-width: 40rem;
+      margin: 1.6rem auto 0;
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
+      line-height: 1.7;
+      color: #cbd5e1;
+    }
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      justify-content: center;
+      margin-top: 2.4rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.95rem 1.8rem;
+      border-radius: 12px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #0891b2);
+      color: #05070f;
+      box-shadow: 0 10px 30px rgba(34,211,238,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(34,211,238,0.5); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      color: #f8fafc;
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+    .btn-ghost:hover { transform: translateY(-2px); border-color: var(--gold); color: var(--gold); }
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.4rem;
+      justify-content: center;
+      margin-top: 2.6rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pills span { display: inline-flex; align-items: center; gap: 0.45rem; }
+    .pills span::before { content: "▮"; color: var(--magenta); font-size: 0.7rem; }
+    footer {
+      position: absolute;
+      bottom: 1.1rem;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+    footer a { color: var(--cyan); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <span class="badge">Planet Ongaku · Sound is Power</span>
+    <h1>DJ24</h1>
+    <p class="tagline">The War of Sound</p>
+    <p class="blurb">
+      A neon-soaked future where music is the only weapon that matters. Twenty-four
+      guardians stand against the fifty-two mutated villains of the Sick 52 in a war
+      for the sound of an entire world. Explore the full universe — lore, characters,
+      the deck of 52, the games and the webcomic.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://dj24.net/">Enter the Wiki →</a>
+      <a class="btn btn-ghost" href="https://dj24.net/comics">Read the Webcomic</a>
+    </div>
+    <div class="pills">
+      <span>Anime</span>
+      <span>Webcomic</span>
+      <span>Games</span>
+      <span>24 Guardians</span>
+      <span>The Sick 52</span>
+    </div>
+  </main>
+  <footer>
+    &copy; <span id="y"></span> DJ24: The War of Sound · The full universe lives at
+    <a href="https://dj24.net/">dj24.net</a>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>

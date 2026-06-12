@@ -2826,8 +2826,22 @@ a {
 .comic-cast-chip span { color: var(--text-muted); }
 a.comic-cast-chip:hover { border-color: var(--arc-color); }
 
-.comic-cover-splash { border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 8px 26px rgba(15,23,42,0.2); }
+.comic-cover-splash { border-radius: 14px; overflow: hidden; margin: 0 0 1.5rem; box-shadow: 0 8px 26px rgba(15,23,42,0.2); }
 .comic-cover-splash img { width: 100%; display: block; }
+
+/* AI image prompt captions */
+.comic-art-caption {
+  font-size: 0.74rem; line-height: 1.5; color: var(--text-muted); background: var(--bg-alt);
+  border-top: 1px dashed var(--border); padding: 0.55rem 0.8rem; font-style: italic;
+}
+.comic-art-caption-label {
+  display: inline-block; font-style: normal; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.05em; font-size: 0.6rem; color: var(--arc-color, #0ea5e9);
+  border: 1px solid var(--arc-color, #0ea5e9); border-radius: 5px; padding: 0.05rem 0.35rem; margin-right: 0.45rem;
+}
+
+/* top pager spacing */
+.comic-nav.top { margin-top: 0; margin-bottom: 1.4rem; }
 
 /* ----- Summary article + Chapter Info infobox ----- */
 .comic-article { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.75rem; align-items: start; }
@@ -2868,7 +2882,7 @@ a.infobox-chip.is-link:hover { background: var(--arc-color, #0ea5e9); color: #ff
   font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
   color: #fff; background: var(--arc-color, #0ea5e9); padding: 0.4rem 0.9rem;
 }
-.comic-page-art { background: #0b1120; }
+.comic-page-art { background: #0b1120; margin: 0; }
 .comic-page-art img { width: 100%; display: block; }
 .comic-panels { padding: 1rem 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; }
 

@@ -34,6 +34,38 @@ Most fighters pick one of the two basic stances — **Bass Stance** to hold grou
 **Type:** Hidden ability (unrevealed).
 The strange thing General 24 noticed about Sync: he doesn't play to a beat that already exists — he *aligns himself to one that isn't there yet.* No one, including Sync, understands this power yet. It is the seed of what the Sick 52 fearfully call the **Phantom**.
 
+### Resonance Anchor
+**Type:** Defensive stance.
+Taught to Sync by [[MasterBass]]. Instead of pushing back against an overwhelming wave of sound, Sync drives his rhythm down into the ground and makes himself "heavier" than the pressure, letting it flow around him. It is the only way to stand inside — and eventually walk through — a sub-bass assault that would flatten anyone else.
+
+### Counter-Drop
+**Type:** Offensive finisher.
+A reversal move. Sync feeds his own [[Bass Drop]] directly into an enemy's own resonating body or speaker at the exact frequency it already uses, overloading them with their own power turned all the way up. He used it to defeat the Sub-Bass Titan, [[Bass Phantom]].
+
+---
+
+## MasterBass (DJ24)
+
+[[MasterBass]] is a frail, ancient monk and the **Sub-Frequency Enforcer** — physically fragile, but able to weaponise the lowest, heaviest frequencies of all.
+
+### Sub-Bass Pressure
+**Type:** Field control.
+MasterBass fills the air with a twenty-hertz tone — too low to actually hear, but heavy enough to crush a person to their knees or even stop a heart. Enemies caught in it can barely move. He uses it both as a weapon and as a brutal teaching tool.
+
+---
+
+## SubZ (DJ24)
+
+[[SubZ]] is a one-eyed Russian sound-pirate turned DJ24 guardian. He doesn't erase or block attacks — he *steals* them.
+
+### Drop Theft
+**Type:** Counter / absorption.
+SubZ catches an incoming sound attack with his cutlass and absorbs it, then hurls that stolen energy straight back at the attacker. Throwing more power at him only makes him stronger, so the way to beat him is to stop attacking entirely.
+
+### Waveform Cutlass
+**Type:** Weapon.
+A curved blade of tightly condensed sound. It can slice through solid sky-rails and is the tool SubZ uses to catch and redirect enemy frequencies.
+
 ---
 
 ## Red Silence (Sick 52)
@@ -97,8 +129,16 @@ General 24 treats a battle like a timetable. He positions his twenty-four guardi
 The mutated soldiers of the [[Deck of 52]] each carry one signature horror.
 
 ### Dead Air
-**Type:** Field drain (Dead Air Revenant).
-A low card of the [[Deck of 52|deck]], the **Dead Air Revenant**, spreads expanding zones of total silence. Left alone, the silence eats a whole district block by block — lights die, music stops, and the people inside slowly forget the sound was ever there.
+**Type:** Field drain ([[Dead Air Revenant]]).
+A low card of the [[Deck of 52|deck]] (the 3 of Hearts), the **Dead Air Revenant**, spreads expanding zones of total silence. Left alone, the silence eats a whole district block by block — lights die, music stops, and the people inside slowly forget the sound was ever there.
+
+### Puppet Chorus
+**Type:** Mass mind control ([[Melody Hex]]).
+The Queen of Clubs, known as the Cursed Composer, runs glowing threads of music from her conductor's baton into everyone within earshot, turning an entire crowd into a puppet orchestra she controls. Her victims become living shields — strike her, and they feel the blow. The counter is not to attack her or them, but to sever the *music* in the silent gap between the notes.
+
+### Bass Quake
+**Type:** Area shockwave ([[Bass Phantom]]).
+The Sub-Bass Titan and Jack of Spades, [[Bass Phantom]], slams the ground and releases a sub-bass wave so heavy it flattens an entire arena at once. Only [[Resonance Anchor]] allows a fighter to survive standing.
 
 ---
 

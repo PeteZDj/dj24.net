@@ -1018,6 +1018,7 @@ export const wikiLinkMap = {
   // World
   'planet ongaku': '/universe',
   'ongaku': '/universe',
+  'ongaku prime': '/planet_ongaku',
   'frequency grid': '/wiki/frequency-grid',
   'the frequency grid': '/wiki/frequency-grid',
   'syncopate': '/wiki/syncopate',
@@ -1181,6 +1182,13 @@ export const wikiLinkMap = {
   'the 24-hour schedule': '/wiki/signature-moves',
   '24-hour schedule': '/wiki/signature-moves',
   'dead air': '/wiki/signature-moves',
+  'sub-bass pressure': '/wiki/signature-moves',
+  'resonance anchor': '/wiki/signature-moves',
+  'drop theft': '/wiki/signature-moves',
+  'waveform cutlass': '/wiki/signature-moves',
+  'puppet chorus': '/wiki/signature-moves',
+  'bass quake': '/wiki/signature-moves',
+  'counter-drop': '/wiki/signature-moves',
   // Webcomic — locations
   'echo arena': '/wiki/stages-and-arenas',
   'the echo arena': '/wiki/stages-and-arenas',
@@ -1196,8 +1204,17 @@ export const wikiLinkMap = {
   'the twenty-four hours': '/comics/ch03-the-twenty-four-hours',
   'deck of cards': '/comics/ch04-deck-of-cards',
   'silent streets': '/comics/ch05-silent-streets',
+  'the sub-bass monk': '/comics/ch06-the-sub-bass-monk',
+  'frequency thieves': '/comics/ch07-frequency-thieves',
+  'the cursed composer': '/comics/ch08-the-cursed-composer',
+  'crescendo': '/comics/ch09-crescendo',
+  'first blood, first drop': '/comics/ch10-first-blood-first-drop',
   'ace of spades': '/sick-deck',
-  'dead air revenant': '/sick-deck',
+  // Sick 52 cards featured in the webcomic
+  'dead air revenant': '/sick52/dead-air-revenant',
+  'melody hex': '/sick52/melody-hex',
+  'nocturne prime': '/sick52/nocturne-prime',
+  'sub-bass titan': '/sick52/bass-phantom',
 };
 
 export function resolveWikiLink(text) {

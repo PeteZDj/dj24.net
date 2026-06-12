@@ -9,7 +9,7 @@ slug: "ch04-deck-of-cards"
 
 ## Summary
 
-[[Sync]] and [[Molly]] track the alert down into the rain-soaked lower districts of Ongaku Prime. In a neon alley, a giant holographic board unfolds in front of them — a fanned-out [[Deck of 52|deck of fifty-two cards]], each one showing the face of a different [[Sick 52]] soldier. Molly uses the moment to teach Sync how the enemy is organised. There are fifty-two of them, dealt out like a deck of cards, and the way you hunt them is from the bottom up. You start at the tens and you climb.
+[[Sync]] and [[Molly]] track the alert down into the rain-soaked lower districts of [[Ongaku Prime]]. In a neon alley, a giant holographic board unfolds in front of them — a fanned-out [[Deck of 52|deck of fifty-two cards]], each one showing the face of a different [[Sick 52]] soldier. Molly uses the moment to teach Sync how the enemy is organised. There are fifty-two of them, dealt out like a deck of cards, and the way you hunt them is from the bottom up. You start at the tens and you climb.
 
 She explains the ranks. The Kings, Queens, and Jacks are the Sick 52's generals, and far above all of them sit the Aces. At the very top of the board, the Ace of Spades burns brightest of all — a silhouette none of them will even name. Sync asks the obvious question: why bother hunting the weakest cards first when it sounds backwards? Molly's answer is that the low cards act as bodyguards. Take them down, and the powerful cards lose the cover protecting them. You don't simply reach an Ace, she says — you earn it.
 

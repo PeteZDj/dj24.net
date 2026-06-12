@@ -9,7 +9,7 @@ slug: "ch02-off-the-beat"
 
 ## Summary
 
-The morning after the fight in the [[Echo Arena|Echo Arena]], [[Sync]] is escorted up through the DJ24 Command Spire in a glass elevator, the whole city shrinking away beneath him. He is annoyed: he survived a death match against the most dangerous man alive, and DJ24 is treating him like a recruit who broke curfew.
+The morning after the fight in the [[Echo Arena|Echo Arena]], [[Sync]] is escorted up through the DJ24 Command Spire in [[Ongaku Prime]] in a glass elevator, the whole city shrinking away beneath him. He is annoyed: he survived a death match against the most dangerous man alive, and DJ24 is treating him like a recruit who broke curfew.
 
 The elevator opens onto a vast hall at the top of the spire. A golden, twenty-four-segment time-disc turns slowly above the room, and around it float the holographic portraits of twenty-four guardians — one for every hour of the day. Waiting beneath the disc is [[General 24]], the Supreme Commander of [[DJ24]]. He explains the structure of his organisation: twenty-four hours, twenty-four guardians. He does not fight like a normal soldier. Using [[The 24-Hour Schedule]], he positions his guardians so precisely that the enemy is always walking into the next planned event. As he tells Sync, he doesn't fight — he schedules reality.
 

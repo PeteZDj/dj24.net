@@ -9,7 +9,7 @@ slug: "ch03-the-twenty-four-hours"
 
 ## Summary
 
-At dawn over Ongaku Prime, a lattice of light hums quietly beneath the streets. This is the [[Frequency Grid]], and [[Molly]] explains to [[Sync]] just how important it is. Every wall, every light, and every heartbeat in the city runs on the Grid. If the sound is ever cut, the city itself dies. That, she tells him, is exactly what the [[Sick 52]] want: silence, forever. Understanding this is the reason DJ24 exists, Sync begins his training on the rooftop dojo at the top of the Command Spire.
+At dawn over [[Ongaku Prime]], a lattice of light hums quietly beneath the streets. This is the [[Frequency Grid]], and [[Molly]] explains to [[Sync]] just how important it is. Every wall, every light, and every heartbeat in the city runs on the Grid. If the sound is ever cut, the city itself dies. That, she tells him, is exactly what the [[Sick 52]] want: silence, forever. Understanding this is the reason DJ24 exists, Sync begins his training on the rooftop dojo at the top of the Command Spire.
 
 Molly teaches him the two basic stances every DJ24 fighter must master. She flows into a spinning attack, her [[Shockwave Pirouette]], to demonstrate. There is **Bass Stance**, used to hold the ground and defend, and **Treble Stance**, used to strike fast and aim high. The rule is simple: pick one. When she presses the attack, Sync throws up a low-frequency barrier in Bass Stance, and her [[Prima Edge]] rings off the shockwave. But even as he blocks, Sync starts to think the rule is wrong — he shouldn't pick one stance, he should drop *between* them, on the beat.
 
