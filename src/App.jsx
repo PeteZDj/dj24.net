@@ -22,6 +22,7 @@ import DJ24Roster from './pages/DJ24Roster';
 import DJ24MemberPage from './pages/DJ24MemberPage';
 import DeckPage from './pages/DeckPage';
 import MissionsPage from './pages/MissionsPage';
+import MissionPage from './pages/MissionPage';
 import ComicsIndex from './pages/ComicsIndex';
 import ComicReader from './pages/ComicReader';
 
@@ -151,6 +152,7 @@ export default function App() {
           <Route path="/sick52" element={<Sick52Gallery />} />
           <Route path="/sick-deck" element={<DeckPage />} />
           <Route path="/missions" element={<MissionsPage />} />
+          <Route path="/missions/:slug" element={<MissionPage />} />
           <Route path="/sick52/:slug" element={<Sick52Member />} />
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/seasons" element={<SeasonsPage />} />

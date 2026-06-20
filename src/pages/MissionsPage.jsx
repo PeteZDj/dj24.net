@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getStoryMissions, getBounties, getDJ24ByBranch } from '../contentLoader';
+import { getBounties, getDJ24ByBranch } from '../contentLoader';
+import { gameMeta, getActsWithEpisodes } from '../missionsData';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 function money(n) {
@@ -17,37 +18,98 @@ function BranchChip({ branch }) {
 }
 
 export default function MissionsPage() {
-  const acts = getStoryMissions();
+  const campaign = getActsWithEpisodes();
   const bounties = getBounties();
   const branches = getDJ24ByBranch();
   const houseKeys = Object.keys(bounties);
   const [activeHouse, setActiveHouse] = useState('clubs');
-
-  // group story missions by act, preserving order
-  const byAct = acts.reduce((acc, m) => {
-    (acc[m.act] = acc[m.act] || []).push(m);
-    return acc;
-  }, {});
+  const firstEp = campaign[0]?.episodes[0];
 
   const house = bounties[activeHouse];
 
   return (
     <div className="wiki-page missions-page">
       <Breadcrumbs />
-      <h1>Missions — The Deck of 52 Bounty War</h1>
-      <p className="page-intro">
-        <Link to="/wiki/dj24-the-sick-52" className="wiki-link">DJ24: The Sick 52</Link> turns the
-        roster into a <strong>most-wanted bounty war</strong>. The 52 enemies are dealt as a{' '}
-        <Link to="/sick-deck" className="wiki-link">deck of cards</Link>; you field the four
-        <strong> DJ24 branches</strong> — Army, Navy, Airforce, Space Force — and clear a city by
-        hunting its cards from the <strong>10</strong> up to the <strong>Ace</strong>.
+
+      {/* ===== GAME HERO ===== */}
+      <section className="game-hero">
+        <img className="game-hero-art" src={gameMeta.cover} alt="DJ24 XD key art" />
+        <div className="game-hero-body">
+          <span className="game-hero-kicker">Music RPG · Create-your-character · Build-your-city</span>
+          <h1>{gameMeta.title} <span className="game-hero-sub">{gameMeta.subtitle}</span></h1>
+          <p className="game-hero-tagline">{gameMeta.tagline}</p>
+          <p className="game-hero-blurb">{gameMeta.blurb}</p>
+          <div className="game-hero-stats">
+            <span><strong>{gameMeta.episodeCount}</strong> episodes</span>
+            <span><strong>5</strong> acts</span>
+            <span><strong>4</strong> regions</span>
+          </div>
+          {firstEp && (
+            <Link to={`/missions/${firstEp.slug}`} className="game-hero-cta">
+              ▶ Start — Ep 1: {firstEp.title}
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* ===== 101-EPISODE CAMPAIGN ===== */}
+      <h2 className="section-title">The Campaign — 101 Episodes</h2>
+      <p className="tier-desc">
+        The story runs across four regions of <Link to="/planet_ongaku" className="wiki-link">Planet Ongaku</Link> —
+        the <strong>Flowers</strong>, <strong>Hearts</strong>, <strong>Diamonds</strong> and <strong>Spades</strong> —
+        with the payouts climbing every act. Click any episode for its full mission page.
       </p>
 
-      {/* ===== DJ24 BRANCHES — your forces ===== */}
-      <h2 className="section-title">Your Forces — The Four DJ24 Branches</h2>
+      <div className="campaign">
+        {campaign.map((act) => (
+          <section key={act.key} className="campaign-act" style={{ '--act-color': act.color }}>
+            <div className="campaign-act-header">
+              <img className="campaign-act-art" src={act.art} alt={`${act.name} key art`} />
+              <div className="campaign-act-meta">
+                <span className="campaign-act-suit">{act.suit}</span>
+                <h3>{act.name}<span className="campaign-act-subtitle">{act.subtitle}</span></h3>
+                <p className="campaign-act-region">📍 {act.region}</p>
+                <p className="campaign-act-desc">{act.desc}</p>
+                <span className="campaign-act-tier">Rewards: {act.rewardTier}</span>
+              </div>
+            </div>
+
+            <ol className="campaign-list">
+              {act.episodes.map((e) => (
+                <li key={e.slug}>
+                  <Link to={`/missions/${e.slug}`} className={`campaign-row ${e.boss ? 'is-boss' : ''}`}>
+                    <span className="campaign-no">{e.no}</span>
+                    <span className="campaign-body">
+                      <span className="campaign-title">
+                        {e.title}
+                        {e.boss && <span className="campaign-boss">KEY</span>}
+                      </span>
+                      <span className="campaign-synopsis">{e.synopsis}</span>
+                      <span className="campaign-tags">
+                        {e.giver && <span className="campaign-giver">▸ {e.giver}</span>}
+                        {e.featuring?.slice(0, 3).map((f) => (
+                          <span key={f} className="campaign-feat">{f}</span>
+                        ))}
+                      </span>
+                    </span>
+                    <span className="campaign-reward">{money(e.rewardCash)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+
+      {/* ===== SICK 52 BOUNTY WAR (endgame / multiplayer) ===== */}
+      <h2 className="section-title">Endgame — The Sick 52 Bounty War</h2>
       <p className="tier-desc">
-        Pick the right branch for the house you're hunting. Each branch counters one Sick 52 house.
+        After the story, <Link to="/wiki/dj24-the-sick-52" className="wiki-link">DJ24: The Sick 52</Link> opens the
+        roster as a <strong>most-wanted bounty war</strong>. Field the four <strong>DJ24 branches</strong> and clear
+        each city by hunting its cards from the <strong>10</strong> up to the <strong>Ace</strong>.
       </p>
+
+      <h3 className="section-title sub">Your Forces — The Four DJ24 Branches</h3>
       <div className="branch-grid">
         {branches.map(b => (
           <div key={b.key} className="branch-card" style={{ '--branch-color': b.color }}>
@@ -74,53 +136,7 @@ export default function MissionsPage() {
         ))}
       </div>
 
-      {/* ===== STORY CAMPAIGN ===== */}
-      <h2 className="section-title">Campaign — The Story Missions</h2>
-      <p className="tier-desc">The spine of the war, from first contact to the Final Drop.</p>
-      <div className="mission-timeline">
-        {Object.entries(byAct).map(([act, missions]) => (
-          <div key={act} className="mission-act">
-            <h3 className="mission-act-title">{act}</h3>
-            {missions.map(m => (
-              <div key={m.id} className={`mission-row ${m.boss ? 'mission-boss' : ''}`}>
-                <div className="mission-no">{m.no}</div>
-                <div className="mission-body">
-                  <div className="mission-head">
-                    <h4>{m.title}{m.boss && <span className="boss-tag">BOSS</span>}</h4>
-                    <div className="mission-meta">
-                      {m.cityInfo && (
-                        <Link to={`/planet_ongaku/cities/${m.cityInfo.slug}`} className="mission-city">
-                          📍 {m.cityInfo.name}
-                        </Link>
-                      )}
-                      <BranchChip branch={m.branchInfo} />
-                      {m.reward > 0 && <span className="mission-reward">{money(m.reward)}</span>}
-                    </div>
-                  </div>
-                  <p className="mission-objective"><strong>Objective:</strong> {m.objective}</p>
-                  <p className="mission-brief">{m.brief}</p>
-                  {m.targetMembers.length > 0 && (
-                    <div className="mission-targets">
-                      {m.targetMembers.map(t => (
-                        <Link key={t.slug} to={`/sick52/${t.slug}`} className="mission-target">
-                          <span className="mission-target-card">{t.cardLabel}</span>
-                          {t.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-
-      {/* ===== BOUNTY BOARD ===== */}
-      <h2 className="section-title">Bounty Board — All 52 Targets</h2>
-      <p className="tier-desc">
-        Every card is a repeatable bounty in a city. Work each house from <strong>10 → Ace</strong>.
-      </p>
+      <h3 className="section-title sub">Bounty Board — All 52 Targets</h3>
       <div className="deck-suit-tabs">
         {houseKeys.map(k => {
           const h = bounties[k];
