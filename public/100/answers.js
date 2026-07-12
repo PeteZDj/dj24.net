@@ -109,3 +109,11 @@ window.ANSWERS = {
   99: { status:"doing", text:"Chase PMF: an engaged fandom and a game people demonstrably want (wishlists/pre-orders)." },
   100:{ status:"doing", text:"Evaluate expansion: sequels, an anime deal, merch lines and licensing." }
 };
+
+/* __DESIGN__ brand-adaptive design tokens for the /100 page */
+window.SITE.design = {"mode":"light","primary":"#a855f7","accent":"#38bdf8","scale":"#f43f5e","launch":"#22d3ee","setup":"#a855f7","bg":"#ffffff","bg2":"#f5f7fb","card":"#ffffff","line":"#e7ecf3","radius":18,"headFont":"'Outfit'","bodyFont":"'Inter'","fontLink":"https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap","logo":"/favicon.svg"};
+/* __END_DESIGN__ */
+
+/* __DESIGN__ brand-adaptive design tokens for the /100 page */
+window.SITE.design = {"mode":"light","primary":"#a855f7","accent":"#38bdf8","scale":"#f43f5e","launch":"#22d3ee","setup":"#a855f7","bg":"#ffffff","bg2":"#f5f7fb","card":"#ffffff","line":"#e7ecf3","radius":18,"headFont":"'Outfit'","bodyFont":"'Inter'","fontLink":"https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap","logo":"/favicon.svg"};
+/* __END_DESIGN__ */
