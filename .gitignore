@@ -20,6 +20,9 @@ dist-ssr
 # Backup files
 *.backup
 
+# Local render output from scripts/render-preview.mjs and scripts/render-city.mjs
+tmp-preview/
+
 # Large image files (use external hosting or Git LFS)
 public/images/**/*.png
 public/images/**/*.jpg

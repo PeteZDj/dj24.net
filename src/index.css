@@ -3699,7 +3699,7 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
 .map-page .breadcrumb-current { color: #94a3b8; }
 .map-page .breadcrumbs a:hover { color: var(--map-gold); }
 
-.map-head { margin: .75rem 0 1.25rem; }
+.map-head { margin: .75rem 0 1.1rem; }
 .map-head h1 {
   font-size: clamp(1.9rem, 4vw, 3rem);
   font-weight: 900;
@@ -3724,14 +3724,14 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
   backdrop-filter: blur(10px);
   margin-bottom: 1rem;
 }
-.map-modes { display: flex; border: 1px solid var(--map-line); border-radius: 10px; overflow: hidden; }
-.map-modes button {
+.map-seg { display: flex; border: 1px solid var(--map-line); border-radius: 10px; overflow: hidden; }
+.map-seg button {
   background: transparent; border: 0; color: #cbd5e1;
-  padding: .5rem .95rem; font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer;
+  padding: .5rem .95rem; font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer;
   transition: background .2s, color .2s;
 }
-.map-modes button.on { background: var(--map-gold); color: #0b1220; }
-.map-modes button:not(.on):hover { background: rgba(148, 163, 184, .12); }
+.map-seg button.on { background: var(--map-gold); color: #0b1220; }
+.map-seg button:not(.on):hover { background: rgba(148, 163, 184, .12); }
 
 .map-btn {
   background: rgba(30, 41, 59, .9);
@@ -3770,7 +3770,7 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
 
 .map-canvas-wrap {
   position: relative;
-  height: min(76vh, 860px);
+  height: min(82vh, 940px);
   border: 1px solid var(--map-line);
   border-radius: 16px;
   overflow: hidden;
@@ -3790,7 +3790,41 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
   font-size: .78rem; color: #94a3b8;
   pointer-events: none;
 }
-.map-busy { left: 50%; top: 50%; bottom: auto; transform: translate(-50%, -50%); color: var(--map-gold); }
+.map-busy {
+  left: 50%; top: 50%; bottom: auto; transform: translate(-50%, -50%);
+  color: var(--map-gold); font-weight: 600; letter-spacing: .02em;
+}
+
+/* Zoom cluster and scale bar, bottom-right like a slippy map */
+.map-zoom-ctl {
+  position: absolute; right: 12px; bottom: 52px;
+  display: flex; flex-direction: column;
+  border: 1px solid var(--map-line); border-radius: 10px; overflow: hidden;
+  background: rgba(6, 11, 24, .88); backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+}
+.map-zoom-ctl button {
+  width: 38px; height: 38px;
+  background: transparent; border: 0; border-bottom: 1px solid var(--map-line);
+  color: #e2e8f0; font-size: 1.05rem; cursor: pointer; line-height: 1;
+  transition: background .15s;
+}
+.map-zoom-ctl button:last-child { border-bottom: 0; }
+.map-zoom-ctl button:hover { background: rgba(148, 163, 184, .16); }
+.map-zoom-ctl .map-fit { font-size: .95rem; }
+
+.map-scalebar {
+  position: absolute; right: 12px; bottom: 14px;
+  display: flex; align-items: center; gap: .45rem;
+  background: rgba(6, 11, 24, .78); border: 1px solid var(--map-line);
+  border-radius: 6px; padding: .3rem .55rem;
+  font-size: .72rem; color: #cbd5e1; pointer-events: none;
+}
+.map-scalebar-line {
+  display: block; height: 6px;
+  border: 1px solid #cbd5e1; border-top: 0;
+  transition: width .15s;
+}
 
 /* ---- inspector ---- */
 .map-inspector {
@@ -3831,7 +3865,7 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
   background: var(--map-panel);
   backdrop-filter: blur(10px);
   padding: 1.1rem;
-  max-height: min(76vh, 860px);
+  max-height: min(82vh, 940px);
   overflow-y: auto;
 }
 .map-legend h3 {
@@ -3849,6 +3883,8 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
 .map-key li { display: flex; align-items: center; gap: .5rem; font-size: .82rem; color: #cbd5e1; }
 .map-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
 .map-ring { width: 11px; height: 11px; border-radius: 50%; border: 2px solid; flex-shrink: 0; }
+.map-line { width: 16px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+.map-key-biomes .map-dot { border: 1px solid rgba(148, 163, 184, .35); }
 .map-legend-note { font-size: .78rem; line-height: 1.55; color: #94a3b8; }
 .map-legend-note code { color: var(--map-gold); font-size: .82rem; letter-spacing: .05em; }
 
