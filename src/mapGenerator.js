@@ -140,7 +140,10 @@ const PALETTES = {
     ice: [230, 238, 242], rock: [125, 115, 100], snow: [240, 244, 247],
     shadeMin: 0.55, shadeMax: 1.35, water: '#0d3459', deepWater: '#06142a',
     river: '#2a7fb8', road: 'rgba(255,231,175,.85)', roadCase: 'rgba(20,14,4,.55)',
-    label: '#ffffff', labelHalo: 'rgba(4,10,20,.92)', ui: '#f8fafc',
+    label: '#ffffff', labelGeo: '#e6eefa', labelWater: 'rgba(179,214,255,.92)', labelHalo: 'rgba(4,10,20,.92)', ui: '#f8fafc',
+    urban: 'rgba(150,146,140,.62)', urbanCore: 'rgba(196,192,184,.5)',
+    urbanCoreFade: 'rgba(196,192,184,0)',
+    urbanEdge: 'rgba(70,66,60,.5)', block: 'rgba(214,210,201,.5)', quay: '#8d8579',
   },
   // Deliberately flat: land is one cream, vegetation one green, water one
   // blue. Biome nuance is the Terrain style's job — this is the layer you
@@ -154,7 +157,10 @@ const PALETTES = {
     ice: [253, 254, 255], rock: [232, 228, 220], snow: [255, 255, 255],
     shadeMin: 0.975, shadeMax: 1.025, water: '#aacde7', deepWater: '#9ac2e0',
     river: '#8fbfe0', road: '#ffffff', roadCase: '#d4d0c8',
-    label: '#3c4043', labelHalo: 'rgba(255,255,255,.95)', ui: '#202124',
+    label: '#3c4043', labelGeo: '#6f7276', labelWater: '#7ba7cc', labelHalo: 'rgba(255,255,255,.95)', ui: '#202124',
+    urban: 'rgba(233,229,223,.95)', urbanCore: 'rgba(223,218,210,.75)',
+    urbanCoreFade: 'rgba(223,218,210,0)',
+    urbanEdge: 'rgba(203,197,188,.9)', block: 'rgba(214,208,199,.85)', quay: '#cfc8bd',
   },
   terrain: {
     abyss: [120, 168, 200], ocean: [141, 186, 214], shelf: [163, 202, 226], surf: [182, 216, 236],
@@ -165,7 +171,10 @@ const PALETTES = {
     ice: [246, 250, 252], rock: [188, 173, 150], snow: [252, 252, 252],
     shadeMin: 0.7, shadeMax: 1.22, water: '#8dbad6', deepWater: '#78a8c8',
     river: '#5a9ec4', road: 'rgba(255,255,255,.9)', roadCase: 'rgba(140,130,110,.7)',
-    label: '#33413d', labelHalo: 'rgba(255,255,255,.92)', ui: '#1f2937',
+    label: '#33413d', labelGeo: '#4a5a54', labelWater: '#5d92b5', labelHalo: 'rgba(255,255,255,.92)', ui: '#1f2937',
+    urban: 'rgba(208,200,188,.85)', urbanCore: 'rgba(196,187,173,.6)',
+    urbanCoreFade: 'rgba(196,187,173,0)',
+    urbanEdge: 'rgba(156,146,130,.8)', block: 'rgba(188,179,165,.75)', quay: '#b3a894',
   },
 };
 
@@ -405,31 +414,679 @@ export function generatePlanet(seedStr) {
     }
   }
 
-  // ---- motorways between cities ----
-  const routes = [];
-  cities.forEach((c, i) => {
-    const others = cities
-      .map((o, j) => ({ o, j, d: Math.hypot(o.x - c.x, o.y - c.y) }))
-      .filter((e) => e.j !== i)
-      .sort((a, b) => a.d - b.d)
-      .slice(0, 2);
-    for (const e of others) {
-      const key = i < e.j ? `${i}-${e.j}` : `${e.j}-${i}`;
-      if (routes.some((r) => r.key === key)) continue;
-      // Curve the route slightly so the network doesn't look like a diagram.
-      const mx = (c.x + e.o.x) / 2 + (rng() - 0.5) * e.d * 0.18;
-      const my = (c.y + e.o.y) / 2 + (rng() - 0.5) * e.d * 0.18;
-      const gx = Math.round((mx / WORLD_W) * (GW - 1));
-      const gy = Math.round((my / WORLD_H) * (GH - 1));
-      routes.push({ key, a: c, b: e.o, mx, my, sea: !isLandG(gx, gy) });
-    }
-  });
-
-  return {
+  const planet = {
     kind: 'planet', seed: seedStr, GW, GH, hf, mf,
     noiseH: nH, noiseR: nR,
-    cities, routes, rivers, lakes,
+    cities, rivers, lakes,
   };
+
+  // Roads are routed over the finished terrain, then the cities are grown
+  // around the bearings those roads arrive on, so highways run into the
+  // street network instead of stopping at a marker.
+  const net = generateRoadNetwork(planet);
+  planet.routes = net.routes;
+  buildFootprints(planet, rng, nW, net.bearings);
+  planet.regions = detectRegions(planet, rng);
+
+  return planet;
+}
+
+/* ------------------------------------------------- NAMED GEOGRAPHY */
+
+const NAME_PARTS = {
+  a: ['Ka', 'Ono', 'Sel', 'Var', 'Mor', 'Tan', 'Ish', 'Bel', 'Dro', 'Yun', 'Ashe', 'Kor', 'Vel', 'Ryo', 'Ambe', 'Sura'],
+  b: ['van', 'dara', 'mere', 'thal', 'ora', 'ska', 'gun', 'ratu', 'lune', 'sei', 'wari', 'nova', 'kai', 'dun'],
+};
+
+function makeName(rng) {
+  const a = NAME_PARTS.a[Math.floor(rng() * NAME_PARTS.a.length)];
+  const b = NAME_PARTS.b[Math.floor(rng() * NAME_PARTS.b.length)];
+  return a + b;
+}
+
+// Multi-source BFS inward from the edge of a component; the last cell reached
+// is the one furthest from any boundary, which is where a label belongs.
+function interiorPoint(cells, test, CW, CH) {
+  const member = new Set(cells);
+  let frontier = [];
+  for (const n of cells) {
+    const nx = n % CW;
+    const ny = (n / CW) | 0;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const ax = nx + dx;
+      const ay = ny + dy;
+      if (ax < 0 || ay < 0 || ax >= CW || ay >= CH || !test(ax, ay)) { frontier.push(n); break; }
+    }
+  }
+  if (!frontier.length) return cells[(cells.length / 2) | 0];
+
+  const visited = new Set(frontier);
+  let last = frontier[0];
+  while (frontier.length) {
+    const next = [];
+    for (const n of frontier) {
+      last = n;
+      const nx = n % CW;
+      const ny = (n / CW) | 0;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const ax = nx + dx;
+        const ay = ny + dy;
+        if (ax < 0 || ay < 0 || ax >= CW || ay >= CH) continue;
+        const ai = ay * CW + ax;
+        if (visited.has(ai) || !member.has(ai)) continue;
+        visited.add(ai);
+        next.push(ai);
+      }
+    }
+    frontier = next;
+  }
+  return last;
+}
+
+// Flood fill over a coarse grid to find the map's real features, so the atlas
+// can name what it actually generated rather than sprinkling labels at random.
+function detectRegions(planet, rng) {
+  const { GW, GH, hf, mf } = planet;
+  const CW = 256;
+  const CH = 160;
+  const at = (x, y) => {
+    const gx = Math.min(GW - 1, Math.round((x / (CW - 1)) * (GW - 1)));
+    const gy = Math.min(GH - 1, Math.round((y / (CH - 1)) * (GH - 1)));
+    return gy * GW + gx;
+  };
+
+  const toWorld = (x, y) => ({ x: (x / (CW - 1)) * WORLD_W, y: (y / (CH - 1)) * WORLD_H });
+
+  function components(test, minSize) {
+    const seen = new Uint8Array(CW * CH);
+    const found = [];
+    const stack = [];
+    for (let y = 0; y < CH; y++) {
+      for (let x = 0; x < CW; x++) {
+        const i = y * CW + x;
+        if (seen[i] || !test(x, y)) continue;
+        stack.length = 0;
+        stack.push(i);
+        seen[i] = 1;
+        const cells = [];
+        while (stack.length) {
+          const n = stack.pop();
+          const nx = n % CW;
+          const ny = (n / CW) | 0;
+          cells.push(n);
+          for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+            const ax = nx + dx;
+            const ay = ny + dy;
+            if (ax < 0 || ay < 0 || ax >= CW || ay >= CH) continue;
+            const ai = ay * CW + ax;
+            if (seen[ai] || !test(ax, ay)) continue;
+            seen[ai] = 1;
+            stack.push(ai);
+          }
+        }
+        if (cells.length >= minSize) {
+          // Anchor at the most interior cell, not the centroid: an ocean that
+          // wraps around a continent has its centroid on dry land.
+          const anchor = interiorPoint(cells, test, CW, CH);
+          const c = toWorld(anchor % CW, (anchor / CW) | 0);
+          // The extent lets the label engine re-anchor the name inside the
+          // visible part of the feature once the centroid pans off screen.
+          let bx0 = CW;
+          let by0 = CH;
+          let bx1 = 0;
+          let by1 = 0;
+          for (const n of cells) {
+            const nx = n % CW;
+            const ny = (n / CW) | 0;
+            if (nx < bx0) bx0 = nx;
+            if (nx > bx1) bx1 = nx;
+            if (ny < by0) by0 = ny;
+            if (ny > by1) by1 = ny;
+          }
+          const a = toWorld(bx0, by0);
+          const b = toWorld(bx1, by1);
+          found.push({ x: c.x, y: c.y, size: cells.length, bbox: { x0: a.x, y0: a.y, x1: b.x, y1: b.y } });
+        }
+      }
+    }
+    return found.sort((a, b) => b.size - a.size);
+  }
+
+  const isLand = (x, y) => hf[at(x, y)] > 0.002;
+  const isWater = (x, y) => hf[at(x, y)] <= 0.002;
+  const isHigh = (x, y) => hf[at(x, y)] > 0.42;
+  const isDry = (x, y) => {
+    const i = at(x, y);
+    return hf[i] > 0.002 && hf[i] < 0.35 && mf[i] < 0.22;
+  };
+  const isWood = (x, y) => {
+    const i = at(x, y);
+    return hf[i] > 0.002 && hf[i] < 0.42 && mf[i] > 0.62;
+  };
+
+  const continents = components(isLand, 900).slice(0, 5)
+    .map((r) => ({ ...r, name: `${makeName(rng)}`, kind: 'continent' }));
+  const oceans = components(isWater, 2600).slice(0, 4)
+    .map((r, i) => ({ ...r, name: i === 0 ? `The ${makeName(rng)} Ocean` : `${makeName(rng)} Sea`, kind: 'ocean' }));
+  const ranges = components(isHigh, 90).slice(0, 6)
+    .map((r) => ({ ...r, name: `${makeName(rng)} Range`, kind: 'range' }));
+  const deserts = components(isDry, 150).slice(0, 4)
+    .map((r) => ({ ...r, name: `${makeName(rng)} Desert`, kind: 'desert' }));
+  const forests = components(isWood, 220).slice(0, 4)
+    .map((r) => ({ ...r, name: `${makeName(rng)} Forest`, kind: 'forest' }));
+
+  return [...oceans, ...continents, ...ranges, ...deserts, ...forests];
+}
+
+/* ------------------------------------------------- ROAD NETWORK (A*) */
+
+// Routing runs on a coarse grid rather than the full field: 64k nodes is
+// plenty to make roads follow terrain, and keeps a whole network under 200ms.
+const RGW = 320;
+const RGH = 200;
+
+function buildRoutingGrid(planet) {
+  const { GW, GH, hf } = planet;
+  const h = new Float32Array(RGW * RGH);
+  for (let y = 0; y < RGH; y++) {
+    const sy = Math.min(GH - 1, Math.round((y / (RGH - 1)) * (GH - 1)));
+    for (let x = 0; x < RGW; x++) {
+      const sx = Math.min(GW - 1, Math.round((x / (RGW - 1)) * (GW - 1)));
+      h[y * RGW + x] = hf[sy * GW + sx];
+    }
+  }
+  return h;
+}
+
+// Binary min-heap over (priority, node). Flat arrays because this is the hot
+// loop of the whole generator.
+function makeHeap() {
+  const pri = [];
+  const node = [];
+  return {
+    get size() { return node.length; },
+    push(p, n) {
+      pri.push(p);
+      node.push(n);
+      let i = node.length - 1;
+      while (i > 0) {
+        const par = (i - 1) >> 1;
+        if (pri[par] <= pri[i]) break;
+        [pri[par], pri[i]] = [pri[i], pri[par]];
+        [node[par], node[i]] = [node[i], node[par]];
+        i = par;
+      }
+    },
+    pop() {
+      const top = node[0];
+      const lastP = pri.pop();
+      const lastN = node.pop();
+      if (node.length) {
+        pri[0] = lastP;
+        node[0] = lastN;
+        let i = 0;
+        for (;;) {
+          const l = i * 2 + 1;
+          const r = l + 1;
+          let s = i;
+          if (l < node.length && pri[l] < pri[s]) s = l;
+          if (r < node.length && pri[r] < pri[s]) s = r;
+          if (s === i) break;
+          [pri[s], pri[i]] = [pri[i], pri[s]];
+          [node[s], node[i]] = [node[i], node[s]];
+          i = s;
+        }
+      }
+      return top;
+    },
+  };
+}
+
+const NEIGHBOURS = [
+  [1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1],
+  [1, 1, 1.414], [1, -1, 1.414], [-1, 1, 1.414], [-1, -1, 1.414],
+];
+
+// Cost of entering a cell. Water is passable but very expensive, so a route
+// will bridge a narrow strait and refuse to cross an ocean. Slope dominates
+// everything else, which is what makes roads seek valleys and passes.
+function enterCost(h, used, from, to, diag) {
+  const ht = h[to];
+  let base = 1;
+  if (ht <= 0) base += 260;
+  else base += ht * 7;
+  // Slope dominates: this is what sends a road up a valley to a pass rather
+  // than straight over the ridge. Too high and every route hugs the coast.
+  const slope = Math.abs(ht - h[from]) * 560;
+  const corridor = used[to] ? 0.42 : 1;
+  return (base + slope) * diag * corridor;
+}
+
+function aStar(h, used, start, goal) {
+  const N = RGW * RGH;
+  const g = new Float32Array(N).fill(Infinity);
+  const came = new Int32Array(N).fill(-1);
+  const closed = new Uint8Array(N);
+  const gx = goal % RGW;
+  const gy = (goal / RGW) | 0;
+
+  const heap = makeHeap();
+  g[start] = 0;
+  heap.push(0, start);
+
+  let guard = 0;
+  while (heap.size && guard++ < 400000) {
+    const cur = heap.pop();
+    if (cur === goal) break;
+    if (closed[cur]) continue;
+    closed[cur] = 1;
+
+    const cx = cur % RGW;
+    const cy = (cur / RGW) | 0;
+    for (const [dx, dy, dd] of NEIGHBOURS) {
+      const nx = cx + dx;
+      const ny = cy + dy;
+      if (nx < 0 || ny < 0 || nx >= RGW || ny >= RGH) continue;
+      const nb = ny * RGW + nx;
+      if (closed[nb]) continue;
+      const ng = g[cur] + enterCost(h, used, cur, nb, dd);
+      if (ng >= g[nb]) continue;
+      g[nb] = ng;
+      came[nb] = cur;
+      // Octile heuristic, scaled by the cheapest possible step.
+      const ax = Math.abs(nx - gx);
+      const ay = Math.abs(ny - gy);
+      const hcost = (ax + ay) + (1.414 - 2) * Math.min(ax, ay);
+      heap.push(ng + hcost, nb);
+    }
+  }
+
+  if (came[goal] < 0 && goal !== start) return null;
+  const path = [];
+  let n = goal;
+  while (n >= 0) {
+    path.push(n);
+    if (n === start) break;
+    n = came[n];
+  }
+  return path.reverse();
+}
+
+// Chaikin corner-cutting: turns the staircase A* returns into a road.
+function smoothPath(pts, iterations = 3) {
+  let out = pts;
+  for (let it = 0; it < iterations; it++) {
+    const next = [out[0]];
+    for (let i = 0; i < out.length - 1; i++) {
+      const a = out[i];
+      const b = out[i + 1];
+      next.push({ x: a.x * 0.75 + b.x * 0.25, y: a.y * 0.75 + b.y * 0.25 });
+      next.push({ x: a.x * 0.25 + b.x * 0.75, y: a.y * 0.25 + b.y * 0.75 });
+    }
+    next.push(out[out.length - 1]);
+    out = next;
+  }
+  return out;
+}
+
+function generateRoadNetwork(planet) {
+  const h = buildRoutingGrid(planet);
+  const used = new Uint8Array(RGW * RGH);
+  const cities = planet.cities;
+  const idxOf = (c) => {
+    const gx = Math.max(0, Math.min(RGW - 1, Math.round((c.x / WORLD_W) * (RGW - 1))));
+    const gy = Math.max(0, Math.min(RGH - 1, Math.round((c.y / WORLD_H) * (RGH - 1))));
+    return gy * RGW + gx;
+  };
+  const toWorld = (n) => ({
+    x: ((n % RGW) / (RGW - 1)) * WORLD_W,
+    y: (((n / RGW) | 0) / (RGH - 1)) * WORLD_H,
+  });
+
+  const rank = (c) => (c.kind === 'capital' ? 3 : c.kind === 'mega' ? 2 : 1);
+
+  // Minimum spanning tree guarantees every city is reachable; the extra
+  // nearest-neighbour links stop the network being a pure tree.
+  const n = cities.length;
+  const pairs = new Set();
+  const inTree = new Array(n).fill(false);
+  const best = new Array(n).fill(Infinity);
+  const bestFrom = new Array(n).fill(-1);
+  inTree[0] = true;
+  for (let i = 1; i < n; i++) {
+    best[i] = Math.hypot(cities[i].x - cities[0].x, cities[i].y - cities[0].y);
+    bestFrom[i] = 0;
+  }
+  for (let step = 1; step < n; step++) {
+    let pick = -1;
+    for (let i = 0; i < n; i++) if (!inTree[i] && (pick < 0 || best[i] < best[pick])) pick = i;
+    if (pick < 0) break;
+    inTree[pick] = true;
+    pairs.add(pick < bestFrom[pick] ? `${pick},${bestFrom[pick]}` : `${bestFrom[pick]},${pick}`);
+    for (let i = 0; i < n; i++) {
+      if (inTree[i]) continue;
+      const d = Math.hypot(cities[i].x - cities[pick].x, cities[i].y - cities[pick].y);
+      if (d < best[i]) { best[i] = d; bestFrom[i] = pick; }
+    }
+  }
+  cities.forEach((c, i) => {
+    const near = cities
+      .map((o, j) => ({ j, d: Math.hypot(o.x - c.x, o.y - c.y) }))
+      .filter((e) => e.j !== i)
+      .sort((a, b) => a.d - b.d)
+      .slice(0, rank(c) > 1 ? 2 : 1);
+    for (const e of near) pairs.add(i < e.j ? `${i},${e.j}` : `${e.j},${i}`);
+  });
+
+  // Trunk routes first, so the important corridors get laid down and the
+  // minor roads then merge into them rather than the other way round.
+  const ordered = [...pairs]
+    .map((k) => k.split(',').map(Number))
+    .sort((p, q) => (rank(cities[q[0]]) + rank(cities[q[1]])) - (rank(cities[p[0]]) + rank(cities[p[1]])));
+
+  const routes = [];
+  const bearings = cities.map(() => []);
+
+  for (const [i, j] of ordered) {
+    const a = idxOf(cities[i]);
+    const b = idxOf(cities[j]);
+    if (a === b) continue;
+    const path = aStar(h, used, a, b);
+    if (!path || path.length < 2) continue;
+
+    let water = 0;
+    for (const p of path) if (h[p] <= 0) water++;
+    const ferry = water > 14 || water > path.length * 0.3;
+
+    if (!ferry) for (const p of path) used[p] = 1;
+
+    const world = path.map(toWorld);
+    const combined = rank(cities[i]) + rank(cities[j]);
+    routes.push({
+      a: cities[i], b: cities[j], ai: i, bi: j,
+      pts: ferry ? [world[0], world[world.length - 1]] : smoothPath(world),
+      ferry,
+      cls: combined >= 5 ? 'motorway' : combined >= 3 ? 'highway' : 'road',
+    });
+
+    if (!ferry) {
+      // Bearing the route leaves each city on, so the city's own radial roads
+      // can be aligned to meet it.
+      const k = Math.min(world.length - 1, 6);
+      bearings[i].push(Math.atan2(world[k].y - world[0].y, world[k].x - world[0].x));
+      const e = world.length - 1;
+      const k2 = Math.max(0, e - 6);
+      bearings[j].push(Math.atan2(world[k2].y - world[e].y, world[k2].x - world[e].x));
+    }
+  }
+
+  return { routes, bearings };
+}
+
+/* ------------------------------------------------- CITY FOOTPRINTS */
+
+const CITY_RADIUS = { capital: 64, mega: 48, hostile: 34, port: 30, military: 24, fortress: 18, town: 20 };
+
+// Every city on the planet gets a real urban area: sprawl clipped to the
+// coastline, a ring road, radial roads aligned to the highways arriving from
+// out of town, a street grid and a block texture. It is the same roads ->
+// blocks pipeline as the district view, just at atlas scale.
+const QUARTER_SUFFIX = ['Quarter', 'Heights', 'Row', 'Flats', 'Gate', 'Yards', 'Bank', 'Cross', 'Reach', 'Mills', 'Park', 'End'];
+
+// Zooming into a city on the planet map should show quarters, not an
+// unlabelled grid. The capital reuses the canon district names so the planet
+// view and the dedicated city view agree with each other.
+function nameQuarters(c, rng) {
+  const secs = c.sectors;
+  if (!secs) return;
+
+  if (c.kind === 'capital') {
+    const canon = DISTRICTS.map((d) => d.name);
+    secs.forEach((s, i) => { s.name = canon[i % canon.length]; });
+  } else {
+    secs.forEach((s, i) => {
+      s.name = i === 0
+        ? (c.kind === 'town' ? c.name : 'Downtown')
+        : `${makeName(rng)} ${QUARTER_SUFFIX[(rng() * QUARTER_SUFFIX.length) | 0]}`;
+    });
+  }
+
+  // The waterfront quarter should be the one actually on the water.
+  if (c.port && secs.length > 2) {
+    let best = 1;
+    let bd = Infinity;
+    for (let i = 1; i < secs.length; i++) {
+      const d = Math.hypot(secs[i].x - c.port.x, secs[i].y - c.port.y);
+      if (d < bd) { bd = d; best = i; }
+    }
+    const harbour = c.kind === 'capital' ? 'Harbour District' : `${makeName(rng)} Docks`;
+    // The canon list already contains a Harbour District, so hand its name to
+    // whichever sector is actually on the water and swap, never duplicate.
+    const dup = secs.findIndex((s) => s.name === harbour);
+    if (dup >= 0) secs[dup].name = secs[best].name;
+    secs[best].name = harbour;
+  }
+}
+
+function buildFootprints(planet, rng, nC, bearings) {
+  const { GW, GH, hf } = planet;
+  const landAt = (x, y) => {
+    const gx = Math.max(0, Math.min(GW - 1, Math.round((x / WORLD_W) * (GW - 1))));
+    const gy = Math.max(0, Math.min(GH - 1, Math.round((y / WORLD_H) * (GH - 1))));
+    return hf[gy * GW + gx] > 0.0015;
+  };
+
+  planet.cities.forEach((c, ci) => {
+    const R = (CITY_RADIUS[c.kind] || 22) * (0.85 + rng() * 0.3);
+    c.radius = R;
+
+    // Sprawl outline, stopped by the coast so waterfront cities sit on their
+    // bay instead of floating over it. Stepped finely, because a coarse ray
+    // walk leaves the polygon cutting corners across the water.
+    const poly = [];
+    const RAYS = 96;
+    let coastHits = 0;
+    for (let a = 0; a < RAYS; a++) {
+      const ang = (a / RAYS) * Math.PI * 2;
+      const ca = Math.cos(ang);
+      const sa = Math.sin(ang);
+      let r = R * (0.66 + (nC(ca * 2.4 + ci * 9, sa * 2.4) * 0.5 + 0.5) * 0.62);
+      const inc = R * 0.025;
+      for (let step = inc; step <= r; step += inc) {
+        if (!landAt(c.x + ca * step, c.y + sa * step)) {
+          r = Math.max(R * 0.06, step - inc);
+          coastHits++;
+          break;
+        }
+      }
+      poly.push({ x: c.x + ca * r, y: c.y + sa * r, r, ang });
+    }
+    c.poly = poly.map((p) => ({ x: p.x, y: p.y }));
+    c.coastal = coastHits > 3;
+
+    // The outline is a radial function of angle, so containment is a lookup
+    // rather than a 96-vertex polygon test. Street and block generation calls
+    // this tens of thousands of times per city, so O(1) matters here.
+    const rays = Float32Array.from(poly.map((p) => p.r));
+    const TAU = Math.PI * 2;
+    const inCity = (x, y) => {
+      const dx = x - c.x;
+      const dy = y - c.y;
+      const d = Math.hypot(dx, dy);
+      if (d > R * 1.5) return false;
+      let a = Math.atan2(dy, dx);
+      if (a < 0) a += TAU;
+      const t = (a / TAU) * RAYS;
+      const i = Math.floor(t) % RAYS;
+      const f = t - Math.floor(t);
+      return d <= rays[i] + (rays[(i + 1) % RAYS] - rays[i]) * f;
+    };
+
+    // Sectors: a downtown plus outlying quarters, each with its own street
+    // angle and density. Without them every city renders as one uniform
+    // lattice, which is what makes procedural cities look fake.
+    const nSec = c.kind === 'capital' ? 7 : c.kind === 'mega' ? 5 : c.kind === 'town' ? 2 : 3;
+    const sectors = [{ x: c.x, y: c.y, w: 1.3, dens: 1, ang: rng() * Math.PI }];
+    for (let s = 1; s < nSec; s++) {
+      const a = (s / (nSec - 1)) * Math.PI * 2 + rng() * 0.7;
+      const d = R * (0.42 + rng() * 0.4);
+      sectors.push({
+        x: c.x + Math.cos(a) * d,
+        y: c.y + Math.sin(a) * d,
+        w: 0.8 + rng() * 0.35,
+        dens: 0.45 + rng() * 0.5,
+        ang: rng() * Math.PI,
+      });
+    }
+    const sectorAt = (x, y) => {
+      let best = 0;
+      let bd = Infinity;
+      for (let s = 0; s < sectors.length; s++) {
+        const d = Math.hypot(x - sectors[s].x, y - sectors[s].y) / sectors[s].w;
+        if (d < bd) { bd = d; best = s; }
+      }
+      return best;
+    };
+    // A sector seed can land in the bay — harmless for street generation,
+    // which tests the outline anyway, but a quarter name floating in the water
+    // looks broken. Walk each anchor back towards downtown until it is inside
+    // the sprawl and on land.
+    for (const s of sectors) {
+      s.lx = s.x;
+      s.ly = s.y;
+      if (inCity(s.x, s.y) && landAt(s.x, s.y)) continue;
+      for (let t = 0.12; t <= 1.001; t += 0.08) {
+        const bx = s.x + (c.x - s.x) * t;
+        const by = s.y + (c.y - s.y) * t;
+        if (inCity(bx, by) && landAt(bx, by)) { s.lx = bx; s.ly = by; break; }
+      }
+    }
+    c.sectors = sectors;
+
+    // Ring road, pulled inside the sprawl edge.
+    const ring = [];
+    for (let a = 0; a < RAYS; a += 2) {
+      const p = poly[a];
+      const rr = Math.min(p.r * 0.62, R * 0.55);
+      ring.push({ x: c.x + Math.cos(p.ang) * rr, y: c.y + Math.sin(p.ang) * rr });
+    }
+    c.ring = ring;
+
+    // Radials: one per arriving highway, topped up so the city never looks
+    // lopsided, each stopping at the edge of the built-up area.
+    const angs = [...(bearings[ci] || [])];
+    const want = c.kind === 'capital' ? 8 : c.kind === 'mega' ? 6 : 4;
+    let guard = 0;
+    while (angs.length < want && guard++ < 60) {
+      const cand = rng() * Math.PI * 2;
+      if (angs.every((a) => Math.abs(Math.atan2(Math.sin(cand - a), Math.cos(cand - a))) > 0.55)) angs.push(cand);
+    }
+    c.radials = angs.map((a) => {
+      const ca = Math.cos(a);
+      const sa = Math.sin(a);
+      let r = R * 0.2;
+      for (let step = R * 0.1; step <= R * 1.3; step += R * 0.04) {
+        const x = c.x + ca * step;
+        const y = c.y + sa * step;
+        if (!inCity(x, y) || !landAt(x, y)) break;
+        r = step;
+      }
+      const pts = [];
+      for (let t = 0; t <= 10; t++) {
+        const d = (r * t) / 10;
+        const wob = nC(a * 5 + ci, d * 0.02) * R * 0.05;
+        pts.push({ x: c.x + ca * d - sa * wob, y: c.y + sa * d + ca * wob });
+      }
+      return pts;
+    });
+
+    // Street grid and block texture per sector, revealed only at high zoom.
+    // Density falls off toward the edge so the sprawl frays out rather than
+    // ending on a hard line.
+    const streets = [];
+    const quads = [];
+    sectors.forEach((sec, si) => {
+      const ux = Math.cos(sec.ang);
+      const uy = Math.sin(sec.ang);
+      const reach = R * (si === 0 ? 0.8 : 0.65);
+      const step = R / (c.kind === 'capital' ? 24 : c.kind === 'mega' ? 19 : 12);
+      const owns = (x, y) => inCity(x, y) && sectorAt(x, y) === si;
+
+      for (let dir = 0; dir < 2; dir++) {
+        const dx = dir ? -uy : ux;
+        const dy = dir ? ux : uy;
+        const px = dir ? ux : -uy;
+        const py = dir ? uy : ux;
+        for (let s = -reach; s <= reach; s += step) {
+          let run = null;
+          for (let t = -reach; t <= reach; t += step * 0.3) {
+            const x = sec.x + px * s + dx * t;
+            const y = sec.y + py * s + dy * t;
+            if (owns(x, y)) {
+              if (!run) run = [];
+              run.push({ x, y });
+            } else if (run) {
+              if (run.length > 2) streets.push(run);
+              run = null;
+            }
+          }
+          if (run && run.length > 2) streets.push(run);
+        }
+      }
+
+      for (let a = -reach; a <= reach; a += step) {
+        for (let b = -reach; b <= reach; b += step) {
+          const bx = sec.x + ux * (a + step / 2) - uy * (b + step / 2);
+          const by = sec.y + uy * (a + step / 2) + ux * (b + step / 2);
+          if (!owns(bx, by)) continue;
+          const falloff = 1 - Math.hypot(bx - c.x, by - c.y) / (R * 1.15);
+          if (rng() > sec.dens * (0.35 + falloff * 0.8)) continue;
+          const inset = step * (0.09 + rng() * 0.05);
+          const x0 = a + inset;
+          const y0 = b + inset;
+          const x1 = a + step - inset;
+          const y1 = b + step - inset;
+          const push = (px0, py0, px1, py1) => quads.push(
+            sec.x + ux * px0 - uy * py0, sec.y + uy * px0 + ux * py0,
+            sec.x + ux * px1 - uy * py0, sec.y + uy * px1 + ux * py0,
+            sec.x + ux * px1 - uy * py1, sec.y + uy * px1 + ux * py1,
+            sec.x + ux * px0 - uy * py1, sec.y + uy * px0 + ux * py1
+          );
+          // Split some cells so block sizes vary; a perfectly even lattice is
+          // the clearest tell that a city was generated rather than grown.
+          const split = rng();
+          if (split < 0.28) {
+            const m = y0 + (y1 - y0) * (0.38 + rng() * 0.24);
+            push(x0, y0, x1, m - step * 0.05);
+            push(x0, m + step * 0.05, x1, y1);
+          } else if (split < 0.5) {
+            const m = x0 + (x1 - x0) * (0.38 + rng() * 0.24);
+            push(x0, y0, m - step * 0.05, y1);
+            push(m + step * 0.05, y0, x1, y1);
+          } else {
+            push(x0, y0, x1, y1);
+          }
+        }
+      }
+    });
+    c.streets = streets;
+    c.quads = Float32Array.from(quads);
+
+    // Port: a quay reaching into the water on the seaward side.
+    if (c.coastal) {
+      let seaAng = 0;
+      let shortest = Infinity;
+      for (const p of poly) if (p.r < shortest) { shortest = p.r; seaAng = p.ang; }
+      c.port = {
+        x: c.x + Math.cos(seaAng) * shortest * 1.02,
+        y: c.y + Math.sin(seaAng) * shortest * 1.02,
+        ang: seaAng,
+        len: R * 0.3,
+      };
+    }
+
+    nameQuarters(c, rng);
+  });
 }
 
 function climateOf(lat, moist, h) {
@@ -612,28 +1269,112 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
     }
   }
 
+  const trace = (pts) => {
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+  };
+
+  // ---- urban footprints, under the roads so highways read as running in ----
+  if (opts.cities !== false) {
+    ctx.lineJoin = 'round';
+    for (const c of planet.cities) {
+      if (!c.poly) continue;
+      // Below this the sprawl is a couple of pixels wide; the marker carries it.
+      if (c.radius * scale < 2.4) continue;
+
+      ctx.beginPath();
+      ctx.moveTo(c.poly[0].x, c.poly[0].y);
+      for (let i = 1; i < c.poly.length; i++) ctx.lineTo(c.poly[i].x, c.poly[i].y);
+      ctx.closePath();
+      ctx.fillStyle = P.urban;
+      ctx.fill();
+      // The silhouette carries the city when it is small; once blocks are
+      // visible they define the edge and an outline just looks drawn on.
+      if (c.radius * scale < 200) {
+        ctx.strokeStyle = P.urbanEdge;
+        ctx.lineWidth = lw(0.6);
+        ctx.stroke();
+      }
+
+      // Denser core, faded out so it reads as density rather than a disc.
+      const g = ctx.createRadialGradient(c.x, c.y, c.radius * 0.08, c.x, c.y, c.radius * 0.72);
+      g.addColorStop(0, P.urbanCore);
+      g.addColorStop(1, P.urbanCoreFade);
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      // Block texture only once a block would be more than a pixel across.
+      if (c.quads && c.radius * scale > 130) {
+        ctx.fillStyle = P.block;
+        ctx.beginPath();
+        for (let i = 0; i < c.quads.length; i += 8) {
+          ctx.moveTo(c.quads[i], c.quads[i + 1]);
+          ctx.lineTo(c.quads[i + 2], c.quads[i + 3]);
+          ctx.lineTo(c.quads[i + 4], c.quads[i + 5]);
+          ctx.lineTo(c.quads[i + 6], c.quads[i + 7]);
+          ctx.closePath();
+        }
+        ctx.fill();
+      }
+
+      if (c.port && c.radius * scale > 40) {
+        ctx.strokeStyle = P.quay;
+        ctx.lineWidth = lw(2.6);
+        ctx.lineCap = 'butt';
+        ctx.beginPath();
+        ctx.moveTo(c.port.x, c.port.y);
+        ctx.lineTo(c.port.x + Math.cos(c.port.ang) * c.port.len, c.port.y + Math.sin(c.port.ang) * c.port.len);
+        ctx.stroke();
+      }
+    }
+  }
+
   if (opts.roads !== false) {
     ctx.lineCap = 'round';
-    for (const pass of ['case', 'fill']) {
-      ctx.strokeStyle = pass === 'case' ? P.roadCase : P.road;
+    ctx.lineJoin = 'round';
+
+    // Local streets sit under the through-routes and appear last.
+    for (const c of planet.cities) {
+      if (!c.streets || c.radius * scale < 110) continue;
+      ctx.strokeStyle = P.road;
+      ctx.lineWidth = lw(0.9);
+      for (const s of c.streets) { trace(s); ctx.stroke(); }
+    }
+
+    // One casing pass then one fill pass across city roads and intercity
+    // routes together, so a highway and the radial it becomes are one line.
+    const WIDTH = { motorway: [5.0, 2.9], highway: [3.7, 2.0], road: [2.5, 1.3], ring: [3.2, 1.7], radial: [3.0, 1.6] };
+    for (const pass of [0, 1]) {
+      ctx.strokeStyle = pass === 0 ? P.roadCase : P.road;
+
+      for (const c of planet.cities) {
+        if (!c.ring || c.radius * scale < 26) continue;
+        ctx.lineWidth = lw(WIDTH.ring[pass]);
+        ctx.beginPath();
+        ctx.moveTo(c.ring[0].x, c.ring[0].y);
+        for (let i = 1; i < c.ring.length; i++) ctx.lineTo(c.ring[i].x, c.ring[i].y);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.lineWidth = lw(WIDTH.radial[pass]);
+        for (const r of c.radials) { trace(r); ctx.stroke(); }
+      }
+
       for (const r of planet.routes) {
-        if (r.sea) {
-          if (pass === 'case') continue;
+        if (r.ferry) {
+          if (pass === 0) continue;
           ctx.save();
           ctx.setLineDash([lw(5), lw(6)]);
           ctx.strokeStyle = styleKey === 'satellite' ? 'rgba(160,205,255,.45)' : 'rgba(90,140,180,.55)';
           ctx.lineWidth = lw(1.4);
-          ctx.beginPath();
-          ctx.moveTo(r.a.x, r.a.y);
-          ctx.quadraticCurveTo(r.mx, r.my, r.b.x, r.b.y);
+          trace(r.pts);
           ctx.stroke();
           ctx.restore();
           continue;
         }
-        ctx.lineWidth = lw(pass === 'case' ? 4.2 : 2.2);
-        ctx.beginPath();
-        ctx.moveTo(r.a.x, r.a.y);
-        ctx.quadraticCurveTo(r.mx, r.my, r.b.x, r.b.y);
+        if (r.cls === 'road' && scale < 0.28) continue;
+        ctx.lineWidth = lw(WIDTH[r.cls][pass]);
+        trace(r.pts);
         ctx.stroke();
       }
     }

@@ -7,21 +7,15 @@ import {
   generatePlanet, generateCity, rasterizeTerrain, drawPlanetVectors, drawCity,
   placeMembers, randomSeedWord, palette,
 } from '../mapGenerator';
-
-const POI_TYPES = {
-  landmark: { label: 'Landmarks', color: '#FBBF24' },
-  venue: { label: 'Venues & studios', color: '#E879F9' },
-  food: { label: 'Restaurants & cafés', color: '#FB923C' },
-  front: { label: 'Mafia fronts', color: '#D4AF37' },
-  civic: { label: 'Civic & institutions', color: '#38BDF8' },
-  transit: { label: 'Transit', color: '#60A5FA' },
-  park: { label: 'Parks & recreation', color: '#4ADE80' },
-  military: { label: 'Military', color: '#34D399' },
-};
+import { drawPlanetLabels, drawCityLabels, POI_TYPES } from '../mapLabels';
 
 // World units per kilometre. A capital is ~180 km across at this scale, which
 // keeps the district sizes in the range the world bible describes.
 const UNITS_PER_KM = 22;
+
+// The label engine is tuned for a viewport around 1400px wide. The PNG
+// export is a 4096px poster, so every label it draws is scaled to match.
+const EXPORT_SCALE = WORLD_W / 1400;
 
 const BASE_W = 2048;
 const BASE_H = Math.round((BASE_W * WORLD_H) / WORLD_W);
@@ -152,9 +146,12 @@ export default function MapPage() {
 
   const fitView = useCallback(() => {
     const wrap = wrapRef.current;
-    if (!wrap) return;
+    // A pane that has not been laid out yet reports zero, which would fit the
+    // camera to zoom 0 and leave the canvas permanently blank.
+    if (!wrap || !wrap.clientWidth || !wrap.clientHeight) return false;
     const z = Math.min(wrap.clientWidth / WORLD_W, wrap.clientHeight / WORLD_H) * 0.98;
     setCam({ x: (wrap.clientWidth - WORLD_W * z) / 2, y: (wrap.clientHeight - WORLD_H * z) / 2, z });
+    return true;
   }, []);
 
   useEffect(() => { fitView(); }, [fitView, mode, cityName]);
@@ -209,99 +206,14 @@ export default function MapPage() {
     ctx.restore();
 
     /* ---- overlay, drawn in screen space so icons and text stay crisp ---- */
-    ctx.lineJoin = 'round';
-    const label = (text, x, y, size, color, weight = 600) => {
-      ctx.font = `${weight} ${size}px Outfit, system-ui, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.lineWidth = Math.max(3, size / 3.5);
-      ctx.strokeStyle = P.labelHalo;
-      ctx.strokeText(text, x, y);
-      ctx.fillStyle = color;
-      ctx.fillText(text, x, y);
-    };
-
+    // One label engine per frame decides what gets a name: markers are
+    // reserved first, then names are placed highest priority first, and any
+    // that cannot find a clear box is dropped rather than overlapped.
+    const view = { ox, oy, z, W, H };
     if (world.kind === 'planet') {
-      for (const c of world.cities) {
-        const p = toScreen(c.x, c.y);
-        if (p.x < -80 || p.y < -40 || p.x > W + 80 || p.y > H + 40) continue;
-        const f = FACTIONS[c.faction];
-        const big = c.kind === 'capital' || c.kind === 'mega';
-        // Small settlements drop out when zoomed out, like a real basemap.
-        if (!big && z < 0.22) continue;
-        const rad = c.kind === 'capital' ? 8 : big ? 6 : 4;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, rad + 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = P.labelHalo;
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
-        ctx.fillStyle = f.color;
-        ctx.fill();
-        if (c.kind === 'capital') {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, rad - 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = P.labelHalo;
-          ctx.fill();
-        }
-        if (layers.labels && (big || z > 0.3)) {
-          label(c.name, p.x, p.y - rad - 7, big ? 14 : 11.5, P.label, big ? 700 : 600);
-        }
-      }
+      drawPlanetLabels(ctx, world, style, view, { labels: layers.labels });
     } else {
-      if (layers.districts && layers.labels && z > 0.14) {
-        for (const d of world.districts) {
-          const p = toScreen(d.x, d.y);
-          if (p.x < -100 || p.y < -40 || p.x > W + 100 || p.y > H + 40) continue;
-          label(d.name.toUpperCase(), p.x, p.y, 14, style === 'map' ? '#5f6368' : d.color, 800);
-        }
-      }
-
-      if (layers.pois && z > 0.42) {
-        for (const poi of world.pois) {
-          const p = toScreen(poi.x, poi.y);
-          if (p.x < -40 || p.y < -40 || p.x > W + 40 || p.y > H + 40) continue;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 10, 0, Math.PI * 2);
-          ctx.fillStyle = style === 'map' ? '#ffffff' : 'rgba(2,6,16,0.85)';
-          ctx.fill();
-          ctx.strokeStyle = POI_TYPES[poi.type]?.color || '#fff';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          ctx.font = '11px system-ui, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = '#fff';
-          ctx.fillText(poi.icon, p.x, p.y + 0.5);
-          ctx.textBaseline = 'alphabetic';
-          if (z > 0.9) label(poi.name, p.x, p.y + 23, 11, P.label);
-        }
-      }
-
-      if (z > 0.5) {
-        for (const mem of members) {
-          if (mem.kind === 'made' && !layers.made) continue;
-          if (mem.kind === 'sick' && !layers.sick) continue;
-          const p = toScreen(mem.x, mem.y);
-          if (p.x < -30 || p.y < -30 || p.x > W + 30 || p.y > H + 30) continue;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
-          ctx.fillStyle = mem.kind === 'made' ? '#D4AF37' : '#DC2626';
-          ctx.fill();
-          ctx.strokeStyle = '#0b1220';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-          ctx.font = '700 8px Outfit, system-ui, sans-serif';
-          ctx.fillStyle = '#0b1220';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(mem.card.slice(0, 3), p.x, p.y + 0.5);
-          ctx.textBaseline = 'alphabetic';
-          if (z > 1.4) {
-            label(mem.label, p.x, p.y - 13, 10.5, mem.kind === 'made' ? '#b8860b' : '#b91c1c', 700);
-          }
-        }
-      }
+      drawCityLabels(ctx, world, style, view, { layers, members });
     }
 
     if (selected) {
@@ -330,10 +242,17 @@ export default function MapPage() {
   useEffect(() => { dirtyRef.current = true; }, [cam, layers, selected, world, members, style, status]);
 
   useEffect(() => {
-    const onResize = () => { dirtyRef.current = true; };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+    const wrap = wrapRef.current;
+    if (!wrap) return undefined;
+    // Watch the pane rather than the window: it can mount at zero height and
+    // gain size later, and until it does there is no sensible camera to fit.
+    const ro = new ResizeObserver(() => {
+      dirtyRef.current = true;
+      if (!(camRef.current.z > 0)) fitView();
+    });
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [fitView]);
 
   /* ----------------------------------------------------- interaction -- */
 
@@ -428,69 +347,26 @@ export default function MapPage() {
       out.width = WORLD_W;
       out.height = WORLD_H;
       const c = out.getContext('2d');
-      const P = palette(style);
 
       if (world.kind === 'planet') {
         const img = c.createImageData(WORLD_W, WORLD_H);
         rasterizeTerrain(img.data, world, { x: 0, y: 0, w: WORLD_W, h: WORLD_H }, WORLD_W, WORLD_H, style, 5);
         c.putImageData(img, 0, 0);
         drawPlanetVectors(c, world, style, 1, { rivers: layers.rivers, roads: layers.roads });
-        for (const city of world.cities) {
-          const f = FACTIONS[city.faction];
-          const rad = city.kind === 'capital' ? 13 : city.kind === 'mega' ? 10 : 7;
-          c.beginPath();
-          c.arc(city.x, city.y, rad, 0, Math.PI * 2);
-          c.fillStyle = f.color;
-          c.fill();
-          c.lineWidth = 3;
-          c.strokeStyle = P.labelHalo;
-          c.stroke();
-          c.font = '700 26px Outfit, system-ui, sans-serif';
-          c.textAlign = 'center';
-          c.lineWidth = 7;
-          c.strokeStyle = P.labelHalo;
-          c.strokeText(city.name, city.x, city.y - rad - 12);
-          c.fillStyle = P.label;
-          c.fillText(city.name, city.x, city.y - rad - 12);
-        }
       } else {
         drawCity(c, world, style, 1, layers);
-        for (const d of world.districts) {
-          c.font = '800 34px Outfit, system-ui, sans-serif';
-          c.textAlign = 'center';
-          c.lineWidth = 9;
-          c.strokeStyle = P.labelHalo;
-          c.strokeText(d.name.toUpperCase(), d.x, d.y);
-          c.fillStyle = style === 'map' ? '#5f6368' : d.color;
-          c.fillText(d.name.toUpperCase(), d.x, d.y);
-        }
-        for (const poi of world.pois) {
-          c.beginPath();
-          c.arc(poi.x, poi.y, 14, 0, Math.PI * 2);
-          c.fillStyle = style === 'map' ? '#fff' : 'rgba(2,6,16,.85)';
-          c.fill();
-          c.strokeStyle = POI_TYPES[poi.type]?.color || '#fff';
-          c.lineWidth = 2.5;
-          c.stroke();
-          c.font = '600 17px Outfit, system-ui, sans-serif';
-          c.textAlign = 'center';
-          c.lineWidth = 5;
-          c.strokeStyle = P.labelHalo;
-          c.strokeText(poi.name, poi.x, poi.y + 30);
-          c.fillStyle = P.label;
-          c.fillText(poi.name, poi.x, poi.y + 30);
-        }
-        for (const mem of members) {
-          if (mem.kind === 'made' && !layers.made) continue;
-          if (mem.kind === 'sick' && !layers.sick) continue;
-          c.beginPath();
-          c.arc(mem.x, mem.y, 10, 0, Math.PI * 2);
-          c.fillStyle = mem.kind === 'made' ? '#D4AF37' : '#DC2626';
-          c.fill();
-          c.strokeStyle = '#0b1220';
-          c.lineWidth = 2.5;
-          c.stroke();
-        }
+      }
+
+      // The export runs the same label engine at 1:1 world scale, so the
+      // poster is decluttered exactly like the screen is — just larger.
+      const view = { ox: 0, oy: 0, z: 1, W: WORLD_W, H: WORLD_H, };
+      if (world.kind === 'planet') {
+        drawPlanetLabels(c, world, style, view, { labels: layers.labels, sizeScale: EXPORT_SCALE, margin: 24 });
+      } else {
+        drawCityLabels(c, world, style, view, {
+          layers, members, sizeScale: EXPORT_SCALE, margin: 24,
+          poiZoom: 0, poiLabelZoom: 0, memberZoom: 0, memberLabelZoom: 0, districtZoom: 0,
+        });
       }
 
       c.fillStyle = 'rgba(2,6,16,0.85)';

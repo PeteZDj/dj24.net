@@ -1,0 +1,504 @@
+// =====================================================================
+// PLANET ONGAKU — LABEL ENGINE
+//
+// Every name on the map goes through this. Candidates are measured, tried
+// against a ranked list of anchor positions around their feature, and dropped
+// outright when nothing fits. Dropping is the point: a map that draws every
+// name is unreadable, and a map that draws the important names in the right
+// places reads like an atlas.
+//
+// Placement runs in screen space, so text keeps a constant size at every zoom
+// and the same code serves the interactive canvas, the PNG export and the
+// headless atlas renderer.
+// =====================================================================
+
+import { palette, FACTIONS, WORLD_W, WORLD_H } from './mapGenerator.js';
+
+const TAU = Math.PI * 2;
+const LABEL_FONT = 'Outfit, "Segoe UI", system-ui, sans-serif';
+
+// Unit offsets around a point feature. Order is cartographic preference:
+// right of the dot first, then left, then above/below, then the diagonals.
+const POINT_ANCHORS = [
+  [1, 0], [-1, 0], [0, -1], [0, 1],
+  [0.74, -0.74], [-0.74, -0.74], [0.74, 0.74], [-0.74, 0.74],
+];
+
+// Area labels want to sit on their centroid, but will walk a short ladder of
+// offsets (in ems) before giving up, which is usually enough to dodge a POI
+// pin sitting in the middle of a district.
+const AREA_NUDGES = [
+  [0, 0], [0, -1.35], [0, 1.35], [-1.1, 0], [1.1, 0],
+  [0, -2.7], [0, 2.7], [-1.1, -1.35], [1.1, -1.35], [-1.1, 1.35], [1.1, 1.35],
+];
+
+export function makeLabeller(ctx, W, H, opts = {}) {
+  const pad = opts.pad ?? 2;
+  const margin = opts.margin ?? 4;
+  // A uniform hash keeps collision tests near-constant as label count grows.
+  const CELL = 88;
+  const grid = new Map();
+  const queue = [];
+
+  const eachCell = (r, fn) => {
+    const x0 = Math.floor(r.x0 / CELL);
+    const x1 = Math.floor(r.x1 / CELL);
+    const y0 = Math.floor(r.y0 / CELL);
+    const y1 = Math.floor(r.y1 / CELL);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) fn(`${x}:${y}`);
+  };
+
+  const hits = (r) => {
+    let bad = false;
+    eachCell(r, (key) => {
+      if (bad) return;
+      const bucket = grid.get(key);
+      if (!bucket) return;
+      for (const o of bucket) {
+        if (r.x0 - pad < o.x1 && r.x1 + pad > o.x0 && r.y0 - pad < o.y1 && r.y1 + pad > o.y0) {
+          bad = true;
+          return;
+        }
+      }
+    });
+    return bad;
+  };
+
+  const insert = (r) => {
+    eachCell(r, (key) => {
+      let bucket = grid.get(key);
+      if (!bucket) grid.set(key, (bucket = []));
+      bucket.push(r);
+    });
+  };
+
+  // Canvas font parsing only accepts hundreds; an in-between weight is not
+  // rejected loudly, it silently measures to nonsense and the label vanishes.
+  const fontOf = (it) => {
+    const w = Math.max(100, Math.min(900, Math.round((it.weight || 600) / 100) * 100));
+    return `${it.italic ? 'italic ' : ''}${w} ${it.size}px ${LABEL_FONT}`;
+  };
+
+  const widthOf = (it) => {
+    ctx.font = fontOf(it);
+    const w = ctx.measureText(it.text).width;
+    return it.tracking ? w + it.tracking * Math.max(0, it.text.length - 1) : w;
+  };
+
+  function place(it) {
+    const w = widthOf(it);
+    // Cap height plus descender is a close enough box, and avoids the wildly
+    // inconsistent actualBoundingBox values across canvas implementations.
+    const asc = it.size * 0.76;
+    const desc = it.size * 0.24;
+    const h = asc + desc;
+    const cands = [];
+
+    if (it.area) {
+      for (const [nx, ny] of AREA_NUDGES) {
+        cands.push({ x0: it.x - w / 2 + nx * it.size, y0: it.y - h / 2 + ny * it.size });
+      }
+      // A feature with a known extent can slide its name anywhere inside it,
+      // nearest position first. This is what keeps mountain ranges and deserts
+      // on the map in a crowded hemisphere instead of being dropped.
+      if (it.spread) {
+        const sp = it.spread;
+        const pts = [];
+        for (let iy = 0; iy < 3; iy++) {
+          for (let ix = 0; ix < 5; ix++) {
+            const px = sp.x0 + ((ix + 0.5) / 5) * (sp.x1 - sp.x0);
+            const py = sp.y0 + ((iy + 0.5) / 3) * (sp.y1 - sp.y0);
+            pts.push([px, py, (px - it.x) ** 2 + (py - it.y) ** 2]);
+          }
+        }
+        pts.sort((a, b) => a[2] - b[2]);
+        for (const [px, py] of pts) cands.push({ x0: px - w / 2, y0: py - h / 2 });
+      }
+    } else {
+      const gap = (it.gap ?? 4) + (it.r || 0);
+      for (const [dx, dy] of POINT_ANCHORS) {
+        const cx = it.x + dx * gap + (dx > 0 ? w / 2 : dx < 0 ? -w / 2 : 0);
+        const cy = it.y + dy * gap + (dy > 0 ? h / 2 : dy < 0 ? -h / 2 : 0);
+        cands.push({ x0: cx - w / 2, y0: cy - h / 2 });
+      }
+    }
+
+    for (const c of cands) {
+      let { x0, y0 } = c;
+      if (it.clamp) {
+        // Big geography names stay on screen rather than vanishing when their
+        // centroid drifts past the edge — an ocean has no better anchor.
+        if (w < W - margin * 2) x0 = Math.max(margin, Math.min(W - margin - w, x0));
+        if (h < H - margin * 2) y0 = Math.max(margin, Math.min(H - margin - h, y0));
+      }
+      const r = { x0, y0, x1: x0 + w, y1: y0 + h };
+      if (r.x0 < margin || r.y0 < margin || r.x1 > W - margin || r.y1 > H - margin) continue;
+      // A name that has been allowed to wander must still land on the thing it
+      // names — an ocean label sliding onto the continent is worse than none.
+      if (it.valid && !it.valid((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2)) continue;
+      if (hits(r)) continue;
+      insert(r);
+      return { x0: r.x0, y0: r.y0, baseline: r.y0 + asc, w, h };
+    }
+    return null;
+  }
+
+  function run(it, box, stroke) {
+    if (!it.tracking) {
+      if (stroke) ctx.strokeText(it.text, box.x0, box.baseline);
+      else ctx.fillText(it.text, box.x0, box.baseline);
+      return;
+    }
+    let x = box.x0;
+    for (const ch of it.text) {
+      if (stroke) ctx.strokeText(ch, x, box.baseline);
+      else ctx.fillText(ch, x, box.baseline);
+      x += ctx.measureText(ch).width + it.tracking;
+    }
+  }
+
+  function paint(it, box) {
+    ctx.font = fontOf(it);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.lineJoin = 'round';
+    ctx.miterLimit = 2;
+    ctx.lineWidth = it.haloWidth ?? Math.max(2.5, it.size / 3.2);
+    ctx.strokeStyle = it.halo;
+    run(it, box, true);
+    ctx.fillStyle = it.color;
+    run(it, box, false);
+  }
+
+  return {
+    // Markers, pins and anything else text must not sit on top of.
+    reserve(x0, y0, x1, y1) { insert({ x0, y0, x1, y1 }); },
+    reserveCircle(x, y, r) { insert({ x0: x - r, y0: y - r, x1: x + r, y1: y + r }); },
+    // For callers that place their own marks and want to avoid stacking them.
+    circleFree(x, y, r) { return !hits({ x0: x - r, y0: y - r, x1: x + r, y1: y + r }); },
+    add(item) { if (item.text) queue.push(item); },
+    // Places every queued label highest priority first, then paints. Painting
+    // is a second pass so no halo can bite into a neighbour's glyphs.
+    flush() {
+      queue.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+      const placed = [];
+      const dropped = [];
+      for (const it of queue) {
+        const box = place(it);
+        if (box) placed.push([it, box]);
+        else dropped.push(it.text);
+      }
+      for (const [it, box] of placed) paint(it, box);
+      queue.length = 0;
+      return { placed: placed.length, dropped: dropped.length, droppedText: dropped };
+    },
+  };
+}
+
+/* ------------------------------------------------ PLANET LABEL LAYER */
+
+// Size and weight per settlement class, the marker radius, and the zoom below
+// which the place is not worth drawing at all.
+const CITY_LABEL = {
+  capital: { size: 15.0, weight: 800, priority: 100, minZoom: 0, dot: 8.0, ring: true },
+  mega: { size: 13.5, weight: 700, priority: 88, minZoom: 0, dot: 6.5 },
+  fortress: { size: 12.0, weight: 700, priority: 84, minZoom: 0.15, dot: 5.5, square: true },
+  military: { size: 12.0, weight: 700, priority: 82, minZoom: 0.15, dot: 5.5, square: true },
+  hostile: { size: 12.0, weight: 600, priority: 80, minZoom: 0.15, dot: 5.5 },
+  port: { size: 12.0, weight: 600, priority: 78, minZoom: 0.15, dot: 5.5 },
+  town: { size: 11.0, weight: 600, priority: 72, minZoom: 0.26, dot: 4.0, hollow: true },
+};
+
+const REGION_LABEL = {
+  continent: { size: 26, weight: 700, tracking: 9.0, caps: true, priority: 68, maxZoom: 1.1, tone: 'geo' },
+  ocean: { size: 21, weight: 500, tracking: 4.5, italic: true, priority: 64, maxZoom: 2.0, tone: 'water' },
+  range: { size: 15, weight: 600, tracking: 1.2, italic: true, priority: 60, maxZoom: 7, tone: 'geo' },
+  desert: { size: 15, weight: 600, tracking: 1.2, italic: true, priority: 58, maxZoom: 7, tone: 'geo' },
+  forest: { size: 14, weight: 600, tracking: 1.0, italic: true, priority: 56, maxZoom: 7, tone: 'geo' },
+};
+
+// Geography names grow a little as you zoom in, so a mountain range does not
+// read as a footnote once you are inside it. The growth is deliberately slow.
+function geoZoomScale(z) {
+  return Math.max(0.9, Math.min(1.5, (Math.max(z, 0.05) / 0.3) ** 0.17));
+}
+
+export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
+  const { ox, oy, z, W, H } = view;
+  const k = opts.sizeScale || 1;
+  const P = palette(styleKey);
+  const L = makeLabeller(ctx, W, H, { pad: 2, margin: opts.margin ?? 4 });
+
+  // Markers become obstacles before any text is placed, so a name is never
+  // allowed to sit on a dot — the dot is the thing being named.
+  const marks = [];
+  for (const c of planet.cities) {
+    const st = CITY_LABEL[c.kind] || CITY_LABEL.town;
+    if (z < st.minZoom) continue;
+    const x = c.x * z + ox;
+    const y = c.y * z + oy;
+    // A city whose centre has panned off screen can still fill it, so the
+    // sprawl radius counts towards visibility, not just the centre point.
+    const rr = (c.radius || 0) * z;
+    if (x < -80 - rr || y < -60 - rr || x > W + 80 + rr || y > H + 60 + rr) continue;
+    // Once the footprint fills the screen the streets carry the city, and the
+    // dot is just something sitting on top of them.
+    const showDot = rr < 46 * k;
+    const r = showDot ? st.dot * k : 0;
+    marks.push({ c, st, x, y, r, showDot });
+    if (showDot) L.reserveCircle(x, y, r + 3 * k);
+  }
+
+  for (const m of marks) {
+    if (!m.showDot) continue;
+    const f = FACTIONS[m.c.faction] || FACTIONS.neutral;
+    const r = m.r;
+    ctx.lineWidth = 2 * k;
+    ctx.beginPath();
+    if (m.st.square) ctx.rect(m.x - r, m.y - r, r * 2, r * 2);
+    else ctx.arc(m.x, m.y, r, 0, TAU);
+    ctx.fillStyle = m.st.hollow ? P.labelHalo : f.color;
+    ctx.fill();
+    ctx.strokeStyle = m.st.hollow ? f.color : P.labelHalo;
+    ctx.stroke();
+    if (m.st.ring) {
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, Math.max(1, r - 3.4 * k), 0, TAU);
+      ctx.fillStyle = P.labelHalo;
+      ctx.fill();
+    }
+  }
+
+  if (opts.labels === false) return { placed: 0, dropped: 0 };
+
+  for (const m of marks) {
+    L.add({
+      // Once the streets are visible the city name stops being a pin label and
+      // becomes the title of what you are looking at, so it grows.
+      text: m.c.name, x: m.x, y: m.y, r: m.r, gap: 5 * k,
+      size: m.st.size * k * (m.showDot ? 1 : 1.5), weight: m.st.weight,
+      area: !m.showDot, clamp: !m.showDot,
+      color: P.label, halo: P.labelHalo, priority: m.st.priority,
+      tracking: m.showDot ? 0 : 2.5 * k,
+    });
+
+    // Quarters appear only once a quarter is a real area on screen, which is
+    // the same moment the block texture starts to read.
+    if (m.c.sectors && m.c.radius * z > 170 * k) {
+      for (const s of m.c.sectors) {
+        if (!s.name) continue;
+        const sx = (s.lx ?? s.x) * z + ox;
+        const sy = (s.ly ?? s.y) * z + oy;
+        if (sx < -60 || sy < -40 || sx > W + 60 || sy > H + 40) continue;
+        L.add({
+          text: s.name.toUpperCase(), area: true, x: sx, y: sy,
+          size: 12.5 * k, weight: 700, tracking: 1.4 * k,
+          color: P.labelGeo, halo: P.labelHalo, priority: 74,
+        });
+      }
+    }
+  }
+
+  // Sea/land test in screen space, straight off the elevation field.
+  const isSea = (sx, sy) => {
+    const gx = Math.max(0, Math.min(planet.GW - 1, Math.round((((sx - ox) / z) / WORLD_W) * (planet.GW - 1))));
+    const gy = Math.max(0, Math.min(planet.GH - 1, Math.round((((sy - oy) / z) / WORLD_H) * (planet.GH - 1))));
+    return planet.hf[gy * planet.GW + gx] <= 0.002;
+  };
+  const isLand = (sx, sy) => !isSea(sx, sy);
+
+  const gz = geoZoomScale(z);
+  for (const rg of planet.regions) {
+    const st = REGION_LABEL[rg.kind];
+    if (!st || z > st.maxZoom) continue;
+    let x = rg.x * z + ox;
+    let y = rg.y * z + oy;
+
+    // A range wider than the screen still deserves its name. When the true
+    // anchor pans out of view, re-anchor to the middle of whatever part of the
+    // feature is still visible, and only give up when nothing is.
+    if (rg.bbox && (x < 0 || y < 0 || x > W || y > H)) {
+      const vx0 = Math.max(rg.bbox.x0 * z + ox, 0);
+      const vy0 = Math.max(rg.bbox.y0 * z + oy, 0);
+      const vx1 = Math.min(rg.bbox.x1 * z + ox, W);
+      const vy1 = Math.min(rg.bbox.y1 * z + oy, H);
+      if (vx1 - vx0 < W * 0.18 || vy1 - vy0 < H * 0.14) continue;
+      x = (vx0 + vx1) / 2;
+      y = (vy0 + vy1) / 2;
+    } else if (x < -W * 0.4 || y < -H * 0.4 || x > W * 1.4 || y > H * 1.4) {
+      continue;
+    }
+
+    // Let the name wander over part of its own extent, but not so far that it
+    // ends up naming somewhere else.
+    let spread = null;
+    if (rg.bbox) {
+      const bw = (rg.bbox.x1 - rg.bbox.x0) * z * 0.35;
+      const bh = (rg.bbox.y1 - rg.bbox.y0) * z * 0.35;
+      spread = {
+        x0: Math.max(x - bw, rg.bbox.x0 * z + ox),
+        y0: Math.max(y - bh, rg.bbox.y0 * z + oy),
+        x1: Math.min(x + bw, rg.bbox.x1 * z + ox),
+        y1: Math.min(y + bh, rg.bbox.y1 * z + oy),
+      };
+    }
+
+    L.add({
+      text: st.caps ? rg.name.toUpperCase() : rg.name,
+      area: true, clamp: true, spread, x, y,
+      valid: planet.hf ? (st.tone === 'water' ? isSea : isLand) : null,
+      size: st.size * gz * k, weight: st.weight, italic: st.italic,
+      tracking: (st.tracking || 0) * gz * k,
+      color: st.tone === 'water' ? P.labelWater : P.labelGeo,
+      halo: P.labelHalo, priority: st.priority,
+    });
+  }
+
+  return L.flush();
+}
+
+/* -------------------------------------------------- CITY LABEL LAYER */
+
+export const POI_TYPES = {
+  landmark: { label: 'Landmarks', color: '#FBBF24' },
+  venue: { label: 'Venues & studios', color: '#E879F9' },
+  food: { label: 'Restaurants & cafés', color: '#FB923C' },
+  front: { label: 'Mafia fronts', color: '#D4AF37' },
+  civic: { label: 'Civic & institutions', color: '#38BDF8' },
+  transit: { label: 'Transit', color: '#60A5FA' },
+  park: { label: 'Parks & recreation', color: '#4ADE80' },
+  military: { label: 'Military', color: '#34D399' },
+};
+
+// Landmarks are the ones you would print on a tourist map, so they outrank the
+// rest of the pins when space is tight.
+const POI_PRIORITY = {
+  landmark: 60, transit: 56, venue: 54, civic: 52,
+  front: 50, military: 50, park: 46, food: 44,
+};
+
+export function drawCityLabels(ctx, city, styleKey, view, opts = {}) {
+  const { ox, oy, z, W, H } = view;
+  const k = opts.sizeScale || 1;
+  const layers = opts.layers || {};
+  const members = opts.members || [];
+  const P = palette(styleKey);
+  const L = makeLabeller(ctx, W, H, { pad: 2, margin: opts.margin ?? 4 });
+  const onScreen = (x, y, m) => x > -m && y > -m && x < W + m && y < H + m;
+
+  const pins = [];
+  if (layers.pois !== false && z > (opts.poiZoom ?? 0.42)) {
+    for (const poi of city.pois) {
+      const x = poi.x * z + ox;
+      const y = poi.y * z + oy;
+      if (!onScreen(x, y, 40)) continue;
+      pins.push({ poi, x, y });
+      L.reserveCircle(x, y, 11 * k);
+    }
+  }
+
+  const crew = [];
+  if (z > (opts.memberZoom ?? 0.5)) {
+    const r = 9 * k;
+    for (const mem of members) {
+      if (mem.kind === 'made' && layers.made === false) continue;
+      if (mem.kind === 'sick' && layers.sick === false) continue;
+      let x = mem.x * z + ox;
+      let y = mem.y * z + oy;
+      if (!onScreen(x, y, 30)) continue;
+      // The Sick 52 operate in cells of five or six, so their markers land on
+      // top of each other. Walk each one out along a short spiral until it has
+      // its own space, which keeps a cell readable as a cell.
+      if (!L.circleFree(x, y, r)) {
+        for (let t = 1; t <= 12; t++) {
+          const a = t * 2.4;
+          const nx = x + Math.cos(a) * r * 1.9 * Math.sqrt(t);
+          const ny = y + Math.sin(a) * r * 1.9 * Math.sqrt(t);
+          if (L.circleFree(nx, ny, r)) { x = nx; y = ny; break; }
+        }
+      }
+      crew.push({ mem, x, y });
+      L.reserveCircle(x, y, r);
+    }
+  }
+
+  for (const p of pins) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 10 * k, 0, TAU);
+    ctx.fillStyle = styleKey === 'map' ? '#ffffff' : 'rgba(2,6,16,0.85)';
+    ctx.fill();
+    ctx.strokeStyle = POI_TYPES[p.poi.type]?.color || '#ffffff';
+    ctx.lineWidth = 2 * k;
+    ctx.stroke();
+    ctx.font = `${11 * k}px system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(p.poi.icon, p.x, p.y + 0.5 * k);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  for (const c of crew) {
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 8 * k, 0, TAU);
+    ctx.fillStyle = c.mem.kind === 'made' ? '#D4AF37' : '#DC2626';
+    ctx.fill();
+    ctx.strokeStyle = '#0b1220';
+    ctx.lineWidth = 1.5 * k;
+    ctx.stroke();
+    ctx.font = `700 ${8 * k}px ${LABEL_FONT}`;
+    ctx.fillStyle = '#0b1220';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(c.mem.card.slice(0, 3), c.x, c.y + 0.5 * k);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  if (layers.labels === false) return { placed: 0, dropped: 0 };
+
+  if (layers.districts !== false && z > (opts.districtZoom ?? 0.14)) {
+    for (const d of city.districts) {
+      const x = d.x * z + ox;
+      const y = d.y * z + oy;
+      if (!onScreen(x, y, 140)) continue;
+      // A district that is thick with pins can still put its name somewhere
+      // inside its own boundary rather than losing it.
+      const spread = d.bbox ? {
+        x0: Math.max(x - d.radius * z * 0.5, d.bbox.x0 * z + ox),
+        y0: Math.max(y - d.radius * z * 0.5, d.bbox.y0 * z + oy),
+        x1: Math.min(x + d.radius * z * 0.5, d.bbox.x1 * z + ox),
+        y1: Math.min(y + d.radius * z * 0.5, d.bbox.y1 * z + oy),
+      } : null;
+      L.add({
+        text: d.name.toUpperCase(), area: true, spread, x, y,
+        size: 14 * k, weight: 800, tracking: 1.6 * k,
+        color: styleKey === 'map' ? '#5f6368' : d.color,
+        halo: P.labelHalo, priority: 90,
+      });
+    }
+  }
+
+  if (z > (opts.poiLabelZoom ?? 0.9)) {
+    for (const p of pins) {
+      L.add({
+        text: p.poi.name, x: p.x, y: p.y, r: 10 * k, gap: 4 * k,
+        size: 11 * k, weight: 600, color: P.label, halo: P.labelHalo,
+        priority: POI_PRIORITY[p.poi.type] ?? 45,
+      });
+    }
+  }
+
+  if (z > (opts.memberLabelZoom ?? 1.4)) {
+    for (const c of crew) {
+      L.add({
+        text: c.mem.label, x: c.x, y: c.y, r: 8 * k, gap: 4 * k,
+        size: 10.5 * k, weight: 700,
+        color: c.mem.kind === 'made' ? '#b8860b' : '#b91c1c',
+        halo: P.labelHalo,
+        priority: c.mem.kind === 'made' ? 36 : 30,
+      });
+    }
+  }
+
+  return L.flush();
+}

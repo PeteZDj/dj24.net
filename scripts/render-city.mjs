@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createCanvas } from '@napi-rs/canvas';
 import { generateCity, drawCity, placeMembers, WORLD_W, WORLD_H, MAP_STYLES } from '../src/mapGenerator.js';
+import { drawCityLabels } from '../src/mapLabels.js';
 import { madeDeckAll } from '../src/madeDeckData.js';
 
 const seed = process.argv[2] || 'NEON-GRID-2481';
@@ -21,7 +22,7 @@ const fakeSick = Array.from({ length: 52 }, (_, i) => ({ name: `Sick ${i}`, card
 const members = placeMembers(city, madeDeckAll, fakeSick);
 console.log(`members=${members.length}`);
 
-const layers = { districts: true, roads: true, buildings: true };
+const layers = { districts: true, roads: true, buildings: true, pois: true, made: true, sick: true, labels: true };
 
 function render(file, W, rect, styleKey) {
   const H = Math.round((W * rect.h) / rect.w);
@@ -35,31 +36,11 @@ function render(file, W, rect, styleKey) {
   drawCity(ctx, city, styleKey, scale, layers);
   ctx.restore();
 
-  // District labels, drawn in screen space like the app does.
-  for (const d of city.districts) {
-    const x = (d.x - rect.x) * scale;
-    const y = (d.y - rect.y) * scale;
-    if (x < 0 || y < 0 || x > W || y > H) continue;
-    ctx.font = '700 15px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'rgba(2,6,16,.9)';
-    ctx.strokeText(d.name.toUpperCase(), x, y);
-    ctx.fillStyle = d.color;
-    ctx.fillText(d.name.toUpperCase(), x, y);
-  }
-  for (const m of members) {
-    const x = (m.x - rect.x) * scale;
-    const y = (m.y - rect.y) * scale;
-    if (x < 0 || y < 0 || x > W || y > H) continue;
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = m.kind === 'made' ? '#D4AF37' : '#DC2626';
-    ctx.fill();
-  }
+  // Markers and labels via the shared engine, exactly as the app draws them.
+  const stats = drawCityLabels(ctx, city, styleKey, { ox: -rect.x * scale, oy: -rect.y * scale, z: scale, W, H }, { layers, members });
 
   fs.writeFileSync(path.join(outDir, file), canvas.toBuffer('image/png'));
-  console.log(`${file}: ${W}x${H} draw ${Date.now() - t0}ms`);
+  console.log(`${file}: ${W}x${H} draw ${Date.now() - t0}ms  labels ${stats.placed}/${stats.placed + stats.dropped}${stats.dropped ? ` dropped: ${stats.droppedText.join(', ')}` : ''}`);
 }
 
 const full = { x: 0, y: 0, w: WORLD_W, h: WORLD_H };
