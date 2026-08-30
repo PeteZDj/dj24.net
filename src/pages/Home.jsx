@@ -116,6 +116,7 @@ export default function Home() {
             <Link to="/planet_ongaku" className="hero-cta">Explore the Universe →</Link>
             <Link to="/comics/ch01-the-first-drop" className="hero-cta hero-cta-alt">Read Chapter 1 →</Link>
             <Link to="/missions" className="hero-cta hero-cta-alt">Play the Campaign →</Link>
+            <Link to="/map" className="hero-cta hero-cta-alt">Generate a World →</Link>
           </div>
         </div>
       </section>
@@ -309,6 +310,11 @@ export default function Home() {
             <span className="portal-icon">🌍</span>
             <h3>Planet Ongaku</h3>
             <p>The Frequency Grid, genre megacities, and the world of sound</p>
+          </Link>
+          <Link to="/map" className="portal-card" style={{ '--portal-color': '#D4AF37' }}>
+            <span className="portal-icon">🗺️</span>
+            <h3>World Generator</h3>
+            <p>Procedural atlas — continents, districts, factions and both decks</p>
           </Link>
           <Link to="/factions" className="portal-card" style={{ '--portal-color': '#DC2626' }}>
             <span className="portal-icon">⚔️</span>

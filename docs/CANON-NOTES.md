@@ -30,6 +30,25 @@ decisions. It is the "verifiable" layer: nothing is silently reconciled.
 - **The game = `DJ24: The Sick 52`** — chosen as the Deck-of-52 bounty game (it already stars the Sick
   52, Mid-XD era). Design doc `content/wiki/dj24-the-sick-52.md`; missions live data on `/missions`
   (`storyMissions` campaign + per-card `getBounties()` tied to cities + difficulty + reward).
+- **Black Noise / the drug trade** — Creator decision: the trade is **cell-level, not
+  institutional**. On the Sick 52 side only a small cell (**"The Pressing Plant"** — Black Vinyl,
+  Static Prophet, plus Tier V prototypes) manufactures it; **Red Silence does not sanction it** and
+  tolerates it purely as war funding, which much of the 52 regard as a betrayal. On the Hip Hop
+  Mafia side only **two of five imprints** (Redline, Ghost Ink) touch it; Velvet Static and Deep
+  Crates refuse it, and Clean Count launders it while claiming otherwise. The Sick 52 stay
+  ideological; the Mafia stays commercial. See `PLANET-ONGAKU-WORLD-BIBLE.md` §5.
+- **Hip Hop Mafia membership** — Creator decision: **not everyone in the Hip Hop Mafia is a
+  criminal.** Formalised as three tiers — **Made** (actual criminals), **Signed** (artists under
+  contract; leveraged, not criminal), **Affiliated** (businesses and neighbourhoods that benefit and
+  look away). Movement between tiers is a story engine.
+- **Media conglomerate = The Tower Group** — Creator decision. Divisions include **24 Radio** (urban
+  station), **OBC News** (acquired news brand), **Tower Sound** (labels), Tower Broadcasting,
+  Stream, Pictures, Sports, Print, Live, Ads. The name ties the media empire to the canon **Sound
+  Towers**, so broadcasting and Harmony Council control share infrastructure. The overnight show
+  ***The 24 Hour*** is the in-world framing device that carries the DJ mixes.
+- **R&B = Velvet Records, not a separate faction** — Creator decision: R&B does **not** get its own
+  organisation. It is the flagship prestige label inside Tower Sound; the **Velvet Room** is a
+  label-owned members' club. Keeps the major-organisation count at **11**.
 - **Game folder** — The Unity project lives in repo `game/` and is **git-ignored**; the tracked
   reference (data export + C# scripts + integration guide) lives in `docs/game/`. JSON is generated
   from `src/contentLoader.js` via `node scripts/export-game-data.mjs`. Engine: **Unity 6000.4.8f1**.
@@ -69,6 +88,21 @@ to "reserves," or move to a dedicated lore appendix?_
 The site ships **12 Ongaku city pages**; `source/57-...stages...` describes **57 stages**, and
 `source/4-...planets...` describes **14 galaxy planets**. These are three different granularities
 (districts ⊂ planet ⊂ galaxy) and are intentionally distinct.
+
+### 5. Two decks of 52 (Sick Deck vs. the Made Deck)
+The **Sick 52 roster stays at exactly 52** — canonical, 4 houses of 13, A♠ = Final Drop, live at
+`/sick-deck`. The proposed **Hip Hop Mafia "Made Deck"** (see
+[`HIP-HOP-MAFIA-DECK.md`](HIP-HOP-MAFIA-DECK.md)) is a **deliberate mirror**: 52 made members in 4
+houses **+2 Jokers** (Consigliere and Intelligence), ranked by the same ladder so the site can reuse
+`SICK52_RANK_ORDER`. In-world justification: **the Mafia's deck came first**; the Sick 52 dealt
+themselves as a deck in mockery of the streets, and the Chairman regards it as plagiarism.
+_Open: whether 10♠ stays vacant as Freq Kid's seat, whether the Jokers exist, and whether this ships
+as a `/made-deck` page._
+
+### 6. "Hip Hop Mafia" name collision
+`source/the-dj-24.md` uses **"Hip Hop Mafia"** as the **Hour 06** entry in the archived genre-named
+DJ24 roster pass (the live Hour 06 is **Striker**). If the name is taken for the new criminal
+organisation, the archived usage should be explicitly marked superseded. _Needs a decision._
 
 ## 🗂️ Asset notes
 

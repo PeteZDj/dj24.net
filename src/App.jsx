@@ -12,6 +12,8 @@ import CharacterIndex from './pages/CharacterIndex';
 import CharacterPage from './pages/CharacterPage';
 import Sick52Gallery from './pages/Sick52Gallery';
 import Sick52Member from './pages/Sick52Member';
+import MafiaGallery from './pages/MafiaGallery';
+import MafiaMember from './pages/MafiaMember';
 import TimelinePage from './pages/TimelinePage';
 import SeasonsPage from './pages/SeasonsPage';
 import GamesPage from './pages/GamesPage';
@@ -25,6 +27,7 @@ import MissionsPage from './pages/MissionsPage';
 import MissionPage from './pages/MissionPage';
 import ComicsIndex from './pages/ComicsIndex';
 import ComicReader from './pages/ComicReader';
+import MapPage from './pages/MapPage';
 
 /* ===== Scroll to top on route change ===== */
 function ScrollToTop() {
@@ -72,10 +75,12 @@ function Nav() {
           <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", color: "white" }}>ðŸ”</button>
         </form>
         <Link to="/planet_ongaku" onClick={() => setMenuOpen(false)}>Planet Ongaku</Link>
+        <Link to="/map" onClick={() => setMenuOpen(false)}>World Map</Link>
         <Link to="/factions" onClick={() => setMenuOpen(false)}>Factions</Link>
         <Link to="/characters" onClick={() => setMenuOpen(false)}>Characters</Link>
         <Link to="/dj24-roster" onClick={() => setMenuOpen(false)}>DJ24 Roster</Link>
         <Link to="/sick52" onClick={() => setMenuOpen(false)}>Sick 52</Link>
+        <Link to="/hip-hop-mafia" onClick={() => setMenuOpen(false)}>Hip Hop Mafia</Link>
         <Link to="/religions" onClick={() => setMenuOpen(false)}>Religions</Link>
         <Link to="/timeline" onClick={() => setMenuOpen(false)}>Timeline</Link>
         <Link to="/seasons" onClick={() => setMenuOpen(false)}>Seasons</Link>
@@ -95,11 +100,13 @@ function Footer() {
         <p>DJ24: War of Sound — Fandom Wiki &copy; 2026</p>
         <div className="footer-links">
           <Link to="/planet_ongaku">Planet Ongaku</Link>
+          <Link to="/map">World Map</Link>
           <Link to="/planet_ongaku/cities">Cities</Link>
           <Link to="/factions">Factions</Link>
           <Link to="/characters">Characters</Link>
           <Link to="/dj24-roster">DJ24 Roster</Link>
           <Link to="/sick52">Sick 52</Link>
+          <Link to="/hip-hop-mafia">Hip Hop Mafia</Link>
           <Link to="/religions">Religions</Link>
           <Link to="/timeline">Timeline</Link>
         </div>
@@ -117,10 +124,11 @@ function LegacyPlanetCityRedirect() {
 function WikiLayout({ children }) {
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isWide = isHome || location.pathname === '/map';
 
   return (
-    <div className={`wiki-layout ${isHome ? 'wiki-layout-home' : ''}`}>
-      {!isHome && <Sidebar />}
+    <div className={`wiki-layout ${isWide ? 'wiki-layout-home' : ''}`}>
+      {!isWide && <Sidebar />}
       <main className="wiki-main">
         {children}
       </main>
@@ -138,6 +146,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/planet_ongaku" element={<PlanetOngaku />} />
+          <Route path="/map" element={<MapPage />} />
           <Route path="/planet_ongaku/cities" element={<PlanetOngakuCities />} />
           <Route path="/planet_ongaku/cities/:slug" element={<WikiPage />} />
           <Route path="/universe" element={<Navigate to="/planet_ongaku" replace />} />
@@ -151,6 +160,8 @@ export default function App() {
           <Route path="/characters/:slug" element={<CharacterPage />} />
           <Route path="/sick52" element={<Sick52Gallery />} />
           <Route path="/sick-deck" element={<DeckPage />} />
+          <Route path="/hip-hop-mafia" element={<MafiaGallery />} />
+          <Route path="/hip-hop-mafia/:slug" element={<MafiaMember />} />
           <Route path="/missions" element={<MissionsPage />} />
           <Route path="/missions/:slug" element={<MissionPage />} />
           <Route path="/sick52/:slug" element={<Sick52Member />} />

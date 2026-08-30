@@ -6,6 +6,7 @@ const routeLabels = {
   'factions': 'Factions',
   'characters': 'Characters',
   'sick52': 'Sick 52 Roster',
+  'hip-hop-mafia': 'Hip Hop Mafia',
   'timeline': 'Timeline',
   'seasons': 'Seasons',
   'games': 'Games',

@@ -98,6 +98,16 @@ export default function Sidebar() {
       </div>
 
       <div className="sidebar-section">
+        <h3 className="sidebar-heading">♠ Hip Hop Mafia</h3>
+        <ul>
+          <li><Link to="/hip-hop-mafia" className={isActive('/hip-hop-mafia') && location.pathname === '/hip-hop-mafia' ? 'active' : ''}>Made Deck Roster</Link></li>
+          <li><Link to="/factions/hip-hop-mafia" className={isActive('/factions/hip-hop-mafia') ? 'active' : ''}>↳ Faction dossier</Link></li>
+          <li><Link to="/hip-hop-mafia/grand-verse" className={isActive('/hip-hop-mafia/grand-verse') ? 'active' : ''}>↳ Grand Verse</Link></li>
+          <li><Link to="/hip-hop-mafia/freq-kid" className={isActive('/hip-hop-mafia/freq-kid') ? 'active' : ''}>↳ Freq Kid</Link></li>
+        </ul>
+      </div>
+
+      <div className="sidebar-section">
         <h3 className="sidebar-heading">🛐 Religions</h3>
         <ul>
           <li><Link to="/religions" className={isActive('/religions') && location.pathname === '/religions' ? 'active' : ''}>All Religions</Link></li>

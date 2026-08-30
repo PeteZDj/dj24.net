@@ -10,6 +10,17 @@ deeply, quickly, and consistently.
 docs/
 ├── README.md            <- you are here (the map)
 ├── CANON-NOTES.md       <- canon status, decisions, and source-vs-site discrepancies
+├── PLANET-ONGAKU-WORLD-BIBLE.md  <- DRAFT: universe expansion — the "mix as soundtrack"
+│                            model, 11 major organisations (Hip Hop Mafia, The Tower
+│                            Group, military factions), the atlas, and the 3D world /
+│                            procedural-city production roadmap
+├── HIP-HOP-MAFIA-DECK.md   <- DRAFT: the Made Deck — the Mafia's own 52 (+2 Jokers),
+│                            4 houses, stat block, guns/cars, and the Commission
+├── ONGAKU-CIVILIAN-LIFE.md <- DRAFT: the ordinary-life layer — the Civilian Column
+│                            system plus restaurants, cars, guns, sport, transit,
+│                            banks, fashion and press
+├── HIP-HOP-MAFIA-VISUAL-BRIEF.md <- art direction + per-character image prompts for
+│                            the Hip Hop Mafia roster
 ├── lore/                <- the STRUCTURED canon (dissected + cross-referenced)
 │   ├── 01-world-and-science.md   World of Ongaku, Frequency Grid, SBS, the science of sound
 │   ├── 02-the-galaxy.md          The 14 single-craft planets
