@@ -147,6 +147,7 @@ const PALETTES = {
     apron: 'rgba(120,118,112,.55)', runway: '#4a4844', runwayMark: 'rgba(255,255,255,.7)',
     track: '#3f3d3a', infield: 'rgba(96,116,74,.5)',
     wall: 'rgba(112,104,92,.95)', wallEvil: 'rgba(24,10,14,.95)',
+    field: 'rgba(150,168,96,.5)', fieldLine: 'rgba(96,110,60,.45)', ruralRoof: 'rgba(196,188,172,.95)', farmTrack: 'rgba(150,138,116,.75)',
   },
   // Deliberately flat: land is one cream, vegetation one green, water one
   // blue. Biome nuance is the Terrain style's job — this is the layer you
@@ -171,6 +172,7 @@ const PALETTES = {
     apron: '#e3e0d8', runway: '#b9b4a9', runwayMark: 'rgba(255,255,255,.85)',
     track: '#9c968b', infield: '#dce7cd',
     wall: '#9a9188', wallEvil: '#3b1f26',
+    field: '#dfe7c4', fieldLine: 'rgba(150,166,118,.55)', ruralRoof: '#cdc6b8', farmTrack: '#c9c1ae',
   },
   terrain: {
     abyss: [120, 168, 200], ocean: [141, 186, 214], shelf: [163, 202, 226], surf: [182, 216, 236],
@@ -188,6 +190,7 @@ const PALETTES = {
     apron: 'rgba(190,182,166,.7)', runway: '#8c857a', runwayMark: 'rgba(255,255,255,.75)',
     track: '#7b736a', infield: 'rgba(150,175,120,.55)',
     wall: 'rgba(126,116,102,.95)', wallEvil: 'rgba(48,22,28,.95)',
+    field: 'rgba(186,198,140,.6)', fieldLine: 'rgba(130,146,90,.5)', ruralRoof: 'rgba(200,190,170,.95)', farmTrack: 'rgba(160,148,126,.8)',
   },
 };
 
@@ -520,6 +523,8 @@ export function generatePlanet(seedStr) {
   buildFootprints(planet, seedStr, nW, net.bearings);
   planet.circuits = buildCircuits(planet, stream(seedStr, 'circuits'), nW);
   finishRoadNetwork(planet);
+  planet.cells = buildCells(planet, stream(seedStr, 'cells'));
+  planet.rural = buildCountryside(planet, stream(seedStr, 'rural'));
   planet.regions = detectRegions(planet, seedStr);
   planet.corpSites = buildCorpSites(planet, stream(seedStr, 'corps'));
 
@@ -1141,6 +1146,199 @@ function buildCastles(planet, rng, hAt, mfAt) {
   return out;
 }
 
+// The Sick 52 work in cells, and a cell is a place: a compound of four or five
+// buildings off a track, well outside anywhere with a police station. Before
+// this they were dots on open grass, which is exactly what a safe house is not.
+function buildCells(planet, rng) {
+  const home = planet.cities.find((c) => c.name === 'Ongaku Prime') || planet.cities[0];
+  if (!home) return [];
+  const R = home.radius;
+  const out = [];
+
+  const nearestRoad = (x, y) => {
+    let best = null;
+    let bd = Infinity;
+    for (const r of planet.routes) {
+      if (r.ferry) continue;
+      for (const pt of r.pts) {
+        const d = Math.hypot(pt.x - x, pt.y - y);
+        if (d < bd) { bd = d; best = pt; }
+      }
+    }
+    return best && bd < 90 ? best : null;
+  };
+
+  for (let c = 0; c < 8; c++) {
+    for (let t = 0; t < 600; t++) {
+      const a = rng() * Math.PI * 2;
+      const r = R * (1.5 + rng() * 2.4);
+      const x = home.x + Math.cos(a) * r;
+      const y = home.y + Math.sin(a) * r;
+      if (!isLandAt(planet, x, y, 6)) continue;
+      if (planet.cities.some((o) => cityContains(o, x, y))) continue;
+      if (out.some((q) => Math.hypot(q.x - x, q.y - y) < R * 0.6)) continue;
+
+      const ang = rng() * Math.PI;
+      const ux = Math.cos(ang);
+      const uy = Math.sin(ang);
+      const buildings = [];
+      const n = 4 + ((rng() * 3) | 0);
+      for (let i = 0; i < n; i++) {
+        const along = (i - (n - 1) / 2) * 3.2;
+        const side = (i % 2 ? 1 : -1) * (1.6 + rng() * 1.2);
+        buildings.push({
+          x: x + ux * along - uy * side,
+          y: y + uy * along + ux * side,
+          ang: ang + (rng() - 0.5) * 0.3,
+          w: 1.6 + rng() * 1.6,
+          h: 1.1 + rng() * 1.0,
+        });
+      }
+      out.push({ x, y, ang, buildings, road: nearestRoad(x, y) });
+      break;
+    }
+  }
+  return out;
+}
+
+/* --------------------------------------------------------- COUNTRYSIDE */
+
+// Everything between the settlements. Before this the world outside a sprawl
+// polygon was empty green, which is why cities looked like they had been cut
+// out with scissors and why a safe house in open country was a dot on grass.
+//
+// Rural development follows roads, because that is where it goes: a farm needs
+// its produce moved, a homestead needs a lane, and a fuel stop needs traffic.
+// So all of it is placed by walking the network rather than by scattering.
+
+const SERVICE_KINDS = [
+  { key: 'fuel', icon: '⛽', label: 'Fuel stop', w: 3, names: ['Services', 'Fuel', 'Filling Station'] },
+  { key: 'diner', icon: '🍳', label: 'Roadside diner', w: 2.4, names: ['Diner', 'Roadhouse', 'Truck Stop'] },
+  { key: 'store', icon: '🏪', label: 'Convenience store', w: 3, names: ['Stores', 'General Store', 'Provisions'] },
+  { key: 'motel', icon: '🛏️', label: 'Motel', w: 1.6, names: ['Motel', 'Rest', 'Lodge'] },
+  { key: 'garage', icon: '🔧', label: 'Repair shop', w: 1.4, names: ['Garage', 'Auto Repairs', 'Tyres'] },
+  { key: 'layby', icon: '🅿️', label: 'Layby', w: 1.2, names: ['Layby', 'Rest Area', 'Viewpoint'] },
+  { key: 'weigh', icon: '⚖️', label: 'Weighbridge', w: 0.7, names: ['Weighbridge', 'Checkpoint'] },
+];
+
+const FARM_WORDS = ['Farm', 'Farmstead', 'Fields', 'Acres', 'Holding', 'Grange', 'Meadows', 'Pasture'];
+const HOME_WORDS = ['Cottage', 'House', 'Croft', 'Lodge', 'Barn', 'Steading'];
+
+function buildCountryside(planet, rng) {
+  const { GW, GH, hf, mf } = planet;
+  const at = (x, y) => {
+    const gx = Math.max(0, Math.min(GW - 1, Math.round((x / WORLD_W) * (GW - 1))));
+    const gy = Math.max(0, Math.min(GH - 1, Math.round((y / WORLD_H) * (GH - 1))));
+    return gy * GW + gx;
+  };
+  const dry = (x, y) => hf[at(x, y)] > 0.004;
+  const green = (x, y) => mf[at(x, y)] > 0.34 && hf[at(x, y)] < 0.34;
+  const inTown = (x, y, pad = 1) => planet.cities.some((c) => Math.hypot(c.x - x, c.y - y) < c.radius * pad);
+
+  const services = [];
+  const homesteads = [];
+  const farms = [];
+  const books = { service: [], home: [] };
+  const clear = (book, x, y, gap) => {
+    for (const q of books[book]) if (Math.hypot(q.x - x, q.y - y) < gap) return false;
+    books[book].push({ x, y });
+    return true;
+  };
+
+  const pickService = () => {
+    let total = 0;
+    for (const k of SERVICE_KINDS) total += k.w;
+    let r = rng() * total;
+    for (const k of SERVICE_KINDS) { r -= k.w; if (r <= 0) return k; }
+    return SERVICE_KINDS[0];
+  };
+
+  for (const r of planet.routes) {
+    if (r.ferry || r.pts.length < 4) continue;
+    const trunk = r.cls === 'motorway' || r.cls === 'highway';
+    const minor = r.cls === 'lane' || r.cls === 'access';
+
+    // Walk the polyline at a fixed step so spacing is in world units rather
+    // than in however many vertices the router happened to emit, carrying the
+    // remainder across segment boundaries.
+    const STEP = 4.5;
+    let since = STEP;
+    for (let i = 1; i < r.pts.length; i++) {
+      const a = r.pts[i - 1];
+      const b = r.pts[i];
+      const seg = Math.hypot(b.x - a.x, b.y - a.y);
+      if (seg < 0.001) continue;
+      const ux = (b.x - a.x) / seg;
+      const uy = (b.y - a.y) / seg;
+      const nx = -uy;
+      const ny = ux;
+
+      let pos = 0;
+      for (;;) {
+        const need = STEP - since;
+        if (pos + need > seg) { since += seg - pos; break; }
+        pos += need;
+        since = 0;
+
+        const x = a.x + ux * pos;
+        const y = a.y + uy * pos;
+        if (!dry(x, y) || inTown(x, y, 1.12)) continue;
+
+        // Services: only on roads with traffic, and well apart.
+        if (!minor && rng() < 0.06) {
+          const side = rng() < 0.5 ? 1 : -1;
+          const sx = x + nx * side * (3.5 + rng() * 2);
+          const sy = y + ny * side * (3.5 + rng() * 2);
+          if (dry(sx, sy) && clear('service', sx, sy, trunk ? 55 : 38)) {
+            const kind = pickService();
+            services.push({
+              x: sx, y: sy, ang: Math.atan2(uy, ux), kind: kind.key,
+              icon: kind.icon, label: kind.label,
+              name: `${makeName(rng)} ${kind.names[(rng() * kind.names.length) | 0]}`,
+              on: r.ref || null,
+            });
+          }
+        }
+
+        // Homesteads: a house set back from the road, more of them on lanes.
+        if (rng() < (minor ? 0.3 : 0.14)) {
+          const side = rng() < 0.5 ? 1 : -1;
+          const off = 3 + rng() * 7;
+          const hx = x + nx * side * off;
+          const hy = y + ny * side * off;
+          if (dry(hx, hy) && !inTown(hx, hy, 1.05) && clear('home', hx, hy, 7)) {
+            homesteads.push({
+              x: hx, y: hy, ang: Math.atan2(uy, ux) + (rng() - 0.5) * 0.5,
+              w: 1.1 + rng() * 1.4, h: 0.8 + rng() * 1.0,
+              // A track back to the road, so nothing out here is unreachable.
+              tx: x, ty: y,
+              name: `${makeName(rng)} ${HOME_WORDS[(rng() * HOME_WORDS.length) | 0]}`,
+            });
+
+            // Farms want green ground and a house to belong to.
+            if (green(hx, hy) && rng() < 0.75) {
+              const fw = 6 + rng() * 12;
+              const fh = 5 + rng() * 9;
+              const fang = Math.atan2(uy, ux) + (rng() - 0.5) * 0.6;
+              const fx = hx + nx * side * (fh * 0.6 + 2);
+              const fy = hy + ny * side * (fh * 0.6 + 2);
+              if (dry(fx, fy) && !inTown(fx, fy, 1.05)) {
+                farms.push({
+                  x: fx, y: fy, ang: fang, w: fw, h: fh,
+                  rows: 3 + ((rng() * 4) | 0),
+                  name: `${makeName(rng)} ${FARM_WORDS[(rng() * FARM_WORDS.length) | 0]}`,
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return { services, homesteads, farms };
+}
+
 /* ------------------------------------------------------ RACE CIRCUITS */
 
 // Two on the planet, no more. Motorsport is a fixture on Ongaku — the season
@@ -1556,6 +1754,36 @@ function buildFootprints(planet, seedStr, nC, bearings) {
         }
       }
     });
+    // Outskirts. Blocks continue past the outline at falling density, each
+    // aligned to whichever quarter it is nearest, so the grid does not simply
+    // stop along a line.
+    {
+      const fringeStep = R / (c.kind === 'capital' ? 20 : c.kind === 'mega' ? 16 : 9);
+      const outer = R * 1.42;
+      for (let fx = -outer; fx <= outer; fx += fringeStep) {
+        for (let fy = -outer; fy <= outer; fy += fringeStep) {
+          const bx = c.x + fx;
+          const by = c.y + fy;
+          const d = Math.hypot(fx, fy);
+          if (d > outer || inCity(bx, by) || !landAt(bx, by)) continue;
+          // Falls to nothing at the outer limit, so there is no second edge.
+          const t = Math.max(0, 1 - (d - R * 0.9) / (outer - R * 0.9));
+          if (rng() > t ** 1.35 * 0.9) continue;
+          const si = sectorAt(bx, by);
+          const ang = sectors[si].ang;
+          const ux = Math.cos(ang);
+          const uy = Math.sin(ang);
+          const half = fringeStep * (0.2 + rng() * 0.16);
+          quads.push(
+            bx + ux * -half - uy * -half, by + uy * -half + ux * -half,
+            bx + ux * half - uy * -half, by + uy * half + ux * -half,
+            bx + ux * half - uy * half, by + uy * half + ux * half,
+            bx + ux * -half - uy * half, by + uy * -half + ux * half,
+          );
+        }
+      }
+    }
+
     c.streets = streets;
     c.quads = Float32Array.from(quads);
 
@@ -1999,6 +2227,114 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
         }
         ctx.lineCap = 'round';
       }
+    }
+  }
+
+
+  // ---- countryside: fields, homesteads and the tracks that serve them ----
+  //
+  // Everything here follows the road network, so it appears exactly where the
+  // eye expects development and nowhere else. Gated on zoom because at planet
+  // scale it is four hundred invisible rectangles.
+  if (planet.rural && opts.rural !== false && scale > 0.55) {
+    const R = planet.rural;
+
+    ctx.fillStyle = P.field;
+    ctx.strokeStyle = P.fieldLine;
+    ctx.lineWidth = lw(0.6);
+    for (const f of R.farms) {
+      const ca = Math.cos(f.ang);
+      const sa = Math.sin(f.ang);
+      const hw = f.w / 2;
+      const hh = f.h / 2;
+      ctx.beginPath();
+      ctx.moveTo(f.x + ca * -hw - sa * -hh, f.y + sa * -hw + ca * -hh);
+      ctx.lineTo(f.x + ca * hw - sa * -hh, f.y + sa * hw + ca * -hh);
+      ctx.lineTo(f.x + ca * hw - sa * hh, f.y + sa * hw + ca * hh);
+      ctx.lineTo(f.x + ca * -hw - sa * hh, f.y + sa * -hw + ca * hh);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      // Ploughed rows, once one would be more than a pixel across.
+      if (scale > 2.2) {
+        ctx.beginPath();
+        for (let i = 1; i < f.rows; i++) {
+          const t = -hh + (f.h * i) / f.rows;
+          ctx.moveTo(f.x + ca * -hw - sa * t, f.y + sa * -hw + ca * t);
+          ctx.lineTo(f.x + ca * hw - sa * t, f.y + sa * hw + ca * t);
+        }
+        ctx.stroke();
+      }
+    }
+
+    // Tracks first, then the buildings that sit at the end of them.
+    ctx.strokeStyle = P.farmTrack;
+    ctx.lineWidth = lw(1.3);
+    ctx.beginPath();
+    for (const h of R.homesteads) {
+      ctx.moveTo(h.tx, h.ty);
+      ctx.lineTo(h.x, h.y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = P.ruralRoof;
+    ctx.strokeStyle = P.urbanEdge;
+    ctx.lineWidth = lw(0.5);
+    ctx.beginPath();
+    for (const h of R.homesteads) {
+      const ca = Math.cos(h.ang);
+      const sa = Math.sin(h.ang);
+      const hw = h.w / 2;
+      const hh = h.h / 2;
+      ctx.moveTo(h.x + ca * -hw - sa * -hh, h.y + sa * -hw + ca * -hh);
+      ctx.lineTo(h.x + ca * hw - sa * -hh, h.y + sa * hw + ca * -hh);
+      ctx.lineTo(h.x + ca * hw - sa * hh, h.y + sa * hw + ca * hh);
+      ctx.lineTo(h.x + ca * -hw - sa * hh, h.y + sa * -hw + ca * hh);
+      ctx.closePath();
+    }
+    ctx.fill();
+    if (scale > 3) ctx.stroke();
+
+    // Safe houses: a track in, and buildings at the end of it.
+    if (planet.cells) {
+      ctx.strokeStyle = P.farmTrack;
+      ctx.lineWidth = lw(1.1);
+      ctx.beginPath();
+      for (const cl of planet.cells) {
+        if (!cl.road) continue;
+        ctx.moveTo(cl.road.x, cl.road.y);
+        ctx.lineTo(cl.x, cl.y);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = P.ruralRoof;
+      ctx.beginPath();
+      for (const cl of planet.cells) {
+        for (const b of cl.buildings) {
+          const ca = Math.cos(b.ang);
+          const sa = Math.sin(b.ang);
+          const hw = b.w / 2;
+          const hh = b.h / 2;
+          ctx.moveTo(b.x + ca * -hw - sa * -hh, b.y + sa * -hw + ca * -hh);
+          ctx.lineTo(b.x + ca * hw - sa * -hh, b.y + sa * hw + ca * -hh);
+          ctx.lineTo(b.x + ca * hw - sa * hh, b.y + sa * hw + ca * hh);
+          ctx.lineTo(b.x + ca * -hw - sa * hh, b.y + sa * -hw + ca * hh);
+          ctx.closePath();
+        }
+      }
+      ctx.fill();
+    }
+
+    // A service is a forecourt and a building on it.
+    for (const sv of R.services) {
+      ctx.beginPath();
+      ctx.arc(sv.x, sv.y, 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = P.apron;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.rect(sv.x - 0.9, sv.y - 0.7, 1.8, 1.4);
+      ctx.fillStyle = P.ruralRoof;
+      ctx.fill();
     }
   }
 

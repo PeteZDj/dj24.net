@@ -756,41 +756,25 @@ export function placeCrew(planet, madeList, sickList) {
     });
   }
 
-  // Everyone else works in cells of five or six, outside the built-up area of
-  // the capital — a presence, not a resident.
-  const cells = [];
-  for (let c = 0; c < 8; c++) {
-    for (let t = 0; t < 500; t++) {
-      const a = rng() * Math.PI * 2;
-      const r = R * (1.4 + rng() * 2.2);
-      const x = home.x + Math.cos(a) * r;
-      const y = home.y + Math.sin(a) * r;
-      if (!isLandAt(planet, x, y, 6)) continue;
-      if (planet.cities.some((o) => cityContains(o, x, y))) continue;
-      if (cells.some((q) => Math.hypot(q.x - x, q.y - y) < R * 0.55)) continue;
-      cells.push({ x, y });
-      break;
-    }
-  }
-  if (!cells.length) cells.push({ x: home.x + R * 2, y: home.y });
+  // Everyone else works in cells of five or six. The world generates the safe
+  // houses — a compound of four or five buildings off a track — so a member is
+  // standing in a building rather than on open grass.
+  const cells = (planet.cells && planet.cells.length) ? planet.cells : [{ x: home.x + R * 2, y: home.y, buildings: [] }];
 
   rest.forEach((sm, i) => {
-    const base = cells[i % cells.length];
-    let x = base.x;
-    let y = base.y;
-    for (let t = 0; t < 40; t++) {
-      const a = rng() * Math.PI * 2;
-      const r = Math.sqrt(rng()) * R * 0.22;
-      const tx = base.x + Math.cos(a) * r;
-      const ty = base.y + Math.sin(a) * r;
-      if (!isLandAt(planet, tx, ty, 6)) continue;
-      x = tx;
-      y = ty;
-      break;
-    }
-    out.push({ kind: 'sick', x, y, label: sm.name, card: sm.cardLabel || '', cell: i % cells.length, data: sm });
+    const cell = cells[i % cells.length];
+    // Put each member on one of the compound buildings where there is one.
+    const b = cell.buildings && cell.buildings.length
+      ? cell.buildings[Math.floor(i / cells.length) % cell.buildings.length]
+      : null;
+    out.push({
+      kind: 'sick',
+      x: b ? b.x : cell.x,
+      y: b ? b.y : cell.y,
+      label: sm.name, card: sm.cardLabel || '',
+      cell: i % cells.length, data: sm,
+    });
   });
-
   return out;
 }
 
