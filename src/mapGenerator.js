@@ -515,6 +515,7 @@ export function generatePlanet(seedStr) {
   planet.routes = net.routes;
   buildFootprints(planet, seedStr, nW, net.bearings);
   planet.circuits = buildCircuits(planet, stream(seedStr, 'circuits'), nW);
+  finishRoadNetwork(planet);
   planet.regions = detectRegions(planet, seedStr);
   planet.corpSites = buildCorpSites(planet, stream(seedStr, 'corps'));
 
@@ -1197,6 +1198,109 @@ function buildCircuits(planet, rng, nC) {
   return circuits;
 }
 
+/* ------------------------------------------------ ACCESS & NUMBERING */
+
+// Runs after the footprints, because an airport, a quay and a circuit are all
+// places you drive to and none of them exist until then. Then the whole
+// network is numbered, which is the difference between a map with roads on it
+// and a road map.
+function finishRoadNetwork(planet) {
+  const routes = planet.routes;
+  const h = buildRoutingGrid(planet);
+  const used = new Uint8Array(RGW * RGH);
+  const idxOf = (c) => {
+    const gx = Math.max(0, Math.min(RGW - 1, Math.round((c.x / WORLD_W) * (RGW - 1))));
+    const gy = Math.max(0, Math.min(RGH - 1, Math.round((c.y / WORLD_H) * (RGH - 1))));
+    return gy * RGW + gx;
+  };
+  const toWorld = (i) => ({
+    x: ((i % RGW) / (RGW - 1)) * WORLD_W,
+    y: (((i / RGW) | 0) / (RGH - 1)) * WORLD_H,
+  });
+
+  // Existing roads are cheap to travel along, so a spur joins the network and
+  // runs beside it rather than cutting its own line across country.
+  for (const r of routes) {
+    if (r.ferry) continue;
+    for (const pt of r.pts) used[idxOf(pt)] = 1;
+  }
+
+  const nearestOnNetwork = (x, y) => {
+    let best = null;
+    let bd = Infinity;
+    for (const r of routes) {
+      if (r.ferry) continue;
+      for (const pt of r.pts) {
+        const d = Math.hypot(pt.x - x, pt.y - y);
+        if (d < bd) { bd = d; best = pt; }
+      }
+    }
+    return best ? { pt: best, d: bd } : null;
+  };
+
+  const spur = (from, to, cls, name) => {
+    if (!from || !to) return;
+    const a = idxOf(from);
+    const b = idxOf(to);
+    if (a === b) {
+      // Close enough that the routing grid cannot tell them apart: two points
+      // still make a road, and it is the right road.
+      routes.push({ a: from, b: to, pts: [{ x: from.x, y: from.y }, { x: to.x, y: to.y }], ferry: false, cls, name });
+      return;
+    }
+    const path = aStar(h, used, a, b);
+    if (!path || path.length < 2) return;
+    let water = 0;
+    for (const q of path) if (h[q] <= 0) water++;
+    if (water > 3) return;
+    for (const q of path) used[q] = 1;
+    const world = path.map(toWorld);
+    world[0] = { x: from.x, y: from.y };
+    world[world.length - 1] = { x: to.x, y: to.y };
+    routes.push({ a: from, b: to, pts: smoothPath(world), ferry: false, cls, name });
+  };
+
+  for (const c of planet.cities) {
+    if (c.airport) {
+      const near = nearestOnNetwork(c.airport.x, c.airport.y);
+      const toCity = Math.hypot(c.airport.x - c.x, c.airport.y - c.y);
+      const target = near && near.d < toCity ? near.pt : c;
+      spur(c.airport, target, 'access', `${c.airport.name} approach`);
+    }
+    if (c.port) spur(c.port, c, 'access', `${c.port.name} approach`);
+  }
+  for (const k of planet.circuits || []) {
+    const near = nearestOnNetwork(k.x, k.y);
+    if (near) spur(k, near.pt, 'access', `${k.name} approach`);
+  }
+
+  /* ---- designations ---- */
+
+  const length = (r) => {
+    let t = 0;
+    for (let i = 1; i < r.pts.length; i++) t += Math.hypot(r.pts[i].x - r.pts[i - 1].x, r.pts[i].y - r.pts[i - 1].y);
+    return t;
+  };
+  const PREFIX = { motorway: 'M', highway: 'H', road: 'R' };
+  const counters = { M: 0, H: 0, R: 0 };
+  for (const cls of ['motorway', 'highway', 'road']) {
+    // Longest first, so M1 is the road that crosses the continent rather than
+    // whichever one happened to be routed first.
+    const set = routes.filter((r) => r.cls === cls && !r.ferry).sort((x, y) => length(y) - length(x));
+    for (const r of set) {
+      const pre = PREFIX[cls];
+      counters[pre] += 1;
+      r.ref = `${pre}${counters[pre]}`;
+      r.len = length(r);
+      r.corridor = `${r.a.name} — ${r.b.name}`;
+    }
+  }
+  for (const r of routes) {
+    if (r.ferry) { r.ref = 'Ferry'; r.corridor = `${r.a.name} — ${r.b.name}`; r.len = length(r); }
+    else if (!r.ref) r.len = length(r);
+  }
+}
+
 /* ------------------------------------------------- CITY FOOTPRINTS */
 
 const CITY_RADIUS = { capital: 64, mega: 48, hostile: 32, port: 27, military: 21, fortress: 16, town: 15, village: 4.6, outpost: 1.05, castle: 3.2 };
@@ -1514,8 +1618,19 @@ function buildFootprints(planet, seedStr, nC, bearings) {
         const rl = R * (c.kind === 'capital' ? 0.55 : c.kind === 'mega' ? 0.42 : 0.3);
         const ux = Math.cos(runwayAng);
         const uy = Math.sin(runwayAng);
-        // Both ends have to be on land or the aircraft stop in the sea.
-        if (!landAt(ax + ux * rl, ay + uy * rl) || !landAt(ax - ux * rl, ay - uy * rl)) continue;
+        // The whole apron has to be on land, not just the runway ends: an
+        // airfield half in the sea is the most obvious tell on the map.
+        const vx = -uy;
+        const vy = ux;
+        const aw = rl * 1.15;
+        const ah = rl * (c.kind === 'capital' ? 0.31 : 0.2);
+        let dry = true;
+        for (const [su, sv] of [[1, 1], [1, -1], [-1, 1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          if (!landAt(ax + ux * aw * su + vx * ah * sv, ay + uy * aw * su + vy * ah * sv)) { dry = false; break; }
+        }
+        if (!dry) continue;
+        // And it must not be sitting on the city it serves.
+        if (inCity(ax, ay)) continue;
         const runways = [];
         const nR = c.kind === 'capital' ? 2 : 1;
         for (let i = 0; i < nR; i++) {
@@ -1829,8 +1944,8 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
         const ap = c.airport;
         // The apron follows the runways. A circle of tarmac in a forest is the
         // single most obvious tell that a map was generated rather than drawn.
-        const aw = ap.r * 2.3;
-        const ah = ap.r * (ap.runways.length > 1 ? 0.62 : 0.40);
+        const aw = ap.r * 2.2;
+        const ah = ap.r * (ap.runways.length > 1 ? 0.58 : 0.36);
         ctx.save();
         ctx.translate(ap.x, ap.y);
         ctx.rotate(ap.ang);
@@ -1893,7 +2008,7 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
     // up against terrain rather than disappear into it.
     const WIDTH = {
       motorway: [10.5, 6.2], highway: [7.0, 4.0], road: [4.4, 2.4],
-      lane: [2.8, 1.4], ring: [4.0, 2.1], radial: [3.6, 1.9],
+      lane: [2.8, 1.4], access: [3.0, 1.5], ring: [4.0, 2.1], radial: [3.6, 1.9],
     };
     for (const pass of [0, 1]) {
       ctx.strokeStyle = pass === 0 ? P.roadCase : P.road;
@@ -1924,6 +2039,7 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
         }
 
         if (r.cls === 'lane' && scale < 0.55) continue;
+        if (r.cls === 'access' && scale < 0.4) continue;
         ctx.lineWidth = lw(WIDTH[r.cls][pass]);
         trace(r.pts);
         ctx.stroke();

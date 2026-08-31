@@ -661,6 +661,9 @@ function seedCanonPlaces(city, quarters, openBlocks, rng, pois, usedBlocks, used
 function seedCorpSites(planet, city, quarters, openBlocks, rng, pois, usedBlocks, usedNames) {
   const sites = (planet.corpSites || []).filter((si) => si.city === city.name);
   for (const si of sites) {
+    // Some corporate sites are also written into the canon place list — NexaGen
+    // Tower, SkyOngaku Cargo — and the capital does not have two of either.
+    if (usedNames.has(si.name)) continue;
     let qi = quarters.findIndex((q) => q.role === si.role);
     if (qi < 0) qi = 0;
     const jx = quarters[qi].x + (rng() - 0.5) * city.radius * 0.4;

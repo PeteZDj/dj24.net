@@ -487,6 +487,100 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
 
   }
 
+  // Route shields. A numbered network is the difference between a map with
+  // roads drawn on it and a road map you could navigate by, and a shield is
+  // the only label that is allowed to sit on top of the thing it names.
+  if (layers.roads !== false && planet.routes) {
+    const SHIELD = {
+      motorway: { minZoom: 0.22, w: 30, h: 17, size: 10.5, fill: '#1f4b8f', text: '#ffffff', edge: 'rgba(255,255,255,.85)' },
+      highway: { minZoom: 0.5, w: 26, h: 15, size: 9.5, fill: '#ffffff', text: '#25303f', edge: 'rgba(40,50,64,.6)' },
+      road: { minZoom: 1.3, w: 23, h: 13.5, size: 8.5, fill: '#f1efe9', text: '#4a5260', edge: 'rgba(74,82,96,.5)' },
+    };
+    for (const r of planet.routes) {
+      const sh = SHIELD[r.cls];
+      if (!sh || !r.ref || z < sh.minZoom) continue;
+
+      // Anchor on the middle of the part of the route that is actually on
+      // screen, so a shield never ends up marking a road you cannot see.
+      let lo = -1;
+      let hi = -1;
+      for (let i = 0; i < r.pts.length; i++) {
+        const px = r.pts[i].x * z + ox;
+        const py = r.pts[i].y * z + oy;
+        if (px < 0 || py < 0 || px > W || py > H) continue;
+        if (lo < 0) lo = i;
+        hi = i;
+      }
+      if (lo < 0 || hi - lo < 2) continue;
+      const mid = r.pts[(lo + hi) >> 1];
+      const mx = mid.x * z + ox;
+      const my = mid.y * z + oy;
+
+      const hw = (sh.w * k) / 2;
+      const hh = (sh.h * k) / 2;
+      if (!L.circleFree(mx, my, Math.max(hw, hh) + 2)) continue;
+      L.reserve(mx - hw, my - hh, mx + hw, my + hh);
+
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(mx - hw, my - hh, hw * 2, hh * 2, 3.5 * k);
+      else ctx.rect(mx - hw, my - hh, hw * 2, hh * 2);
+      ctx.fillStyle = sh.fill;
+      ctx.fill();
+      ctx.strokeStyle = sh.edge;
+      ctx.lineWidth = 1.4 * k;
+      ctx.stroke();
+      ctx.font = `800 ${sh.size * k}px ${LABEL_FONT}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = sh.text;
+      ctx.fillText(r.ref, mx, my + 0.5 * k);
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+    }
+  }
+
+  // Playable sites. Drawn as diamonds so they never read as another café: a
+  // level marker is production data sitting on top of the world, not part of
+  // it, and it should look like it.
+  if (opts.levels && layers.levels !== false) {
+    for (const lv of opts.levels) {
+      const x = lv.x * z + ox;
+      const y = lv.y * z + oy;
+      if (x < -40 || y < -40 || x > W + 40 || y > H + 40) continue;
+      const r = 11 * k;
+      if (!L.circleFree(x, y, r)) continue;
+      L.reserveCircle(x, y, r + 1);
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.PI / 4);
+      ctx.beginPath();
+      ctx.rect(-r * 0.72, -r * 0.72, r * 1.44, r * 1.44);
+      ctx.fillStyle = styleKey === 'satellite' ? 'rgba(2,6,16,0.9)' : '#ffffff';
+      ctx.fill();
+      ctx.strokeStyle = lv.color;
+      ctx.lineWidth = 2.4 * k;
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.font = `${10 * k}px system-ui, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = styleKey === 'satellite' ? '#ffffff' : '#111111';
+      ctx.fillText(lv.icon, x, y + 0.5 * k);
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+
+      if (opts.labels !== false) {
+        L.add({
+          text: lv.name, x, y, r, gap: 4 * k,
+          size: 11.5 * k, weight: 700, color: P.label, halo: P.labelHalo,
+          priority: 86,
+        });
+      }
+    }
+  }
+
   // Race circuits are landmarks, so they get a pin and a name of their own
   // rather than waiting for a city model to stream in around them.
   if (planet.circuits && layers.pois !== false && (!opts.placeTypes || opts.placeTypes.landmark !== false)) {

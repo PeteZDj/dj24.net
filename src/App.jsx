@@ -124,7 +124,9 @@ function LegacyPlanetCityRedirect() {
 function WikiLayout({ children }) {
   const location = useLocation();
   const isHome = location.pathname === '/';
-  const isWide = isHome || location.pathname === '/map';
+  // Both map pages are full-bleed: a sidebar next to a slippy map wastes the
+  // half of the screen the map is for.
+  const isWide = isHome || location.pathname === '/map' || location.pathname === '/mapgenerator';
 
   return (
     <div className={`wiki-layout ${isWide ? 'wiki-layout-home' : ''}`}>
@@ -146,7 +148,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/planet_ongaku" element={<PlanetOngaku />} />
-          <Route path="/map" element={<MapPage />} />
+          <Route path="/map" element={<MapPage canon />} />
+          <Route path="/mapgenerator" element={<MapPage />} />
           <Route path="/planet_ongaku/cities" element={<PlanetOngakuCities />} />
           <Route path="/planet_ongaku/cities/:slug" element={<WikiPage />} />
           <Route path="/universe" element={<Navigate to="/planet_ongaku" replace />} />

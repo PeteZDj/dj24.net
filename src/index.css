@@ -3947,6 +3947,44 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
 .map-corp-sites button:hover { background: var(--bg-alt); color: var(--text); }
 .map-corp-sites em { margin-left: auto; font-style: normal; font-size: .68rem; color: var(--text-light); white-space: nowrap; }
 
+
+/* ---- canon atlas panel ---- */
+.map-locked {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: var(--bg-alt); border: 1px solid var(--border); border-radius: 999px;
+  padding: .4rem .8rem; font-size: .78rem; font-weight: 600; color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .03em;
+}
+.map-count {
+  margin-left: auto; font-style: normal; font-size: .66rem; font-weight: 700;
+  color: #fff; background: var(--primary); border-radius: 999px; padding: .05rem .4rem;
+}
+.map-levels, .map-levels ul, .map-register { list-style: none; }
+.map-tier + .map-tier { margin-top: .4rem; }
+.map-tier-head {
+  display: block; font-size: .62rem; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-light); margin: .3rem 0 .15rem;
+}
+.map-levels button, .map-register button {
+  display: flex; align-items: center; gap: .4rem; width: 100%;
+  background: none; border: 0; padding: .22rem .35rem; border-radius: 6px; cursor: pointer;
+  font: inherit; font-size: .78rem; color: var(--text-muted); text-align: left;
+}
+.map-levels button:hover, .map-register button:hover { background: var(--bg-alt); color: var(--text); }
+.map-levels button.on { background: var(--bg-alt); color: var(--text); font-weight: 600; }
+.map-lv-dot { width: 8px; height: 8px; border-radius: 2px; transform: rotate(45deg); flex-shrink: 0; }
+.map-lv-name { flex: 1; }
+.map-levels em, .map-register em { font-style: normal; font-size: .66rem; color: var(--text-light); white-space: nowrap; }
+.map-reg-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.map-shield {
+  flex-shrink: 0; min-width: 30px; text-align: center;
+  border-radius: 4px; padding: .05rem .28rem;
+  font-size: .66rem; font-weight: 800; letter-spacing: .02em;
+}
+.map-shield-motorway { background: #1f4b8f; color: #fff; }
+.map-shield-highway { background: #fff; color: #25303f; border: 1px solid rgba(40,50,64,.5); }
+.map-shield-road { background: var(--bg-alt); color: var(--text-muted); border: 1px solid var(--border); }
+
 /* ---- explainer ---- */
 .map-explainer { margin-top: 2.5rem; }
 .map-explainer-grid {

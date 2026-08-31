@@ -9,6 +9,8 @@ import {
 } from '../mapGenerator';
 import { buildCityDetail, drawCityDetail, placeCrew } from '../cityDetail';
 import { drawPlanetLabels, POI_TYPES } from '../mapLabels';
+import { CANON_SEED, LEVEL_KINDS, buildCanon } from '../ongakuCanon';
+import { Link } from 'react-router-dom';
 
 // World units per kilometre. A capital's sprawl is ~59 units across the
 // radius, which lands it at roughly 170 km² — the size the world bible asks a
@@ -33,13 +35,16 @@ const DETAIL_CACHE = 6;
 // Bump when the file shape changes in a way an older reader could not handle.
 const OGX_VERSION = 1;
 
-export default function MapPage() {
-  const [seed, setSeed] = useState('NEON-GRID-2481');
-  const [seedInput, setSeedInput] = useState('NEON-GRID-2481');
+// `canon` locks the page to the world we kept: no seed, no re-roll, and the
+// authored layer on top of it. Without it this is the sandbox at
+// /mapgenerator, which builds a new planet on demand.
+export default function MapPage({ canon = false }) {
+  const [seed, setSeed] = useState(CANON_SEED);
+  const [seedInput, setSeedInput] = useState(CANON_SEED);
   const [style, setStyle] = useState('map');
   const [layers, setLayers] = useState({
     districts: true, roads: true, buildings: true, rivers: true,
-    pois: true, made: true, sick: true, labels: true, tenants: true, grid: false,
+    pois: true, made: true, sick: true, labels: true, tenants: true, grid: false, levels: true,
   });
   const [selected, setSelected] = useState(null);
   const [cam, setCam] = useState({ x: 0, y: 0, z: 0.3 });
@@ -53,6 +58,7 @@ export default function MapPage() {
   const [placeTypes, setPlaceTypes] = useState(() => Object.fromEntries(Object.keys(POI_TYPES).map((k) => [k, true])));
   const [query, setQuery] = useState('');
   const [openCorp, setOpenCorp] = useState(null);
+  const [openLevel, setOpenLevel] = useState(null);
 
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
@@ -104,6 +110,14 @@ export default function MapPage() {
   }, [seed]);
 
   const crew = useMemo(() => (world ? placeCrew(world, madeDeckAll, sick52) : []), [world, sick52]);
+
+  // The authored layer. Only the canon world has one — a level anchored to a
+  // quarter of Ongaku Prime means nothing on a planet that has no Ongaku Prime.
+  const atlas = useMemo(() => (canon && world ? buildCanon(world) : null), [canon, world]);
+  const levels = useMemo(
+    () => (atlas ? atlas.levels.map((l) => ({ ...l, ...LEVEL_KINDS[l.kind] })) : []),
+    [atlas],
+  );
 
   /* ------------------------------------------------------ base raster -- */
 
@@ -260,6 +274,33 @@ export default function MapPage() {
     setCam({ z, x: wrap.clientWidth / 2 - c.x * z, y: wrap.clientHeight / 2 - c.y * z });
   }, []);
 
+  // Fly to an arbitrary point rather than a settlement: a level can sit on a
+  // runway or a quay, which are not in the city list.
+  const flyToPoint = useCallback((x, y, span) => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const z = Math.min(wrap.clientWidth, wrap.clientHeight) / Math.max(1, span * 60);
+    setCam({ z, x: wrap.clientWidth / 2 - x * z, y: wrap.clientHeight / 2 - y * z });
+  }, []);
+
+  // Frame a whole route, so clicking M1 in the register shows you M1.
+  const flyToRoute = useCallback((r) => {
+    const wrap = wrapRef.current;
+    if (!wrap || !r.pts.length) return;
+    let x0 = Infinity;
+    let y0 = Infinity;
+    let x1 = -Infinity;
+    let y1 = -Infinity;
+    for (const pt of r.pts) {
+      if (pt.x < x0) x0 = pt.x;
+      if (pt.y < y0) y0 = pt.y;
+      if (pt.x > x1) x1 = pt.x;
+      if (pt.y > y1) y1 = pt.y;
+    }
+    const z = Math.min(wrap.clientWidth / Math.max(40, x1 - x0), wrap.clientHeight / Math.max(40, y1 - y0)) * 0.82;
+    setCam({ z, x: wrap.clientWidth / 2 - ((x0 + x1) / 2) * z, y: wrap.clientHeight / 2 - ((y0 + y1) / 2) * z });
+  }, []);
+
   /* ------------------------------------------------------------ draw -- */
 
   const draw = useCallback(() => {
@@ -325,6 +366,7 @@ export default function MapPage() {
     // anything that cannot find a clear box is dropped rather than overlapped.
     drawPlanetLabels(ctx, world, style, { ox, oy, z, W, H }, {
       labels: layers.labels, layers, details, crew, placeTypes,
+      levels: layers.levels === false ? null : levels,
     });
 
     if (selected) {
@@ -334,7 +376,7 @@ export default function MapPage() {
       ctx.lineWidth = 3;
       ctx.stroke();
     }
-  }, [world, crew, layers, style, selected, placeTypes]);
+  }, [world, crew, layers, style, selected, placeTypes, levels]);
 
   useEffect(() => {
     let raf = 0;
@@ -349,7 +391,7 @@ export default function MapPage() {
     return () => { alive = false; cancelAnimationFrame(raf); };
   }, [draw]);
 
-  useEffect(() => { dirtyRef.current = true; }, [cam, layers, selected, world, crew, style, status, detailTick, placeTypes]);
+  useEffect(() => { dirtyRef.current = true; }, [cam, layers, selected, world, crew, style, status, detailTick, placeTypes, levels]);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -400,6 +442,7 @@ export default function MapPage() {
       if (m.kind === 'sick' && !layers.sick) continue;
       points.push({ ...m, _t: 'member' });
     }
+    if (layers.levels !== false) for (const lv of levels) points.push({ ...lv, _t: 'level' });
     for (const c of world.cities) points.push({ ...c, _t: 'city' });
 
     const tol = 22 / z;
@@ -624,12 +667,25 @@ export default function MapPage() {
       <Breadcrumbs />
 
       <header className="map-head">
-        <h1>Planet Ongaku — World Generator</h1>
+        <h1>{canon ? 'Planet Ongaku — The Atlas' : 'Planet Ongaku — World Generator'}</h1>
         <p className="map-sub">
-          One continuous world, streamed. Fly from orbit down to a street corner without ever
-          changing maps: terrain, climate and rivers at planet scale, then motorways, sprawl,
-          quarters, blocks and individual buildings as each settlement loads in underneath you.
-          Every seed builds a different world, and the same seed always rebuilds the same one.
+          {canon ? (
+            <>
+              The canon world. One continuous surface, streamed: fly from orbit down to a street
+              corner without ever changing maps, past numbered motorways, harbours, airfields and
+              two race circuits, into quarters, blocks and individual named buildings. This planet
+              is locked — every link to it shows the same world.{' '}
+              <Link to="/mapgenerator">Build a different one →</Link>
+            </>
+          ) : (
+            <>
+              The sandbox. Every seed builds a different planet: terrain, climate and rivers at
+              planet scale, then motorways, sprawl, quarters, blocks and individual buildings as
+              each settlement loads in underneath you. The same seed always rebuilds the same
+              world.{' '}
+              <Link to="/map">See the canon world →</Link>
+            </>
+          )}
         </p>
       </header>
 
@@ -652,20 +708,29 @@ export default function MapPage() {
           {(world?.cities || []).map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}
         </select>
 
-        <div className="map-seed">
-          <label htmlFor="seed">Seed</label>
-          <input
-            id="seed"
-            value={seedInput}
-            onChange={(e) => setSeedInput(e.target.value.toUpperCase())}
-            onKeyDown={(e) => e.key === 'Enter' && regenerate(seedInput)}
-          />
-          <button onClick={() => regenerate(seedInput)}>Apply</button>
-        </div>
-
-        <button className="map-btn primary" onClick={() => regenerate()}>🎲 New world</button>
+        {canon ? (
+          <div className="map-seed">
+            <span className="map-locked" title="This world is canon and cannot be re-rolled">🔒 Canon world · {CANON_SEED}</span>
+          </div>
+        ) : (
+          <>
+            <div className="map-seed">
+              <label htmlFor="seed">Seed</label>
+              <input
+                id="seed"
+                value={seedInput}
+                onChange={(e) => setSeedInput(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === 'Enter' && regenerate(seedInput)}
+              />
+              <button onClick={() => regenerate(seedInput)}>Apply</button>
+            </div>
+            <button className="map-btn primary" onClick={() => regenerate()}>🎲 New world</button>
+          </>
+        )}
         <button className="map-btn" onClick={saveOgx} title="Save this world as an .ogx atlas file">💾 Save .ogx</button>
-        <button className="map-btn" onClick={() => fileRef.current?.click()} title="Open an .ogx atlas file">📂 Open .ogx</button>
+        {!canon && (
+          <button className="map-btn" onClick={() => fileRef.current?.click()} title="Open an .ogx atlas file">📂 Open .ogx</button>
+        )}
         <input
           ref={fileRef}
           type="file"
@@ -757,6 +822,23 @@ export default function MapPage() {
                 </>
               )}
 
+              {selected._t === 'level' && (
+                <>
+                  <span className="map-kicker" style={{ color: selected.color }}>
+                    {selected.icon} {selected.label} · tier {selected.tier}
+                  </span>
+                  <h3>{selected.name}</h3>
+                  <p>{selected.brief}</p>
+                  <p className="map-note">📍 {selected.where}</p>
+                  <p className="map-note">{selected.blurb}</p>
+                  {FACTIONS[selected.faction] && (
+                    <span className="map-tag" style={{ '--tag': FACTIONS[selected.faction].color }}>
+                      {FACTIONS[selected.faction].icon} {FACTIONS[selected.faction].name}
+                    </span>
+                  )}
+                </>
+              )}
+
               {selected._t === 'place' && (
                 <>
                   <span className="map-kicker" style={{ color: POI_TYPES[selected.type]?.color }}>
@@ -839,6 +921,80 @@ export default function MapPage() {
             {!index.length && <li className="map-index-empty">Nothing matches “{query}”.</li>}
           </ul>
 
+          {canon && (
+            <>
+              <h3>
+                Levels
+                <em className="map-count">{levels.length}</em>
+              </h3>
+              <p className="map-legend-note">
+                Sites a level could be built on, anchored to real geometry — a quarter, a quay, a
+                runway, a circuit. Click one to fly to it.
+              </p>
+              <ul className="map-levels">
+                {[1, 2, 3, 4].map((tier) => {
+                  const inTier = levels.filter((l) => l.tier === tier);
+                  if (!inTier.length) return null;
+                  return (
+                    <li key={tier} className="map-tier">
+                      <span className="map-tier-head">Tier {tier}</span>
+                      <ul>
+                        {inTier.map((lv) => (
+                          <li key={lv.id}>
+                            <button
+                              onClick={() => {
+                                setOpenLevel(lv.id);
+                                setSelected({ ...lv, _t: 'level' });
+                                flyToPoint(lv.x, lv.y, lv.city ? 1 : 3);
+                              }}
+                              className={openLevel === lv.id ? 'on' : ''}
+                            >
+                              <span className="map-lv-dot" style={{ background: lv.color }} />
+                              <span className="map-lv-name">{lv.icon} {lv.name}</span>
+                              <em>{lv.label}</em>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <h3>Provinces</h3>
+              <ul className="map-key">
+                {atlas?.provinces.map((pr) => (
+                  <li key={pr.name}>
+                    <button
+                      className="map-linkline"
+                      onClick={() => { flyTo(pr.city); setSelected({ ...pr.city, _t: 'city' }); }}
+                    >
+                      <span className="map-dot" style={{ background: pr.color }} />
+                      <strong>{pr.name}</strong>
+                      <em>{pr.members.length} · {(pr.pop / 1e6).toFixed(1)}M</em>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+
+              <h3>
+                Road register
+                <em className="map-count">{atlas?.register.length}</em>
+              </h3>
+              <ul className="map-register">
+                {atlas?.register.slice(0, 26).map((r) => (
+                  <li key={r.ref}>
+                    <button onClick={() => flyToRoute(r)}>
+                      <span className={`map-shield map-shield-${r.cls}`}>{r.ref}</span>
+                      <span className="map-reg-name">{r.corridor}</span>
+                      <em>{Math.round(r.len / UNITS_PER_KM)} km</em>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
           <h3>Layers</h3>
           <div className="map-layer-list">
             <label><input type="checkbox" checked={layers.roads} onChange={() => toggle('roads')} /> Roads & sea routes</label>
@@ -849,6 +1005,7 @@ export default function MapPage() {
             <label><input type="checkbox" checked={layers.pois} onChange={() => toggle('pois')} /> Places</label>
             <label><input type="checkbox" checked={layers.made} onChange={() => toggle('made')} /> 🃏 Made Deck (54)</label>
             <label><input type="checkbox" checked={layers.sick} onChange={() => toggle('sick')} /> 💀 Sick 52 cells</label>
+            {canon && <label><input type="checkbox" checked={layers.levels} onChange={() => toggle('levels')} /> 🎯 Playable levels</label>}
             <label><input type="checkbox" checked={layers.labels} onChange={() => toggle('labels')} /> Labels</label>
             <label><input type="checkbox" checked={layers.grid} onChange={() => toggle('grid')} /> Coordinate grid</label>
           </div>

@@ -199,3 +199,66 @@ Final Drop holds court there. So do the six Founding Dissonants below him —
 Red Silence, Hollow Aria, Bass Phantom, Nocturne Prime, Sonic Vicar and Black
 Vinyl, the top of the spades. Seven of the Sick 52 have an address; the other
 forty-five work in cells outside the capital and do not.
+
+---
+
+## 10. Two maps
+
+`/map` is **the Atlas**: the canon world, locked to one seed. Every link to it
+shows the same planet, so a place named in a chapter is in the same spot next
+month. It carries an authored layer that a generated world could not — see
+`src/ongakuCanon.js`.
+
+`/mapgenerator` is **the sandbox**: press the button, get a different planet.
+Seed field, `.ogx` save and load, no canon layer, because a level anchored to
+the Old Quarter of Ongaku Prime means nothing on a world that has no Ongaku
+Prime.
+
+The rule for which file a thing belongs in: **if it would be wrong on a
+different world, it is canon; if it would be right on any world, it is the
+generator.**
+
+## 11. Playable levels
+
+Nineteen sites on the canon map, each anchored to real geometry — a quarter, a
+quay, a runway, a circuit, a castle — rather than to a guessed coordinate. Nine
+kinds (hub, mission, heist, siege, race, chase, stealth, performance, finale)
+across four tiers from opening to endgame.
+
+They are drawn as diamonds, never as another café pin, because a level marker
+is production data sitting on top of the world rather than part of it, and it
+should look like it.
+
+Tier 4 is the endgame: **Attack on Trolley**, **The Long Table**, and **The
+Last Chord**.
+
+## 12. The road register
+
+Every through route on the planet is numbered. Motorways take M, highways H,
+ordinary roads R, longest first within each class — so M1 is the road that
+actually crosses the continent rather than whichever was routed first. Shields
+are drawn on the map at the middle of whatever part of the route is on screen,
+and the register in the side panel flies the camera to frame a whole road when
+you click it.
+
+Airports, quays and circuits each get an **access road** to the nearest point
+on the network. Until they had one, they were places you could see and not
+drive to.
+
+## 13. Provinces
+
+Eight, drawn around the settlements that already matter, with every settlement
+assigned to the nearest provincial seat. Because the seats are where the road
+network already converges, the administrative map and the story map end up
+being the same map.
+
+| Province | Seat |
+|---|---|
+| Prime Territory | Ongaku Prime |
+| The Western Reach | Urban City |
+| Northmarch | Rock City |
+| The Blue Coast | Blue City |
+| The Conservatory | Classic City |
+| Eastmarch | Pop City |
+| The Pulse Isles | Electric City |
+| The Cloud Shelf | Cloud City |
