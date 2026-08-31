@@ -482,6 +482,40 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
 
   }
 
+  // Race circuits are landmarks, so they get a pin and a name of their own
+  // rather than waiting for a city model to stream in around them.
+  if (planet.circuits && layers.pois !== false && (!opts.placeTypes || opts.placeTypes.landmark !== false)) {
+    for (const ck of planet.circuits) {
+      if (ck.r * z < 7) continue;
+      const x = ck.x * z + ox;
+      const y = ck.y * z + oy;
+      if (x < -40 || y < -40 || x > W + 40 || y > H + 40) continue;
+      const pr = 10 * k;
+      if (!L.circleFree(x, y, pr)) continue;
+      L.reserveCircle(x, y, pr + 1);
+      ctx.beginPath();
+      ctx.arc(x, y, pr, 0, TAU);
+      ctx.fillStyle = styleKey === 'satellite' ? 'rgba(2,6,16,0.85)' : '#ffffff';
+      ctx.fill();
+      ctx.strokeStyle = POI_TYPES.landmark.color;
+      ctx.lineWidth = 2 * k;
+      ctx.stroke();
+      ctx.font = `${11 * k}px system-ui, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = styleKey === 'satellite' ? '#ffffff' : '#111111';
+      ctx.fillText('\u{1F3C1}', x, y + 0.5 * k);
+      ctx.textBaseline = 'alphabetic';
+      if (opts.labels !== false) {
+        L.add({
+          text: ck.name, x, y, r: pr, gap: 4 * k,
+          size: 11.5 * k, weight: 700, color: P.label, halo: P.labelHalo,
+          priority: 58,
+        });
+      }
+    }
+  }
+
   // Tenants. Once a footprint is big enough on screen to read a name inside
   // it, it gets one — which is the difference between a street of grey boxes
   // and a street you can walk down. The engine drops whatever does not fit, so

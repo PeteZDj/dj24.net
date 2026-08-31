@@ -117,3 +117,41 @@ of them.
 That is the point of the generator. The named landmarks are the ones audiences
 remember, but a city only feels inhabited when the *unremarkable* buildings
 also have names on them.
+
+---
+
+## 5. Why a place is there
+
+No village or outpost is generated without a reason, and the reason drives its
+name, its description and the one facility on its map that anybody actually
+visits. Placement is gated on terrain, so a fishing village never appears on a
+desert plateau.
+
+**Outposts** — mine (Korrat Steel), quarry (Bastion Grade), geothermal station
+and Frequency Grid relay (Onoska Energy), salt works, fuel stop (Halcyon
+Motors), border post, research station (NexaGen).
+
+**Villages** — fishing, lake, farming, mill, orchard, market and logging.
+
+An outpost is a handful of cabins around the thing that put it there: no
+square, no monument, no village hall, and three or four buildings you would
+name. A village has a hall, a square with a monument on it, a chapel, a shop
+and a surgery. A town has all of that and a skyline.
+
+## 6. The square and the monument
+
+Every settlement above outpost tier carves one block out of its middle for a
+public square, paved rather than planted so it reads as civic space, with a
+monument on it that the place is measured from. The capital's is Harmony
+Square; everywhere else names its own.
+
+## 7. Motorsport
+
+Exactly two circuits on the planet, on separate landmasses, each outside a
+capital or mega city. They are road courses rather than ovals — long straights,
+a hairpin, a couple of sweepers — with an infield and a racing line. Halcyon
+Motors runs the series, officially as a marketing budget.
+
+Two, and no more, on purpose: a landmark stops being a landmark when there are
+twelve of them, and the season finale only works as a seasonal fixture if there
+is nowhere else it could be held.

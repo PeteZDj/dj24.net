@@ -488,6 +488,7 @@ export default function MapPage() {
           port: !!c.port, airport: c.airport ? c.airport.name : null,
         })),
         regions: world.regions.map((r) => ({ name: r.name, kind: r.kind })),
+        circuits: world.circuits.map((c) => ({ name: c.name, host: c.host })),
         routes: world.routes.length,
       },
     };
@@ -584,7 +585,7 @@ export default function MapPage() {
   }, [world, query]);
 
   const worldStats = useMemo(() => {
-    if (!world) return { total: 0, village: 0, outpost: 0, routes: 0, ports: 0, airports: 0 };
+    if (!world) return { total: 0, village: 0, outpost: 0, routes: 0, ports: 0, airports: 0, circuits: 0 };
     return {
       total: world.cities.length,
       village: world.cities.filter((c) => c.kind === 'village').length,
@@ -592,6 +593,7 @@ export default function MapPage() {
       routes: world.routes.length,
       ports: world.cities.filter((c) => c.port).length,
       airports: world.cities.filter((c) => c.airport).length,
+      circuits: world.circuits.length,
     };
   }, [world]);
 
@@ -711,6 +713,9 @@ export default function MapPage() {
                     <div><dt>Across</dt><dd>{((selected.radius * 2) / UNITS_PER_KM).toFixed(0)}km</dd></div>
                   </dl>
                   <p className="map-note"><strong>Climate:</strong> {selected.climate}</p>
+                  {selected.purpose && (
+                    <p className="map-note"><strong>{selected.purpose.label}.</strong> {selected.purpose.operator ? `Operated by ${selected.purpose.operator}.` : ''}</p>
+                  )}
                   <p className="map-note">
                     {selected.sectors?.length} quarters
                     {streamed[selected.name]
@@ -802,6 +807,7 @@ export default function MapPage() {
             <div><dt>Routes</dt><dd>{worldStats.routes}</dd></div>
             <div><dt>Harbours</dt><dd>{worldStats.ports}</dd></div>
             <div><dt>Airfields</dt><dd>{worldStats.airports}</dd></div>
+            <div><dt>Circuits</dt><dd>{worldStats.circuits}</dd></div>
           </dl>
 
           <h3>Index</h3>

@@ -145,6 +145,7 @@ const PALETTES = {
     urbanCoreFade: 'rgba(216,207,191,0)',
     urbanEdge: 'rgba(64,58,48,.55)', block: 'rgba(208,200,186,.66)', quay: '#8d8579',
     apron: 'rgba(120,118,112,.55)', runway: '#4a4844', runwayMark: 'rgba(255,255,255,.7)',
+    track: '#3f3d3a', infield: 'rgba(96,116,74,.5)',
   },
   // Deliberately flat: land is one cream, vegetation one green, water one
   // blue. Biome nuance is the Terrain style's job — this is the layer you
@@ -163,6 +164,7 @@ const PALETTES = {
     urbanCoreFade: 'rgba(223,218,210,0)',
     urbanEdge: 'rgba(203,197,188,.9)', block: 'rgba(214,208,199,.85)', quay: '#cfc8bd',
     apron: '#e3e0d8', runway: '#b9b4a9', runwayMark: 'rgba(255,255,255,.85)',
+    track: '#9c968b', infield: '#dce7cd',
   },
   terrain: {
     abyss: [120, 168, 200], ocean: [141, 186, 214], shelf: [163, 202, 226], surf: [182, 216, 236],
@@ -178,6 +180,7 @@ const PALETTES = {
     urbanCoreFade: 'rgba(196,187,173,0)',
     urbanEdge: 'rgba(156,146,130,.8)', block: 'rgba(188,179,165,.75)', quay: '#b3a894',
     apron: 'rgba(190,182,166,.7)', runway: '#8c857a', runwayMark: 'rgba(255,255,255,.75)',
+    track: '#7b736a', infield: 'rgba(150,175,120,.55)',
   },
 };
 
@@ -433,24 +436,29 @@ export function generatePlanet(seedStr) {
       const py = (gy / (GH - 1)) * WORLD_H;
       if (cities.some((c) => Math.hypot(c.x - px, c.y - py) < (c.kind === 'village' || c.kind === 'outpost' ? minGap : minGap * 1.7))) continue;
       const lat = Math.abs(gy / (GH - 1) - 0.5) * 2;
+      const moist = mf[gy * GW + gx];
+      const coastal = isCoastG(gx, gy);
+      const purpose = pickPurpose(rng, kind, h, moist, coastal);
       return {
-        name: minorName(rng, kind),
+        name: `${makeName(rng)} ${purpose.suffix[(rng() * purpose.suffix.length) | 0]}`,
         kind,
         faction: 'neutral',
-        desc: kind === 'village'
-          ? 'A village. A few hundred people, one road in and one road out.'
-          : 'An outpost. Fuel, a relay mast and somewhere to sleep.',
+        purpose,
+        desc: purpose.blurb,
         x: px, y: py,
         elev: Math.round(h * 4200),
-        climate: climateOf(lat, mf[gy * GW + gx], h),
-        pop: Math.round((kind === 'village' ? 4200 : 260) * (0.5 + rng() * 1.4)),
+        climate: climateOf(lat, moist, h),
+        pop: Math.round((kind === 'village' ? 2600 : 140) * (0.4 + rng() * 1.5)),
       };
     }
     return null;
   };
 
   for (let i = 0; i < 46; i++) {
-    const v = minorAt('village', 74, 400, (gx, gy, h) => h < 0.36);
+    // Every third village wants the coast. Left to chance, a random land point
+    // is almost never on a shoreline and the planet ends up with no fishing.
+    const wantCoast = i % 3 === 0;
+    const v = minorAt('village', 68, 500, (gx, gy, h) => h < 0.36 && (!wantCoast || isCoastG(gx, gy)));
     if (v) cities.push(v);
   }
   for (let i = 0; i < 22; i++) {
@@ -471,19 +479,92 @@ export function generatePlanet(seedStr) {
   const net = generateRoadNetwork(planet);
   planet.routes = net.routes;
   buildFootprints(planet, rng, nW, net.bearings);
+  planet.circuits = buildCircuits(planet, rng, nW);
   planet.regions = detectRegions(planet, rng);
 
   return planet;
 }
 
-// Village and outpost names. Deliberately plainer than the canon cities: these
-// are places named after a ford, a mill or whoever got there first.
-const VILLAGE_SUFFIX = ['Cross', 'Ford', 'Hollow', 'Bridge', 'Mill', 'Rest', 'Bend', 'Green', 'Fields', 'Wells', 'Barrow', 'Landing', 'Reach', 'Combe'];
-const OUTPOST_SUFFIX = ['Station', 'Camp', 'Watch', 'Post', 'Relay', 'Halt', 'Depot', 'Rise', 'Signal', 'Waypoint'];
+// Nowhere exists for no reason. Every village and outpost gets the thing that
+// put it there, and that reason drives its name, its description and the one
+// facility on its map — which is usually the only building anyone visits.
+//
+// `needs` gates placement against the terrain: a fishing village on a desert
+// plateau is the kind of detail that makes a generated world feel fake.
+const SETTLEMENT_PURPOSE = [
+  { key: 'mine', tier: 'outpost', w: 1, label: 'Mine', site: 'Mine', operator: 'Korrat Steel', icon: '⛏️',
+    suffix: ['Shaft', 'Seam', 'Workings', 'Cut', 'Lode'],
+    blurb: 'A working mine. The shaft came first, the huts came after, and nobody pretends otherwise.',
+    needs: (h) => h > 0.34 },
+  { key: 'quarry', tier: 'outpost', w: 1, label: 'Quarry', site: 'Quarry', operator: 'Bastion Grade', icon: '🪨',
+    suffix: ['Quarry', 'Pit', 'Face', 'Scar'],
+    blurb: 'A stone quarry. Half the motorways on this continent came out of this hole.',
+    needs: (h) => h > 0.3 },
+  { key: 'geothermal', tier: 'outpost', w: 1, label: 'Geothermal station', site: 'Geothermal Station', operator: 'Onoska Energy', icon: '⚡',
+    suffix: ['Vent', 'Station', 'Wells', 'Field'],
+    blurb: 'A geothermal tap feeding the grid. Three engineers, one road, and a fence nobody argues with.',
+    needs: (h) => h > 0.36 },
+  { key: 'relay', tier: 'outpost', w: 0.7, label: 'Relay mast', site: 'Relay', operator: 'Onoska Energy', icon: '📶',
+    suffix: ['Relay', 'Signal', 'Mast', 'Repeater'],
+    blurb: 'A Frequency Grid relay. On a clear night you can hear it in your fillings.',
+    needs: (h) => h > 0.33 },
+  { key: 'salt', tier: 'outpost', w: 1, label: 'Salt works', site: 'Salt Works', operator: null, icon: '🧂',
+    suffix: ['Flats', 'Pans', 'Works'],
+    blurb: 'Salt pans. Nothing grows, nothing rots, and everything tastes of it.',
+    needs: (h, moist) => moist < 0.24 },
+  { key: 'refuel', tier: 'outpost', w: 0.6, label: 'Fuel stop', site: 'Fuel Stop', operator: 'Halcyon Motors', icon: '⛽',
+    suffix: ['Halt', 'Stop', 'Waypoint', 'Crossing'],
+    blurb: 'Fuel, a canteen and somewhere to sleep. It exists because the next one is four hours away.',
+    needs: () => true },
+  { key: 'watch', tier: 'outpost', w: 0.6, label: 'Border post', site: 'Border Post', operator: null, icon: '🛡️',
+    suffix: ['Watch', 'Post', 'Lookout', 'Gate'],
+    blurb: 'A border post. Officially a customs point, and everybody knows what that means.',
+    needs: (h) => h > 0.3 },
+  { key: 'research', tier: 'outpost', w: 0.5, label: 'Research station', site: 'Field Station', operator: 'NexaGen Harmonics', icon: '🔬',
+    suffix: ['Station', 'Field Post', 'Observatory'],
+    blurb: 'A NexaGen field station. The published work is about acoustics. So is the unpublished work.',
+    needs: () => true },
 
-function minorName(rng, kind) {
-  const pool = kind === 'outpost' ? OUTPOST_SUFFIX : VILLAGE_SUFFIX;
-  return `${makeName(rng)} ${pool[(rng() * pool.length) | 0]}`;
+  { key: 'fishing', tier: 'village', w: 1, label: 'Fishing village', site: 'Quay', operator: null, icon: '🐟',
+    suffix: ['Quay', 'Landing', 'Cove', 'Strand', 'Haven'],
+    blurb: 'A fishing village. The boats go out before the road wakes up.',
+    needs: (h, moist, coastal) => coastal },
+  { key: 'lake', tier: 'village', w: 1, label: 'Lake village', site: 'Boathouse', operator: null, icon: '🛶',
+    suffix: ['Mere', 'Water', 'Shore', 'Reach'],
+    blurb: 'Built along the water on stilts and stubbornness. Everything arrives by boat.',
+    needs: (h, moist) => moist > 0.6 },
+  { key: 'farming', tier: 'village', w: 1, label: 'Farming village', site: 'Grain Store', operator: null, icon: '🌾',
+    suffix: ['Fields', 'Furlong', 'Grange', 'Barrow', 'Green'],
+    blurb: 'Farmland and a grain store. The whole village turns out for harvest and for funerals.',
+    needs: (h, moist) => moist > 0.32 && h < 0.3 },
+  { key: 'mill', tier: 'village', w: 1, label: 'Mill village', site: 'Mill', operator: null, icon: '🏭',
+    suffix: ['Mill', 'Wheel', 'Race', 'Ford'],
+    blurb: 'A mill, a bridge and the houses that grew around them, in that order.',
+    needs: (h, moist) => moist > 0.4 },
+  { key: 'orchard', tier: 'village', w: 1, label: 'Orchard village', site: 'Cider Press', operator: null, icon: '🍏',
+    suffix: ['Orchard', 'Grove', 'Vale', 'Combe'],
+    blurb: 'Orchards on the terraces. The cider is the only export anybody cares about.',
+    needs: (h, moist) => moist > 0.45 },
+  { key: 'market', tier: 'village', w: 0.3, label: 'Market village', site: 'Market Cross', operator: null, icon: '🛒',
+    suffix: ['Cross', 'Market', 'Bridge', 'Bend'],
+    blurb: 'A market village on a junction. Busy one day a week and asleep the other six.',
+    needs: () => true },
+  { key: 'timber', tier: 'village', w: 1, label: 'Logging village', site: 'Sawmill', operator: 'Bastion Grade', icon: '🪵',
+    suffix: ['Cut', 'Stand', 'Hollow', 'Camp'],
+    blurb: 'A logging camp that stopped being temporary about sixty years ago.',
+    needs: (h, moist) => moist > 0.55 },
+];
+
+function pickPurpose(rng, tier, h, moist, coastal) {
+  const pool = SETTLEMENT_PURPOSE.filter((p) => p.tier === tier && p.needs(h, moist, coastal));
+  const use = pool.length ? pool : SETTLEMENT_PURPOSE.filter((p) => p.tier === tier);
+  // Weighted, because the catch-all reasons (a market, a fuel stop) would
+  // otherwise be half the planet.
+  let total = 0;
+  for (const p of use) total += p.w;
+  let r = rng() * total;
+  for (const p of use) { r -= p.w; if (r <= 0) return p; }
+  return use[use.length - 1];
 }
 
 /* ------------------------------------------------- NAMED GEOGRAPHY */
@@ -882,28 +963,39 @@ function generateRoadNetwork(planet) {
   }
 
 
-  // Now feed the villages and outposts in. Each gets one lane to whichever
-  // settlement is nearest, which is how a real minor road network grows: not
-  // planned, just the shortest way to somewhere that already had a road.
+  // Now feed the villages and outposts in. A lane goes to whichever is nearer:
+  // the closest settlement, or the closest point on a road that already exists.
+  // That second case is what stops minor roads running halfway across a
+  // continent to a village nobody has heard of — real ones join the main road.
+  const junctions = [];
+  for (const r of routes) {
+    if (r.ferry) continue;
+    for (let i = 2; i < r.pts.length - 2; i += 3) junctions.push(r.pts[i]);
+  }
+
   for (const c of cities) {
     if (MAJOR(c)) continue;
-    let host = null;
-    let hostD = Infinity;
+    let target = null;
+    let bestD = Infinity;
     for (const o of cities) {
-      if (o === c) continue;
-      if (!MAJOR(o) && o.kind !== 'village') continue;
+      if (o === c || (!MAJOR(o) && o.kind !== 'village')) continue;
       const d = Math.hypot(o.x - c.x, o.y - c.y);
-      if (d < hostD) { hostD = d; host = o; }
+      if (d < bestD) { bestD = d; target = { x: o.x, y: o.y }; }
     }
-    if (!host || hostD > 900) continue;
-    const path = aStar(h, used, idxOf(c), idxOf(host));
+    for (const j of junctions) {
+      const d = Math.hypot(j.x - c.x, j.y - c.y) * 1.15;
+      if (d < bestD) { bestD = d; target = j; }
+    }
+    if (!target || bestD > 700) continue;
+
+    const path = aStar(h, used, idxOf(c), idxOf(target));
     if (!path || path.length < 2) continue;
     let water = 0;
     for (const p of path) if (h[p] <= 0) water++;
     if (water > 6) continue;
     for (const p of path) used[p] = 1;
     const world = path.map(toWorld);
-    routes.push({ a: c, b: host, pts: smoothPath(world), ferry: false, cls: 'lane' });
+    routes.push({ a: c, b: target, pts: smoothPath(world), ferry: false, cls: 'lane' });
     const k = Math.min(world.length - 1, 5);
     bearingOf(c).push(Math.atan2(world[k].y - world[0].y, world[k].x - world[0].x));
   }
@@ -911,9 +1003,70 @@ function generateRoadNetwork(planet) {
   return { routes, bearings };
 }
 
+/* ------------------------------------------------------ RACE CIRCUITS */
+
+// Two on the planet, no more. Motorsport is a fixture on Ongaku — the season
+// finale is a seasonal-mix generator all by itself — but a circuit is a
+// landmark, and a landmark stops being one when there are twelve of them.
+const CIRCUIT_SUFFIX = ['Speedway', 'Circuit', 'Raceway', 'Motor Park'];
+
+function buildCircuits(planet, rng, nC) {
+  const hosts = planet.cities
+    .filter((c) => c.kind === 'capital' || c.kind === 'mega')
+    .sort((a, b) => b.pop - a.pop);
+  const circuits = [];
+
+  for (const host of hosts) {
+    if (circuits.length >= 2) break;
+    // Keep them apart: two circuits on the same stretch of coast is one
+    // circuit and a car park.
+    if (circuits.some((k) => Math.hypot(k.x - host.x, k.y - host.y) < 900)) continue;
+
+    let placed = null;
+    for (let t = 0; t < 60; t++) {
+      const a = rng() * Math.PI * 2;
+      const d = host.radius * (1.6 + rng() * 1.2);
+      const cx = host.x + Math.cos(a) * d;
+      const cy = host.y + Math.sin(a) * d;
+      const r = host.radius * 0.5;
+      // The whole lap has to be on land, which is most of the work.
+      let ok = true;
+      for (let k = 0; k < 24; k++) {
+        const th = (k / 24) * Math.PI * 2;
+        if (!isLandAt(planet, cx + Math.cos(th) * r * 1.15, cy + Math.sin(th) * r * 0.8, 5)) { ok = false; break; }
+      }
+      if (!ok) continue;
+      placed = { cx, cy, r };
+      break;
+    }
+    if (!placed) continue;
+
+    // A road course rather than an oval: the lap radius is modulated by noise,
+    // which gives long straights, a hairpin and a couple of sweepers.
+    const pts = [];
+    const N = 96;
+    for (let k = 0; k <= N; k++) {
+      const th = (k / N) * Math.PI * 2;
+      const wob = 0.72 + (nC(Math.cos(th) * 1.7 + circuits.length * 11, Math.sin(th) * 1.7) * 0.5 + 0.5) * 0.62;
+      pts.push({
+        x: placed.cx + Math.cos(th) * placed.r * 1.18 * wob,
+        y: placed.cy + Math.sin(th) * placed.r * 0.82 * wob,
+      });
+    }
+    circuits.push({
+      x: placed.cx, y: placed.cy, r: placed.r, pts,
+      host: host.name,
+      name: `${host.name.replace(/ City$/, '')} ${CIRCUIT_SUFFIX[(rng() * CIRCUIT_SUFFIX.length) | 0]}`,
+      // Halcyon's "marketing budget" has to race somewhere.
+      operator: 'Halcyon Motors',
+    });
+  }
+  return circuits;
+}
+
 /* ------------------------------------------------- CITY FOOTPRINTS */
 
-const CITY_RADIUS = { capital: 64, mega: 48, hostile: 34, port: 30, military: 24, fortress: 18, town: 20, village: 9, outpost: 4.5 };
+const CITY_RADIUS = { capital: 64, mega: 48, hostile: 32, port: 27, military: 21, fortress: 16, town: 15, village: 4.6, outpost: 1.9 };
 
 // Every city on the planet gets a real urban area: sprawl clipped to the
 // coastline, a ring road, radial roads aligned to the highways arriving from
@@ -934,7 +1087,7 @@ function nameQuarters(c, rng) {
   } else {
     secs.forEach((s, i) => {
       s.name = i === 0
-        ? (c.kind === 'town' ? c.name : 'Downtown')
+        ? (c.kind === 'town' || c.kind === 'village' || c.kind === 'outpost' ? c.name : 'Downtown')
         : `${makeName(rng)} ${QUARTER_SUFFIX[(rng() * QUARTER_SUFFIX.length) | 0]}`;
     });
   }
@@ -1067,7 +1220,7 @@ function buildFootprints(planet, rng, nC, bearings) {
     // Radials: one per arriving highway, topped up so the city never looks
     // lopsided, each stopping at the edge of the built-up area.
     const angs = [...(bearings.get(c) || [])];
-    const want = c.kind === 'capital' ? 8 : c.kind === 'mega' ? 6 : c.kind === 'village' ? 3 : c.kind === 'outpost' ? 2 : 4;
+    const want = c.kind === 'capital' ? 8 : c.kind === 'mega' ? 6 : c.kind === 'village' ? 2 : c.kind === 'outpost' ? 1 : 4;
     let guard = 0;
     while (angs.length < want && guard++ < 60) {
       const cand = rng() * Math.PI * 2;
@@ -1101,7 +1254,7 @@ function buildFootprints(planet, rng, nC, bearings) {
       const ux = Math.cos(sec.ang);
       const uy = Math.sin(sec.ang);
       const reach = R * (si === 0 ? 0.8 : 0.65);
-      const step = R / (c.kind === 'capital' ? 24 : c.kind === 'mega' ? 19 : c.kind === 'outpost' ? 5 : c.kind === 'village' ? 7 : 12);
+      const step = R / (c.kind === 'capital' ? 24 : c.kind === 'mega' ? 19 : c.kind === 'outpost' ? 3 : c.kind === 'village' ? 5 : 12);
       const owns = (x, y) => inCity(x, y) && sectorAt(x, y) === si;
 
       for (let dir = 0; dir < 2; dir++) {
@@ -1615,6 +1768,34 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
         ctx.lineWidth = lw(WIDTH[r.cls][pass]);
         trace(r.pts);
         ctx.stroke();
+      }
+    }
+
+    // Race circuits: infield, then the track, then the racing line. Drawn with
+    // the roads because that is what a circuit is.
+    if (planet.circuits) {
+      for (const k of planet.circuits) {
+        if (k.r * scale < 6) continue;
+        ctx.beginPath();
+        ctx.moveTo(k.pts[0].x, k.pts[0].y);
+        for (let i = 1; i < k.pts.length; i++) ctx.lineTo(k.pts[i].x, k.pts[i].y);
+        ctx.closePath();
+        ctx.fillStyle = P.infield;
+        ctx.fill();
+        ctx.strokeStyle = P.roadCase;
+        ctx.lineWidth = lw(7.5);
+        ctx.stroke();
+        ctx.strokeStyle = P.track;
+        ctx.lineWidth = lw(5);
+        ctx.stroke();
+        if (k.r * scale > 80) {
+          ctx.save();
+          ctx.setLineDash([lw(6), lw(9)]);
+          ctx.strokeStyle = P.runwayMark;
+          ctx.lineWidth = lw(0.9);
+          ctx.stroke();
+          ctx.restore();
+        }
       }
     }
 
