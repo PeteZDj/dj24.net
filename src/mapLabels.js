@@ -170,9 +170,20 @@ export function makeLabeller(ctx, W, H, opts = {}) {
     run(it, box, false);
   }
 
+  const early = [];
+
   return {
     // Markers, pins and anything else text must not sit on top of.
     reserve(x0, y0, x1, y1) { insert({ x0, y0, x1, y1 }); },
+    // Claims its box straight away, ahead of any marker reserved later. The
+    // title of whatever you are looking at has to win outright — it cannot be
+    // outbid by a restaurant pin that happened to be registered first.
+    addFirst(item) {
+      if (!item.text) return false;
+      const box = place(item);
+      if (box) early.push([item, box]);
+      return !!box;
+    },
     reserveCircle(x, y, r) { insert({ x0: x - r, y0: y - r, x1: x + r, y1: y + r }); },
     // For callers that place their own marks and want to avoid stacking them.
     circleFree(x, y, r) { return !hits({ x0: x - r, y0: y - r, x1: x + r, y1: y + r }); },
@@ -188,12 +199,32 @@ export function makeLabeller(ctx, W, H, opts = {}) {
         if (box) placed.push([it, box]);
         else dropped.push(it.text);
       }
+      for (const [it, box] of early) paint(it, box);
       for (const [it, box] of placed) paint(it, box);
+      const total = placed.length + early.length;
       queue.length = 0;
-      return { placed: placed.length, dropped: dropped.length, droppedText: dropped };
+      early.length = 0;
+      return { placed: total, dropped: dropped.length, droppedText: dropped };
     },
   };
 }
+
+/* ----------------------------------------------------- place pins -- */
+
+export const POI_TYPES = {
+  landmark: { label: 'Landmarks', color: '#FBBF24' },
+  venue: { label: 'Venues & studios', color: '#E879F9' },
+  food: { label: 'Restaurants & cafés', color: '#FB923C' },
+  front: { label: 'Mafia fronts', color: '#D4AF37' },
+  civic: { label: 'Civic & institutions', color: '#38BDF8' },
+  transit: { label: 'Transit', color: '#60A5FA' },
+  park: { label: 'Parks & recreation', color: '#4ADE80' },
+  military: { label: 'Military', color: '#34D399' },
+};
+
+// Which pins survive when a street cannot hold them all. Landmarks are what
+// you would print on a tourist map, so they go first.
+const PIN_RANK = { landmark: 8, transit: 6, venue: 4, civic: 3, front: 2, military: 2, park: 1, food: 0 };
 
 /* ------------------------------------------------ PLANET LABEL LAYER */
 
@@ -228,6 +259,16 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
   const k = opts.sizeScale || 1;
   const P = palette(styleKey);
   const L = makeLabeller(ctx, W, H, { pad: 2, margin: opts.margin ?? 4 });
+  const details = opts.details;
+  const layers = opts.layers || {};
+
+  // Sea/land test in screen space, straight off the elevation field.
+  const isSea = (sx, sy) => {
+    const gx = Math.max(0, Math.min(planet.GW - 1, Math.round((((sx - ox) / z) / WORLD_W) * (planet.GW - 1))));
+    const gy = Math.max(0, Math.min(planet.GH - 1, Math.round((((sy - oy) / z) / WORLD_H) * (planet.GH - 1))));
+    return planet.hf[gy * planet.GW + gx] <= 0.002;
+  };
+  const isLand = (sx, sy) => !isSea(sx, sy);
 
   // Markers become obstacles before any text is placed, so a name is never
   // allowed to sit on a dot — the dot is the thing being named.
@@ -269,43 +310,151 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
     }
   }
 
-  if (opts.labels === false) return { placed: 0, dropped: 0 };
-
-  for (const m of marks) {
-    L.add({
-      // Once the streets are visible the city name stops being a pin label and
-      // becomes the title of what you are looking at, so it grows.
-      text: m.c.name, x: m.x, y: m.y, r: m.r, gap: 5 * k,
-      size: m.st.size * k * (m.showDot ? 1 : 1.5), weight: m.st.weight,
-      area: !m.showDot, clamp: !m.showDot,
-      color: P.label, halo: P.labelHalo, priority: m.st.priority,
-      tracking: m.showDot ? 0 : 2.5 * k,
-    });
-
-    // Quarters appear only once a quarter is a real area on screen, which is
-    // the same moment the block texture starts to read.
-    if (m.c.sectors && m.c.radius * z > 170 * k) {
+  // Quarter names are structural too, so they claim their space alongside the
+  // city title rather than competing with the places inside them.
+  if (opts.labels !== false) {
+    for (const m of marks) {
+      // Quarters appear only once a quarter is a real area on screen, which is
+      // the same moment the block texture starts to read.
+      if (!m.c.sectors || m.c.radius * z < 170 * k) continue;
+      const det = details && details.get(m.c.name);
       for (const s of m.c.sectors) {
         if (!s.name) continue;
         const sx = (s.lx ?? s.x) * z + ox;
         const sy = (s.ly ?? s.y) * z + oy;
         if (sx < -60 || sy < -40 || sx > W + 60 || sy > H + 40) continue;
-        L.add({
+        // Once the quarter is tinted with its own colour the label takes it,
+        // so the name and the territory read as the same thing.
+        const tint = det && det.quarters.find((q) => q.name === s.name);
+        // Let the name move around inside its own quarter rather than lose
+        // its slot to whatever pin happens to sit on the middle of it.
+        const reach = m.c.radius * z * 0.28;
+        L.addFirst({
           text: s.name.toUpperCase(), area: true, x: sx, y: sy,
+          spread: { x0: sx - reach, y0: sy - reach, x1: sx + reach, y1: sy + reach },
+          valid: planet.hf ? isLand : null,
           size: 12.5 * k, weight: 700, tracking: 1.4 * k,
-          color: P.labelGeo, halo: P.labelHalo, priority: 74,
+          color: tint && styleKey !== 'map' ? tint.color : P.labelGeo,
+          halo: P.labelHalo, priority: 74,
         });
       }
     }
   }
 
-  // Sea/land test in screen space, straight off the elevation field.
-  const isSea = (sx, sy) => {
-    const gx = Math.max(0, Math.min(planet.GW - 1, Math.round((((sx - ox) / z) / WORLD_W) * (planet.GW - 1))));
-    const gy = Math.max(0, Math.min(planet.GH - 1, Math.round((((sy - oy) / z) / WORLD_H) * (planet.GH - 1))));
-    return planet.hf[gy * planet.GW + gx] <= 0.002;
-  };
-  const isLand = (sx, sy) => !isSea(sx, sy);
+  /* ---- streamed detail: places and crew, both drawn as pins ---- */
+  const pins = [];
+  if (details && layers.pois !== false) {
+    const pinR = 10 * k;
+    for (const m of marks) {
+      const det = details.get(m.c.name);
+      if (!det || m.c.radius * z < (opts.poiZoom ?? 190)) continue;
+      // Canon landmarks claim their space first, so what survives the thinning
+      // as you pull back is the stuff that matters.
+      const sorted = [...det.pois].sort((a, b) => (b.canon ? 1 : 0) - (a.canon ? 1 : 0) + (PIN_RANK[b.type] || 0) - (PIN_RANK[a.type] || 0));
+      for (const poi of sorted) {
+        const x = poi.x * z + ox;
+        const y = poi.y * z + oy;
+        if (x < -40 || y < -40 || x > W + 40 || y > H + 40) continue;
+        // Pins thin themselves out rather than piling up: the ones that fit
+        // are drawn, the rest wait until you are closer.
+        if (!L.circleFree(x, y, pinR)) continue;
+        L.reserveCircle(x, y, pinR + 1);
+        pins.push({ poi, x, y });
+      }
+    }
+  }
+
+  const crew = [];
+  if (opts.crew && opts.crew.length) {
+    const cr = 8 * k;
+    for (const mem of opts.crew) {
+      if (mem.kind === 'made' && layers.made === false) continue;
+      if (mem.kind === 'sick' && layers.sick === false) continue;
+      if (z < (opts.crewZoom ?? 8)) continue;
+      let x = mem.x * z + ox;
+      let y = mem.y * z + oy;
+      if (x < -30 || y < -30 || x > W + 30 || y > H + 30) continue;
+      // A Sick 52 cell is five or six people in one safe house; walk them out
+      // along a short spiral so the cell reads as a cell.
+      if (!L.circleFree(x, y, cr)) {
+        let ok = false;
+        for (let t = 1; t <= 10; t++) {
+          const a = t * 2.4;
+          const nx = x + Math.cos(a) * cr * 1.9 * Math.sqrt(t);
+          const ny = y + Math.sin(a) * cr * 1.9 * Math.sqrt(t);
+          if (L.circleFree(nx, ny, cr)) { x = nx; y = ny; ok = true; break; }
+        }
+        if (!ok) continue;
+      }
+      L.reserveCircle(x, y, cr);
+      crew.push({ mem, x, y });
+    }
+  }
+
+  for (const p of pins) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 10 * k, 0, TAU);
+    ctx.fillStyle = styleKey === 'satellite' ? 'rgba(2,6,16,0.85)' : '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = POI_TYPES[p.poi.type]?.color || '#ffffff';
+    ctx.lineWidth = 2 * k;
+    ctx.stroke();
+    ctx.font = `${11 * k}px system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = styleKey === 'satellite' ? '#ffffff' : '#111111';
+    ctx.fillText(p.poi.icon, p.x, p.y + 0.5 * k);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  for (const c of crew) {
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 8 * k, 0, TAU);
+    ctx.fillStyle = c.mem.kind === 'made' ? '#D4AF37' : '#DC2626';
+    ctx.fill();
+    ctx.strokeStyle = '#0b1220';
+    ctx.lineWidth = 1.5 * k;
+    ctx.stroke();
+    ctx.font = `700 ${8 * k}px ${LABEL_FONT}`;
+    ctx.fillStyle = '#0b1220';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(c.mem.card.slice(0, 3), c.x, c.y + 0.5 * k);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  if (opts.labels === false) return { placed: 0, dropped: 0 };
+
+  for (const p of pins) {
+    L.add({
+      text: p.poi.name, x: p.x, y: p.y, r: 10 * k, gap: 4 * k,
+      size: 11 * k, weight: 600, color: P.label, halo: P.labelHalo,
+      priority: (p.poi.canon ? 52 : 44) + (PIN_RANK[p.poi.type] || 0),
+    });
+  }
+
+  for (const c of crew) {
+    L.add({
+      text: c.mem.label, x: c.x, y: c.y, r: 8 * k, gap: 4 * k,
+      size: 10.5 * k, weight: 700,
+      color: c.mem.kind === 'made' ? '#b8860b' : '#b91c1c',
+      halo: P.labelHalo,
+      priority: c.mem.kind === 'made' ? 40 : 34,
+    });
+  }
+
+  for (const m of marks) {
+    // Cities big enough to be a title were placed above, ahead of the pins;
+    // what is left here is the ordinary pin-and-name treatment.
+    if (m.showDot) {
+      L.add({
+        text: m.c.name, x: m.x, y: m.y, r: m.r, gap: 5 * k,
+        size: m.st.size * k, weight: m.st.weight,
+        color: P.label, halo: P.labelHalo, priority: m.st.priority,
+      });
+    }
+
+  }
 
   const gz = geoZoomScale(z);
   for (const rg of planet.regions) {
@@ -352,152 +501,6 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
       color: st.tone === 'water' ? P.labelWater : P.labelGeo,
       halo: P.labelHalo, priority: st.priority,
     });
-  }
-
-  return L.flush();
-}
-
-/* -------------------------------------------------- CITY LABEL LAYER */
-
-export const POI_TYPES = {
-  landmark: { label: 'Landmarks', color: '#FBBF24' },
-  venue: { label: 'Venues & studios', color: '#E879F9' },
-  food: { label: 'Restaurants & cafés', color: '#FB923C' },
-  front: { label: 'Mafia fronts', color: '#D4AF37' },
-  civic: { label: 'Civic & institutions', color: '#38BDF8' },
-  transit: { label: 'Transit', color: '#60A5FA' },
-  park: { label: 'Parks & recreation', color: '#4ADE80' },
-  military: { label: 'Military', color: '#34D399' },
-};
-
-// Landmarks are the ones you would print on a tourist map, so they outrank the
-// rest of the pins when space is tight.
-const POI_PRIORITY = {
-  landmark: 60, transit: 56, venue: 54, civic: 52,
-  front: 50, military: 50, park: 46, food: 44,
-};
-
-export function drawCityLabels(ctx, city, styleKey, view, opts = {}) {
-  const { ox, oy, z, W, H } = view;
-  const k = opts.sizeScale || 1;
-  const layers = opts.layers || {};
-  const members = opts.members || [];
-  const P = palette(styleKey);
-  const L = makeLabeller(ctx, W, H, { pad: 2, margin: opts.margin ?? 4 });
-  const onScreen = (x, y, m) => x > -m && y > -m && x < W + m && y < H + m;
-
-  const pins = [];
-  if (layers.pois !== false && z > (opts.poiZoom ?? 0.42)) {
-    for (const poi of city.pois) {
-      const x = poi.x * z + ox;
-      const y = poi.y * z + oy;
-      if (!onScreen(x, y, 40)) continue;
-      pins.push({ poi, x, y });
-      L.reserveCircle(x, y, 11 * k);
-    }
-  }
-
-  const crew = [];
-  if (z > (opts.memberZoom ?? 0.5)) {
-    const r = 9 * k;
-    for (const mem of members) {
-      if (mem.kind === 'made' && layers.made === false) continue;
-      if (mem.kind === 'sick' && layers.sick === false) continue;
-      let x = mem.x * z + ox;
-      let y = mem.y * z + oy;
-      if (!onScreen(x, y, 30)) continue;
-      // The Sick 52 operate in cells of five or six, so their markers land on
-      // top of each other. Walk each one out along a short spiral until it has
-      // its own space, which keeps a cell readable as a cell.
-      if (!L.circleFree(x, y, r)) {
-        for (let t = 1; t <= 12; t++) {
-          const a = t * 2.4;
-          const nx = x + Math.cos(a) * r * 1.9 * Math.sqrt(t);
-          const ny = y + Math.sin(a) * r * 1.9 * Math.sqrt(t);
-          if (L.circleFree(nx, ny, r)) { x = nx; y = ny; break; }
-        }
-      }
-      crew.push({ mem, x, y });
-      L.reserveCircle(x, y, r);
-    }
-  }
-
-  for (const p of pins) {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 10 * k, 0, TAU);
-    ctx.fillStyle = styleKey === 'map' ? '#ffffff' : 'rgba(2,6,16,0.85)';
-    ctx.fill();
-    ctx.strokeStyle = POI_TYPES[p.poi.type]?.color || '#ffffff';
-    ctx.lineWidth = 2 * k;
-    ctx.stroke();
-    ctx.font = `${11 * k}px system-ui, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(p.poi.icon, p.x, p.y + 0.5 * k);
-    ctx.textBaseline = 'alphabetic';
-  }
-
-  for (const c of crew) {
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, 8 * k, 0, TAU);
-    ctx.fillStyle = c.mem.kind === 'made' ? '#D4AF37' : '#DC2626';
-    ctx.fill();
-    ctx.strokeStyle = '#0b1220';
-    ctx.lineWidth = 1.5 * k;
-    ctx.stroke();
-    ctx.font = `700 ${8 * k}px ${LABEL_FONT}`;
-    ctx.fillStyle = '#0b1220';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(c.mem.card.slice(0, 3), c.x, c.y + 0.5 * k);
-    ctx.textBaseline = 'alphabetic';
-  }
-
-  if (layers.labels === false) return { placed: 0, dropped: 0 };
-
-  if (layers.districts !== false && z > (opts.districtZoom ?? 0.14)) {
-    for (const d of city.districts) {
-      const x = d.x * z + ox;
-      const y = d.y * z + oy;
-      if (!onScreen(x, y, 140)) continue;
-      // A district that is thick with pins can still put its name somewhere
-      // inside its own boundary rather than losing it.
-      const spread = d.bbox ? {
-        x0: Math.max(x - d.radius * z * 0.5, d.bbox.x0 * z + ox),
-        y0: Math.max(y - d.radius * z * 0.5, d.bbox.y0 * z + oy),
-        x1: Math.min(x + d.radius * z * 0.5, d.bbox.x1 * z + ox),
-        y1: Math.min(y + d.radius * z * 0.5, d.bbox.y1 * z + oy),
-      } : null;
-      L.add({
-        text: d.name.toUpperCase(), area: true, spread, x, y,
-        size: 14 * k, weight: 800, tracking: 1.6 * k,
-        color: styleKey === 'map' ? '#5f6368' : d.color,
-        halo: P.labelHalo, priority: 90,
-      });
-    }
-  }
-
-  if (z > (opts.poiLabelZoom ?? 0.9)) {
-    for (const p of pins) {
-      L.add({
-        text: p.poi.name, x: p.x, y: p.y, r: 10 * k, gap: 4 * k,
-        size: 11 * k, weight: 600, color: P.label, halo: P.labelHalo,
-        priority: POI_PRIORITY[p.poi.type] ?? 45,
-      });
-    }
-  }
-
-  if (z > (opts.memberLabelZoom ?? 1.4)) {
-    for (const c of crew) {
-      L.add({
-        text: c.mem.label, x: c.x, y: c.y, r: 8 * k, gap: 4 * k,
-        size: 10.5 * k, weight: 700,
-        color: c.mem.kind === 'made' ? '#b8860b' : '#b91c1c',
-        halo: P.labelHalo,
-        priority: c.mem.kind === 'made' ? 36 : 30,
-      });
-    }
   }
 
   return L.flush();

@@ -8,6 +8,8 @@ import path from 'node:path';
 import { createCanvas, ImageData } from '@napi-rs/canvas';
 import { generatePlanet, rasterizeTerrain, drawPlanetVectors, WORLD_W, WORLD_H } from '../src/mapGenerator.js';
 import { drawPlanetLabels } from '../src/mapLabels.js';
+import { buildCityDetail, drawCityDetail, placeCrew } from '../src/cityDetail.js';
+import { madeDeckAll } from '../src/madeDeckData.js';
 
 const seed = process.argv[2] || 'NEON-GRID-2481';
 const outDir = path.join(process.cwd(), 'tmp-preview');
@@ -19,6 +21,7 @@ console.timeEnd('generatePlanet');
 console.log(`cities=${planet.cities.length} routes=${planet.routes.length} regions=${planet.regions.length}`);
 console.log('ferries:', planet.routes.filter((r) => r.ferry).length);
 console.log('classes:', planet.routes.reduce((a, r) => { a[r.cls] = (a[r.cls] || 0) + 1; return a; }, {}));
+const crew = placeCrew(planet, madeDeckAll, Array.from({ length: 52 }, (_, i) => ({ name: 'Sick ' + (i + 1), cardLabel: String(i + 1) })));
 console.log('regions:', planet.regions.map((r) => `${r.kind}:${r.name}`).join(' | '));
 
 function render(file, rect, W, H, style, octaves) {
@@ -30,14 +33,30 @@ function render(file, rect, W, H, style, octaves) {
   ctx.putImageData(new ImageData(buf, W, H), 0, 0);
 
   const z = W / rect.w;
+
+  // Same streaming rule the page uses: build a model for any settlement close
+  // enough to be worth one.
+  const details = new Map();
+  for (const c of planet.cities) {
+    if (c.radius * z < 150) continue;
+    details.set(c.name, buildCityDetail(planet, c));
+  }
+  const detailed = new Set(details.keys());
+  const layers = { districts: true, roads: true, buildings: true, rivers: true, pois: true, made: true, sick: true, labels: true };
+
   ctx.save();
   ctx.scale(z, z);
   ctx.translate(-rect.x, -rect.y);
-  drawPlanetVectors(ctx, planet, style, z, {});
+  drawPlanetVectors(ctx, planet, style, z, { roads: false, detailed });
+  for (const c of planet.cities) {
+    const det = details.get(c.name);
+    if (det) drawCityDetail(ctx, c, det, style, z, layers);
+  }
+  drawPlanetVectors(ctx, planet, style, z, { rivers: false, cities: false, roads: true });
   ctx.restore();
 
   // Markers and text in screen space, exactly as the app draws them.
-  const stats = drawPlanetLabels(ctx, planet, style, { ox: -rect.x * z, oy: -rect.y * z, z, W, H });
+  const stats = drawPlanetLabels(ctx, planet, style, { ox: -rect.x * z, oy: -rect.y * z, z, W, H }, { details, crew, layers });
 
   fs.writeFileSync(path.join(outDir, file), canvas.toBuffer('image/png'));
   console.log(`wrote ${file}  labels ${stats.placed} placed / ${stats.dropped} dropped${stats.dropped ? ': ' + stats.droppedText.join(', ') : ''}`);

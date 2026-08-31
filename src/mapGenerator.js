@@ -50,7 +50,7 @@ export function randomSeedWord() {
 
 /* -------------------------------------------------------------- NOISE */
 
-function makeNoise(rng) {
+export function makeNoise(rng) {
   const N = 256;
   const grad = new Float32Array(N);
   const perm = new Uint8Array(N * 2);
@@ -902,6 +902,10 @@ function buildFootprints(planet, rng, nC, bearings) {
       poly.push({ x: c.x + ca * r, y: c.y + sa * r, r, ang });
     }
     c.poly = poly.map((p) => ({ x: p.x, y: p.y }));
+    // Kept so the outline can be point-tested later without the polygon:
+    // the detail builder needs the same O(1) containment test this does.
+    c.rays = Float32Array.from(poly.map((p) => p.r));
+    c.RAYS = RAYS;
     c.coastal = coastHits > 3;
 
     // The outline is a radial function of angle, so containment is a lookup
@@ -925,7 +929,7 @@ function buildFootprints(planet, rng, nC, bearings) {
     // Sectors: a downtown plus outlying quarters, each with its own street
     // angle and density. Without them every city renders as one uniform
     // lattice, which is what makes procedural cities look fake.
-    const nSec = c.kind === 'capital' ? 7 : c.kind === 'mega' ? 5 : c.kind === 'town' ? 2 : 3;
+    const nSec = c.kind === 'capital' ? 9 : c.kind === 'mega' ? 6 : c.kind === 'town' ? 2 : 3;
     const sectors = [{ x: c.x, y: c.y, w: 1.3, dens: 1, ang: rng() * Math.PI }];
     for (let s = 1; s < nSec; s++) {
       const a = (s / (nSec - 1)) * Math.PI * 2 + rng() * 0.7;
@@ -1071,6 +1075,29 @@ function buildFootprints(planet, rng, nC, bearings) {
     });
     c.streets = streets;
     c.quads = Float32Array.from(quads);
+
+    // Re-anchor each quarter on the middle of the area it actually got built
+    // on. The seed point is only a Voronoi site: outlying sectors often end up
+    // half in the sea, and an anchor pulled back toward downtown drags the
+    // quarter's label — and everyone living in it — into the city centre.
+    {
+      const sx = new Float64Array(sectors.length);
+      const sy = new Float64Array(sectors.length);
+      const sn = new Uint32Array(sectors.length);
+      for (let i = 0; i < quads.length; i += 8) {
+        const bx = (quads[i] + quads[i + 2] + quads[i + 4] + quads[i + 6]) / 4;
+        const by = (quads[i + 1] + quads[i + 3] + quads[i + 5] + quads[i + 7]) / 4;
+        const si = sectorAt(bx, by);
+        sx[si] += bx;
+        sy[si] += by;
+        sn[si]++;
+      }
+      sectors.forEach((sec, i) => {
+        if (sn[i] < 4) return;
+        sec.lx = sx[i] / sn[i];
+        sec.ly = sy[i] / sn[i];
+      });
+    }
 
     // Port: a quay reaching into the water on the seaward side.
     if (c.coastal) {
@@ -1304,8 +1331,10 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
       ctx.fillStyle = g;
       ctx.fill();
 
-      // Block texture only once a block would be more than a pixel across.
-      if (c.quads && c.radius * scale > 130) {
+      // Block texture only once a block would be more than a pixel across —
+      // and only until the streamed detail tier takes over, which draws the
+      // same blocks subdivided into individual buildings.
+      if (c.quads && c.radius * scale > 130 && !(opts.detailed && opts.detailed.has(c.name))) {
         ctx.fillStyle = P.block;
         ctx.beginPath();
         for (let i = 0; i < c.quads.length; i += 8) {
@@ -1337,14 +1366,24 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
     // Local streets sit under the through-routes and appear last.
     for (const c of planet.cities) {
       if (!c.streets || c.radius * scale < 110) continue;
+      // Local streets carry the city at close range, so they get a casing
+      // once they are wide enough for one to read.
+      if (c.radius * scale > 400) {
+        ctx.strokeStyle = P.roadCase;
+        ctx.lineWidth = lw(2.4);
+        for (const s of c.streets) { trace(s); ctx.stroke(); }
+      }
       ctx.strokeStyle = P.road;
-      ctx.lineWidth = lw(0.9);
+      ctx.lineWidth = lw(c.radius * scale > 400 ? 1.5 : 0.9);
       for (const s of c.streets) { trace(s); ctx.stroke(); }
     }
 
     // One casing pass then one fill pass across city roads and intercity
     // routes together, so a highway and the radial it becomes are one line.
-    const WIDTH = { motorway: [5.0, 2.9], highway: [3.7, 2.0], road: [2.5, 1.3], ring: [3.2, 1.7], radial: [3.0, 1.6] };
+    // Wider than a city map would draw them: at planet zoom these lines are
+    // the only thing showing how the world is connected, so they have to hold
+    // up against terrain rather than disappear into it.
+    const WIDTH = { motorway: [6.4, 3.7], highway: [4.8, 2.7], road: [3.2, 1.7], ring: [3.4, 1.8], radial: [3.2, 1.7] };
     for (const pass of [0, 1]) {
       ctx.strokeStyle = pass === 0 ? P.roadCase : P.road;
 
@@ -1372,7 +1411,7 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
           ctx.restore();
           continue;
         }
-        if (r.cls === 'road' && scale < 0.28) continue;
+
         ctx.lineWidth = lw(WIDTH[r.cls][pass]);
         trace(r.pts);
         ctx.stroke();
@@ -1406,7 +1445,9 @@ export const DISTRICTS = [
     blurb: 'Fortress installation outside the city. The defence grid.', stories: 'The EDM spectacle register — Attack on Trolley.' },
 ];
 
-const POI_DEFS = [
+// The hand-written places that make the capital and Trolley themselves.
+// Everything else on the planet is generated; these are canon.
+export const CANON_PLACES = [
   { name: 'NexaGen Tower', type: 'landmark', d: 'central', icon: '🏢', note: 'HQ of the planet-spanning conglomerate.' },
   { name: 'The Ongaku Exchange', type: 'civic', d: 'central', icon: '🏦', note: 'Stock exchange.' },
   { name: 'Meridian Bank', type: 'civic', d: 'central', icon: '🏦', note: 'Everyone has an account here.' },
@@ -1462,633 +1503,59 @@ const POI_DEFS = [
   { name: 'Grid Relay Station', type: 'military', d: 'trolley', icon: '📶', note: 'Frequency Grid infrastructure.' },
 ];
 
-const CLIMATE_GROUND = {
-  temperate: { satellite: '#4a6b3c', map: '#eef1e6', terrain: '#cfd9b8', veg: 1.0, vegColor: '#33562f' },
-  arid: { satellite: '#9c8350', map: '#f6ead0', terrain: '#e2cd9e', veg: 0.25, vegColor: '#6d7440' },
-  tropical: { satellite: '#3c6135', map: '#e8f0e0', terrain: '#bdd2ab', veg: 1.35, vegColor: '#265225' },
-  cold: { satellite: '#5b6a5c', map: '#eef0ee', terrain: '#cfd6cb', veg: 0.7, vegColor: '#2f4a3c' },
-  polar: { satellite: '#b9c6cc', map: '#f7fafc', terrain: '#e4ecef', veg: 0.15, vegColor: '#4a5f58' },
-};
 
-function pointInPoly(px, py, poly) {
-  let inside = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const xi = poly[i].x;
-    const yi = poly[i].y;
-    const xj = poly[j].x;
-    const yj = poly[j].y;
-    if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi) inside = !inside;
-  }
-  return inside;
+/* ------------------------------------------------ WORLD SAMPLING API */
+
+// The elevation the terrain raster would draw at this exact point, including
+// the detail octaves it adds when zoomed in. City geometry tests land and
+// water through this, so blocks never end up standing in the sea that the
+// raster is drawing underneath them.
+export function heightAt(planet, wx, wy, extraOctaves = 6) {
+  const { GW, GH, hf, noiseH } = planet;
+  const nx = wx / WORLD_W;
+  const ny = wy / WORLD_H;
+  const fx = Math.max(0, Math.min(GW - 1.001, nx * (GW - 1)));
+  const fy = Math.max(0, Math.min(GH - 1.001, ny * (GH - 1)));
+  const ix = fx | 0;
+  const iy = fy | 0;
+  const tx = fx - ix;
+  const ty = fy - iy;
+  const r0 = iy * GW + ix;
+  const r1 = r0 + GW;
+  const top = hf[r0] + (hf[r0 + 1] - hf[r0]) * tx;
+  const bot = hf[r1] + (hf[r1 + 1] - hf[r1]) * tx;
+  let h = top + (bot - top) * ty;
+  if (extraOctaves > 0) h += detailOctaves(noiseH, nx, ny, FIELD_OCT, FIELD_OCT + extraOctaves) * DETAIL_AMP;
+  return h;
 }
 
-export function generateCity(seedStr, cityName = 'Ongaku Prime', climate = 'temperate') {
-  const seed = seedFromString(`${seedStr}::${cityName}`);
-  const rng = mulberry32(seed);
-  const nC = makeNoise(rng);
-
-  const cx = WORLD_W / 2;
-  const cy = WORLD_H / 2;
-  const spread = Math.min(WORLD_W, WORLD_H) * 0.80;
-
-  const districts = DISTRICTS.map((d) => ({
-    ...d,
-    x: cx + d.ax * spread * 1.35 + (rng() - 0.5) * 70,
-    y: cy + d.ay * spread * 1.15 + (rng() - 0.5) * 70,
-    weight: d.r,
-  }));
-
-  // ---- coastline: a bay sweeping in from the lower right ----
-  const coast = [];
-  const COAST_N = 120;
-  for (let i = 0; i <= COAST_N; i++) {
-    const t = i / COAST_N;
-    const x = t * WORLD_W;
-    const y = WORLD_H * 0.90 + nC(t * 4, 11.3) * 220 - (x / WORLD_W) * WORLD_H * 0.20;
-    coast.push({ x, y });
-  }
-  const coastPoly = [...coast, { x: WORLD_W, y: WORLD_H + 40 }, { x: 0, y: WORLD_H + 40 }];
-  const coastYAt = (x) => {
-    const t = Math.max(0, Math.min(0.9999, x / WORLD_W)) * COAST_N;
-    const i = t | 0;
-    const f = t - i;
-    return coast[i].y + (coast[Math.min(COAST_N, i + 1)].y - coast[i].y) * f;
-  };
-  const isWater = (x, y) => y > coastYAt(x);
-
-  // ---- district polygons: Voronoi boundary traced per ray, then softened ----
-  const RAYS = 72;
-  for (let k = 0; k < districts.length; k++) {
-    const d = districts[k];
-    // Districts grow until they meet a neighbour or the water, so the city is
-    // continuous. Trolley is capped because it is a fortress outside the city,
-    // not a neighbourhood of it.
-    const maxR = spread * (d.fortress ? 0.13 : 0.52) * d.weight;
-    const poly = [];
-    for (let a = 0; a < RAYS; a++) {
-      const ang = (a / RAYS) * Math.PI * 2;
-      const ca = Math.cos(ang);
-      const sa = Math.sin(ang);
-      let r = maxR;
-      for (let step = 12; step <= maxR; step += 12) {
-        const px = d.x + ca * step;
-        const py = d.y + sa * step;
-        if (isWater(px, py)) { r = step - 12; break; }
-        let nearest = k;
-        let nd = Infinity;
-        for (let j = 0; j < districts.length; j++) {
-          const o = districts[j];
-          const dd = Math.hypot(px - o.x, py - o.y) / o.weight;
-          if (dd < nd) { nd = dd; nearest = j; }
-        }
-        if (nearest !== k) { r = step - 12; break; }
-      }
-      const wobble = d.organic ? 0.72 + nC(ca * 3 + k * 7, sa * 3) * 0.5 : 0.84 + nC(ca * 2 + k * 7, sa * 2) * 0.3;
-      poly.push({ x: d.x + ca * r * wobble, y: d.y + sa * r * wobble });
-    }
-    d.poly = poly;
-    d.radius = maxR;
-
-    // Bounding box and true area of the finished polygon. Street spacing and
-    // building counts key off these so every district ends up with a
-    // consistent urban density regardless of how big the Voronoi cell grew.
-    let x0 = Infinity;
-    let y0 = Infinity;
-    let x1 = -Infinity;
-    let y1 = -Infinity;
-    let area2 = 0;
-    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-      const p = poly[i];
-      if (p.x < x0) x0 = p.x;
-      if (p.y < y0) y0 = p.y;
-      if (p.x > x1) x1 = p.x;
-      if (p.y > y1) y1 = p.y;
-      area2 += poly[j].x * p.y - p.x * poly[j].y;
-    }
-    d.bbox = { x0, y0, x1, y1 };
-    d.area = Math.abs(area2) / 2;
-  }
-
-  const districtAt = (x, y) => {
-    for (let k = 0; k < districts.length; k++) if (pointInPoly(x, y, districts[k].poly)) return k;
-    return -1;
-  };
-
-  // ---- river through the city, ending at the coast ----
-  const river = [];
-  {
-    let x = WORLD_W * 0.06;
-    let y = WORLD_H * 0.10;
-    const tx = cx + spread * 0.30;
-    for (let i = 0; i <= 90; i++) {
-      const t = i / 90;
-      const bx = x + (tx - x) * t;
-      const by = y + (coastYAt(bx) + 30 - y) * (t * t * 0.7 + t * 0.3);
-      river.push({ x: bx + nC(t * 6, 3.1) * 190, y: by + nC(t * 6, 8.7) * 130 });
-    }
-  }
-
-  // Distance to the river, so nothing gets built in it. Sampled against the
-  // polyline directly — it is only ~90 points and the check runs a few
-  // thousand times during generation.
-  const riverDist = (x, y) => {
-    let best = Infinity;
-    for (let i = 0; i < river.length - 1; i++) {
-      const a = river[i];
-      const b = river[i + 1];
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const len2 = dx * dx + dy * dy;
-      let t = len2 ? ((x - a.x) * dx + (y - a.y) * dy) / len2 : 0;
-      t = t < 0 ? 0 : t > 1 ? 1 : t;
-      const d = Math.hypot(x - (a.x + dx * t), y - (a.y + dy * t));
-      if (d < best) best = d;
-    }
-    return best;
-  };
-  const RIVER_BANK = 62;
-
-  // ---- roads ----
-  const hub = districts.find((d) => d.key === 'central');
-  const roads = { motorway: [], arterials: [], collectors: [], streets: [] };
-
-  const ringR = spread * 0.30;
-  for (let a = 0; a <= 96; a++) {
-    const t = (a / 96) * Math.PI * 2;
-    const rr = ringR * (0.92 + nC(Math.cos(t) * 2.2, Math.sin(t) * 2.2) * 0.3);
-    const px = hub.x + Math.cos(t) * rr;
-    const py = hub.y + Math.sin(t) * rr * 0.86;
-    roads.motorway.push({ x: px, y: py, water: isWater(px, py) });
-  }
-
-  // Arterials start from a ring around the centre rather than a single point,
-  // so the inner city gets a junction pattern instead of a nine-road star.
-  for (const d of districts) {
-    if (d.key === 'central') continue;
-    const ang = Math.atan2(d.y - hub.y, d.x - hub.x);
-    const startR = 90 + rng() * 120;
-    const sx = hub.x + Math.cos(ang) * startR;
-    const sy = hub.y + Math.sin(ang) * startR;
-    const mx = (sx + d.x) / 2 + (rng() - 0.5) * 220;
-    const my = (sy + d.y) / 2 + (rng() - 0.5) * 220;
-    const pts = [];
-    for (let i = 0; i <= 24; i++) {
-      const t = i / 24;
-      const it = 1 - t;
-      pts.push({
-        x: it * it * sx + 2 * it * t * mx + t * t * d.x,
-        y: it * it * sy + 2 * it * t * my + t * t * d.y,
-      });
-    }
-    roads.arterials.push(pts);
-  }
-
-  // Collectors ring each district and connect it to its nearest neighbour.
-  districts.forEach((d, k) => {
-    let bestJ = -1;
-    let bestD = Infinity;
-    districts.forEach((o, j) => {
-      if (j === k) return;
-      const dd = Math.hypot(o.x - d.x, o.y - d.y);
-      if (dd < bestD) { bestD = dd; bestJ = j; }
-    });
-    if (bestJ > k) {
-      const o = districts[bestJ];
-      roads.collectors.push([{ x: d.x, y: d.y }, { x: (d.x + o.x) / 2 + (rng() - 0.5) * 120, y: (d.y + o.y) / 2 + (rng() - 0.5) * 120 }, { x: o.x, y: o.y }]);
-    }
-  });
-
-  // Each district gets one street orientation and one block size, shared by
-  // the street grid and the buildings, so the two actually line up.
-  districts.forEach((d) => {
-    d.ang = rng() * Math.PI;
-    const base = d.key === 'central' ? 74 : d.organic ? 84 : d.key === 'southside' ? 92 : 120;
-    d.step = base / Math.max(0.4, d.density);
-    // Sweep across the polygon's own extent rather than the uncapped Voronoi
-    // radius, so no time is spent testing points nowhere near the district.
-    d.reach = Math.hypot(d.bbox.x1 - d.bbox.x0, d.bbox.y1 - d.bbox.y0) * 0.55;
-  });
-
-  districts.forEach((d, k) => {
-    if (d.fortress) return;
-    for (let dir = 0; dir < 2; dir++) {
-      const a = d.ang + (dir ? Math.PI / 2 : 0);
-      const ca = Math.cos(a);
-      const sa = Math.sin(a);
-      const px = Math.cos(a + Math.PI / 2);
-      const py = Math.sin(a + Math.PI / 2);
-      for (let s = -d.reach; s <= d.reach; s += d.step) {
-        // The Old Quarter's streets bend; everywhere else is a grid.
-        const bend = d.organic ? 14 : 0;
-        let run = null;
-        for (let t = -d.reach; t <= d.reach; t += 10) {
-          const bx = d.x + px * s + ca * t + (bend ? nC(t * 0.02, s * 0.02) * bend : 0);
-          const by = d.y + py * s + sa * t + (bend ? nC(t * 0.02 + 9, s * 0.02) * bend : 0);
-          const ok = pointInPoly(bx, by, d.poly);
-          if (ok) {
-            if (!run) run = [];
-            run.push({ x: bx, y: by });
-          } else if (run) {
-            if (run.length > 3) roads.streets.push({ pts: run, k });
-            run = null;
-          }
-        }
-        if (run && run.length > 3) roads.streets.push({ pts: run, k });
-      }
-    }
-  });
-
-  // ---- parks, woodland, buildings ----
-  const parks = [];
-  districts.forEach((d, k) => {
-    const n = d.green ? 3 : d.key === 'central' ? 1 : 2;
-    for (let i = 0; i < n; i++) {
-      let px = d.x;
-      let py = d.y;
-      let found = false;
-      for (let t = 0; t < 40; t++) {
-        const a = rng() * Math.PI * 2;
-        const r = Math.sqrt(rng()) * d.radius * 0.7;
-        px = d.x + Math.cos(a) * r;
-        py = d.y + Math.sin(a) * r;
-        if (pointInPoly(px, py, d.poly)) { found = true; break; }
-      }
-      if (!found || riverDist(px, py) < RIVER_BANK) continue;
-      const rad = (18 + rng() * 46) * (d.green ? 1.5 : 1);
-      const poly = [];
-      for (let a = 0; a < 20; a++) {
-        const ang = (a / 20) * Math.PI * 2;
-        const rr = rad * (0.7 + nC(Math.cos(ang) * 2 + i * 5 + k, Math.sin(ang) * 2) * 0.5);
-        poly.push({ x: px + Math.cos(ang) * rr, y: py + Math.sin(ang) * rr });
-      }
-      parks.push({ x: px, y: py, r: rad, poly, district: k });
-    }
-  });
-
-  // Woodland fills the countryside between districts. Trees are grown in
-  // clusters rather than sprinkled uniformly, otherwise the countryside reads
-  // as confetti instead of forest.
-  const cg = CLIMATE_GROUND[climate] || CLIMATE_GROUND.temperate;
-  const woods = [];
-  const clusters = Math.round(150 * cg.veg);
-  for (let c = 0; c < clusters * 5 && woods.length < clusters * 26; c++) {
-    const ox = rng() * WORLD_W;
-    const oy = rng() * WORLD_H;
-    if (isWater(ox, oy) || districtAt(ox, oy) >= 0) continue;
-    if (nC(ox * 0.0011, oy * 0.0011) < -0.06) continue;
-    const spreadR = 60 + rng() * 190;
-    const n = 14 + Math.floor(rng() * 26);
-    for (let i = 0; i < n; i++) {
-      const a = rng() * Math.PI * 2;
-      const r = Math.sqrt(rng()) * spreadR;
-      const x = ox + Math.cos(a) * r;
-      const y = oy + Math.sin(a) * r;
-      if (x < 0 || y < 0 || x > WORLD_W || y > WORLD_H) continue;
-      if (isWater(x, y) || districtAt(x, y) >= 0) continue;
-      woods.push({ x, y, r: 9 + rng() * 20 });
-    }
-  }
-
-  // roads -> blocks -> lots -> buildings.
-  //
-  // Buildings are laid out inside the cells the street grid creates, then
-  // subdivided into lots, so footprints front onto streets and back onto each
-  // other the way real blocks do. Quads are stored pre-rotated as flat
-  // coordinates: one path per district draws thousands of them in one call.
-  const buildings = [];
-  districts.forEach((d, k) => {
-    if (d.fortress) return;
-    const ux = Math.cos(d.ang);
-    const uy = Math.sin(d.ang);
-    const vx = -uy;
-    const vy = ux;
-    const step = d.step;
-    const setback = step * 0.17;
-    const inner = step - setback * 2;
-    const districtParks = parks.filter((p) => p.district === k);
-    const quads = [];
-    const tallFlags = [];
-
-    for (let a = -d.reach; a <= d.reach; a += step) {
-      for (let b = -d.reach; b <= d.reach; b += step) {
-        const ca = a + step / 2;
-        const cb = b + step / 2;
-        const wx = d.x + ux * ca + vx * cb;
-        const wy = d.y + uy * ca + vy * cb;
-        if (!pointInPoly(wx, wy, d.poly)) continue;
-        if (riverDist(wx, wy) < RIVER_BANK + step * 0.4) continue;
-        if (districtParks.some((p) => Math.hypot(p.x - wx, p.y - wy) < p.r + step * 0.3)) continue;
-
-        // Subdivide the block into lots. Denser districts pack more, smaller
-        // lots into the same block.
-        const lots = d.density > 0.8 ? 2 + Math.floor(rng() * 3) : 1 + Math.floor(rng() * 2);
-        const lotSize = inner / lots;
-        for (let li = 0; li < lots; li++) {
-          for (let lj = 0; lj < lots; lj++) {
-            if (rng() > 0.86) continue; // gaps: yards, car parks, empty lots
-            const gap = lotSize * (0.10 + rng() * 0.14);
-            const la = a + setback + li * lotSize + gap / 2;
-            const lb = b + setback + lj * lotSize + gap / 2;
-            const w = lotSize - gap;
-            const h = lotSize - gap;
-            const x0 = la;
-            const y0 = lb;
-            const x1 = la + w;
-            const y1 = lb + h;
-            quads.push(
-              d.x + ux * x0 + vx * y0, d.y + uy * x0 + vy * y0,
-              d.x + ux * x1 + vx * y0, d.y + uy * x1 + vy * y0,
-              d.x + ux * x1 + vx * y1, d.y + uy * x1 + vy * y1,
-              d.x + ux * x0 + vx * y1, d.y + uy * x0 + vy * y1
-            );
-            tallFlags.push(d.tall && rng() > 0.55 ? 1 : 0);
-          }
-        }
-      }
-    }
-    buildings.push({ district: k, color: d.color, quads: Float32Array.from(quads), tall: Uint8Array.from(tallFlags) });
-  });
-
-  // ---- POIs ----
-  const pois = POI_DEFS.map((p) => {
-    const k = districts.findIndex((d) => d.key === p.d);
-    const d = districts[k];
-    let px = d.x;
-    let py = d.y;
-    for (let t = 0; t < 80; t++) {
-      const a = rng() * Math.PI * 2;
-      const r = Math.sqrt(rng()) * d.radius * 0.85;
-      const tx = d.x + Math.cos(a) * r;
-      const ty = d.y + Math.sin(a) * r;
-      if (pointInPoly(tx, ty, d.poly)) { px = tx; py = ty; break; }
-    }
-    return { ...p, x: px, y: py, district: d.name };
-  });
-
-  // Runways for the Skyport district.
-  const runways = [];
-  {
-    const sp = districts.find((d) => d.key === 'skyport');
-    const a = rng() * Math.PI;
-    const len = Math.min(sp.bbox.x1 - sp.bbox.x0, sp.bbox.y1 - sp.bbox.y0) * 0.34;
-    for (let i = 0; i < 2; i++) {
-      const off = (i - 0.5) * 90;
-      runways.push({
-        x1: sp.x + Math.cos(a) * -len + Math.cos(a + Math.PI / 2) * off,
-        y1: sp.y + Math.sin(a) * -len + Math.sin(a + Math.PI / 2) * off,
-        x2: sp.x + Math.cos(a) * len + Math.cos(a + Math.PI / 2) * off,
-        y2: sp.y + Math.sin(a) * len + Math.sin(a + Math.PI / 2) * off,
-      });
-    }
-  }
-
-  return {
-    kind: 'city', seed: seedStr, cityName, climate,
-    districts, districtAt, pointInPoly, isWater,
-    coastPoly, river, roads, parks, woods, buildings, pois, runways,
-    spread, center: { x: cx, y: cy },
-  };
+export function isLandAt(planet, wx, wy, extraOctaves = 6) {
+  return heightAt(planet, wx, wy, extraOctaves) > SEA;
 }
 
-/* ------------------------------------------------------ CITY RENDER */
-
-// Fully vector, drawn under the camera transform, so the city stays sharp at
-// every zoom level. `lod` is world-units-per-screen-pixel scale (higher = more
-// zoomed in) and gates which layers are worth drawing.
-export function drawCity(ctx, city, styleKey, scale, layers) {
-  const P = palette(styleKey);
-  const cg = CLIMATE_GROUND[city.climate] || CLIMATE_GROUND.temperate;
-  const ground = cg[styleKey] || cg.satellite;
-
-  ctx.fillStyle = ground;
-  ctx.fillRect(0, 0, WORLD_W, WORLD_H);
-
-  // Woodland
-  if (scale > 0.12) {
-    ctx.fillStyle = styleKey === 'map' ? '#cfe3bd' : cg.vegColor;
-    ctx.globalAlpha = styleKey === 'map' ? 0.9 : 0.55;
-    for (const w of city.woods) {
-      ctx.beginPath();
-      ctx.arc(w.x, w.y, w.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-  }
-
-  // Water
-  ctx.fillStyle = P.water;
-  ctx.beginPath();
-  city.coastPoly.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = P.water;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  for (let seg = 0; seg < 3; seg++) {
-    const from = Math.floor((city.river.length * seg) / 3);
-    const to = Math.min(city.river.length, Math.floor((city.river.length * (seg + 1)) / 3) + 1);
-    if (to - from < 2) continue;
-    ctx.lineWidth = 22 + seg * 20;
-    ctx.beginPath();
-    ctx.moveTo(city.river[from].x, city.river[from].y);
-    // Curve through the midpoints so a widened river doesn't show the
-    // corners of its own polyline.
-    for (let i = from + 1; i < to - 1; i++) {
-      const a = city.river[i];
-      const b = city.river[i + 1];
-      ctx.quadraticCurveTo(a.x, a.y, (a.x + b.x) / 2, (a.y + b.y) / 2);
-    }
-    ctx.lineTo(city.river[to - 1].x, city.river[to - 1].y);
-    ctx.stroke();
-  }
-
-  // District fills
-  if (layers.districts) {
-    for (const d of city.districts) {
-      ctx.beginPath();
-      d.poly.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
-      ctx.closePath();
-      ctx.fillStyle = d.color;
-      // Territory tint fades out as you zoom in, handing the view over to
-      // streets and buildings rather than washing them in colour.
-      const fade = Math.max(0.22, Math.min(1, 1.5 - scale));
-      ctx.globalAlpha = (styleKey === 'map' ? 0.12 : 0.20) * fade;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      const px = 1 / Math.max(0.02, scale);
-      ctx.strokeStyle = styleKey === 'map' ? 'rgba(120,130,145,.5)' : 'rgba(226,232,240,.42)';
-      ctx.lineWidth = 1.6 * px;
-      ctx.setLineDash([7 * px, 6 * px]);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
-  }
-
-  // Parks
-  ctx.fillStyle = styleKey === 'map' ? '#c3e0ac' : '#3f6b3a';
-  for (const p of city.parks) {
-    ctx.beginPath();
-    p.poly.forEach((q, i) => (i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y)));
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // Runways
-  ctx.strokeStyle = styleKey === 'map' ? '#d8d5cf' : '#4a4a52';
-  ctx.lineWidth = 14;
-  ctx.lineCap = 'butt';
-  for (const r of city.runways) {
-    ctx.beginPath();
-    ctx.moveTo(r.x1, r.y1);
-    ctx.lineTo(r.x2, r.y2);
-    ctx.stroke();
-  }
-
-  // Individual buildings only appear once you're close enough for them to
-  // mean something — the same threshold behaviour a slippy map uses.
-  if (layers.buildings !== false && scale > 0.45) {
-    for (const group of city.buildings) {
-      const q = group.quads;
-      // Low blocks first, then the towers, so tall buildings read on top.
-      for (let pass = 0; pass < 2; pass++) {
-        ctx.beginPath();
-        let any = false;
-        for (let i = 0, b = 0; i < q.length; i += 8, b++) {
-          if (group.tall[b] !== pass) continue;
-          any = true;
-          ctx.moveTo(q[i], q[i + 1]);
-          ctx.lineTo(q[i + 2], q[i + 3]);
-          ctx.lineTo(q[i + 4], q[i + 5]);
-          ctx.lineTo(q[i + 6], q[i + 7]);
-          ctx.closePath();
-        }
-        if (!any) continue;
-        if (styleKey === 'map') {
-          ctx.fillStyle = pass ? '#cfc7b8' : '#ded7cb';
-          ctx.globalAlpha = 1;
-        } else {
-          ctx.fillStyle = group.color;
-          ctx.globalAlpha = pass ? 0.85 : 0.5;
-        }
-        ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-  }
-
-  // Road hierarchy, drawn casing-first so junctions merge like a real map.
-  //
-  // The canvas is already scaled by `scale`, so a stroke of N world units
-  // paints N*scale screen pixels. Dividing by scale gives roads a constant
-  // on-screen weight at every zoom level, which is what makes them read as
-  // roads rather than hairlines when zoomed out.
-  const lw = (screenPx) => screenPx / Math.max(0.02, scale);
-  const drawPath = (pts, closed) => {
-    ctx.beginPath();
-    pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
-    if (closed) ctx.closePath();
-    ctx.stroke();
-  };
-
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-
-  if (layers.roads !== false) {
-    if (scale > 0.12) {
-      ctx.strokeStyle = P.roadCase;
-      ctx.lineWidth = lw(4.6);
-      for (const s of city.roads.streets) drawPath(s.pts);
-      ctx.strokeStyle = P.road;
-      ctx.lineWidth = lw(3);
-      ctx.globalAlpha = 0.95;
-      for (const s of city.roads.streets) drawPath(s.pts);
-      ctx.globalAlpha = 1;
-    }
-
-    ctx.strokeStyle = P.roadCase;
-    ctx.lineWidth = lw(5);
-    for (const c of city.roads.collectors) drawPath(c);
-    ctx.strokeStyle = P.road;
-    ctx.lineWidth = lw(3.2);
-    for (const c of city.roads.collectors) drawPath(c);
-
-    ctx.strokeStyle = P.roadCase;
-    ctx.lineWidth = lw(5.4);
-    for (const a of city.roads.arterials) drawPath(a);
-    ctx.strokeStyle = styleKey === 'map' ? '#fdf6e3' : P.road;
-    ctx.lineWidth = lw(3.4);
-    for (const a of city.roads.arterials) drawPath(a);
-
-    // Motorway: skip the stretch that would run through the bay.
-    const land = city.roads.motorway.filter((p) => !p.water);
-    ctx.strokeStyle = styleKey === 'map' ? '#e8a33d' : 'rgba(30,20,6,.6)';
-    ctx.lineWidth = lw(10);
-    drawPath(land);
-    ctx.strokeStyle = styleKey === 'map' ? '#fcd34d' : '#facc15';
-    ctx.lineWidth = lw(6.5);
-    drawPath(land);
-  }
+// Containment against a settlement's sprawl outline. The outline is stored as
+// a radius per bearing, so this is a lookup rather than a polygon crossing
+// test — it runs tens of thousands of times while a city is being detailed.
+export function cityContains(c, x, y) {
+  if (!c.rays) return false;
+  const dx = x - c.x;
+  const dy = y - c.y;
+  const d = Math.hypot(dx, dy);
+  if (d > c.radius * 1.5) return false;
+  let a = Math.atan2(dy, dx);
+  if (a < 0) a += Math.PI * 2;
+  const t = (a / (Math.PI * 2)) * c.RAYS;
+  const i = Math.floor(t) % c.RAYS;
+  const f = t - Math.floor(t);
+  return d <= c.rays[i] + (c.rays[(i + 1) % c.RAYS] - c.rays[i]) * f;
 }
 
-/* ------------------------------------------------- MEMBER PLACEMENT */
-
-export function placeMembers(city, madeList, sickList) {
-  const rng = mulberry32(seedFromString(`${city.seed}::members::${city.cityName}`));
-  const out = [];
-
-  for (const p of madeList) {
-    const k = city.districts.findIndex((d) => d.name === p.district);
-    const d = city.districts[k >= 0 ? k : 0];
-    let x = d.x;
-    let y = d.y;
-    for (let t = 0; t < 60; t++) {
-      const a = rng() * Math.PI * 2;
-      const r = Math.sqrt(rng()) * d.radius * 0.8;
-      const tx = d.x + Math.cos(a) * r;
-      const ty = d.y + Math.sin(a) * r;
-      if (city.pointInPoly(tx, ty, d.poly)) { x = tx; y = ty; break; }
-    }
-    out.push({
-      kind: 'made', x, y,
-      label: p.alias,
-      card: `${p.card}${p.suit === 'spades' ? '♠' : p.suit === 'hearts' ? '♥' : p.suit === 'clubs' ? '♣' : '♦'}`,
-      data: p,
-    });
+export function citySectorAt(c, x, y) {
+  let best = 0;
+  let bd = Infinity;
+  for (let s = 0; s < c.sectors.length; s++) {
+    const d = Math.hypot(x - c.sectors[s].x, y - c.sectors[s].y) / c.sectors[s].w;
+    if (d < bd) { bd = d; best = s; }
   }
-
-  // Sick 52 hold the margins outside the districts, and they operate in cells:
-  // a handful of safe houses with several members each, not 52 lone dots.
-  const cellCount = 9;
-  const cells = [];
-  for (let c = 0; c < cellCount; c++) {
-    for (let t = 0; t < 400; t++) {
-      const x = WORLD_W * (0.05 + rng() * 0.9);
-      const y = WORLD_H * (0.05 + rng() * 0.9);
-      if (city.isWater(x, y) || city.districtAt(x, y) >= 0) continue;
-      if (cells.some((p) => Math.hypot(p.x - x, p.y - y) < 420)) continue;
-      cells.push({ x, y });
-      break;
-    }
-  }
-  if (!cells.length) cells.push({ x: WORLD_W * 0.1, y: WORLD_H * 0.1 });
-
-  sickList.forEach((s, i) => {
-    const base = cells[i % cells.length];
-    let x = base.x;
-    let y = base.y;
-    for (let t = 0; t < 40; t++) {
-      const a = rng() * Math.PI * 2;
-      const r = Math.sqrt(rng()) * 150;
-      const tx = base.x + Math.cos(a) * r;
-      const ty = base.y + Math.sin(a) * r;
-      if (city.isWater(tx, ty) || city.districtAt(tx, ty) >= 0) continue;
-      x = tx;
-      y = ty;
-      break;
-    }
-    out.push({ kind: 'sick', x, y, label: s.name, card: s.cardLabel || '', cell: i % cells.length, data: s });
-  });
-
-  return out;
+  return best;
 }

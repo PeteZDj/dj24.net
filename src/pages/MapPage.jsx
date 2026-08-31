@@ -3,34 +3,37 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { getSick52Roster } from '../contentLoader';
 import { madeDeckAll, madeHouses } from '../madeDeckData';
 import {
-  WORLD_W, WORLD_H, FACTIONS, DISTRICTS, MAP_STYLES, BIOME_LEGEND,
-  generatePlanet, generateCity, rasterizeTerrain, drawPlanetVectors, drawCity,
-  placeMembers, randomSeedWord, palette,
+  WORLD_W, WORLD_H, FACTIONS, MAP_STYLES, BIOME_LEGEND,
+  generatePlanet, rasterizeTerrain, drawPlanetVectors,
+  randomSeedWord, palette, cityContains, citySectorAt,
 } from '../mapGenerator';
-import { drawPlanetLabels, drawCityLabels, POI_TYPES } from '../mapLabels';
+import { buildCityDetail, drawCityDetail, placeCrew } from '../cityDetail';
+import { drawPlanetLabels, POI_TYPES } from '../mapLabels';
 
-// World units per kilometre. A capital is ~180 km across at this scale, which
-// keeps the district sizes in the range the world bible describes.
-const UNITS_PER_KM = 22;
-
-// The label engine is tuned for a viewport around 1400px wide. The PNG
-// export is a 4096px poster, so every label it draws is scaled to match.
-const EXPORT_SCALE = WORLD_W / 1400;
+// World units per kilometre. A capital's sprawl is ~59 units across the
+// radius, which lands it at roughly 170 km² — the size the world bible asks a
+// major city to be.
+const UNITS_PER_KM = 8;
 
 const BASE_W = 2048;
 const BASE_H = Math.round((BASE_W * WORLD_H) / WORLD_W);
 
-const CITY_CHOICES = [
-  'Ongaku Prime', 'Urban City', 'Electric City', 'Classic City', 'Rock City',
-  'Blue City', 'Pop City', 'Rose City', 'Cloud City', 'Port Sonora',
-];
+// The label engine is tuned for a viewport around 1400px wide. The PNG export
+// is a 4096px poster, so every label it draws is scaled to match.
+const EXPORT_SCALE = WORLD_W / 1400;
+
+// Screen pixels of city radius at which the streamed detail tier is worth
+// building. Below this the block texture already reads correctly.
+const DETAIL_ZOOM = 150;
+
+// How many city models to keep in memory. Each is a couple of hundred KB and
+// takes single-digit milliseconds to rebuild, so this can stay small.
+const DETAIL_CACHE = 6;
 
 export default function MapPage() {
   const [seed, setSeed] = useState('NEON-GRID-2481');
   const [seedInput, setSeedInput] = useState('NEON-GRID-2481');
-  const [mode, setMode] = useState('planet');
-  const [style, setStyle] = useState('satellite');
-  const [cityName, setCityName] = useState('Ongaku Prime');
+  const [style, setStyle] = useState('map');
   const [layers, setLayers] = useState({
     districts: true, roads: true, buildings: true, rivers: true,
     pois: true, made: true, sick: true, labels: true, grid: false,
@@ -39,16 +42,27 @@ export default function MapPage() {
   const [cam, setCam] = useState({ x: 0, y: 0, z: 0.3 });
   const [status, setStatus] = useState('');
   const [world, setWorld] = useState(null);
+  // Bumped whenever a city model finishes streaming, purely to trigger a redraw.
+  const [detailTick, setDetailTick] = useState(0);
+  // Render-safe mirror of what the streaming cache holds, so the panel can
+  // report it without reaching into a ref during render.
+  const [streamed, setStreamed] = useState({});
 
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
   const baseRef = useRef(null);
-  const detailRef = useRef(null);
+  const sharpRef = useRef(null);
   const dragRef = useRef(null);
   const dirtyRef = useRef(true);
   const camRef = useRef(cam);
-  const detailTimer = useRef(0);
-  camRef.current = cam;
+  const sharpTimer = useRef(0);
+  const streamTimer = useRef(0);
+  const detailsRef = useRef(new Map());
+
+  // The rAF draw loop reads the camera through a ref so it never has to be
+  // re-created when the camera moves. Declared first so it is up to date
+  // before any other effect marks the canvas dirty.
+  useEffect(() => { camRef.current = cam; }, [cam]);
 
   const sick52 = useMemo(() => getSick52Roster(), []);
 
@@ -56,36 +70,39 @@ export default function MapPage() {
 
   useEffect(() => {
     let cancelled = false;
-    setStatus(mode === 'planet' ? 'Building planet…' : `Building ${cityName}…`);
-    setWorld(null);
     baseRef.current = null;
-    detailRef.current = null;
-    setSelected(null);
+    sharpRef.current = null;
+    detailsRef.current = new Map();
 
-    // Deferred so the status message paints before the main thread is tied up.
-    const t = setTimeout(() => {
+    // Two stages on purpose: clear and show the message first, then let the
+    // browser paint it before the generator ties up the main thread.
+    const t0 = setTimeout(() => {
       if (cancelled) return;
-      const w = mode === 'planet' ? generatePlanet(seed) : generateCity(seed, cityName, cityClimate(seed, cityName));
+      setStatus('Building the planet…');
+      setWorld(null);
+      setStreamed({});
+      setSelected(null);
+    }, 0);
+    const t1 = setTimeout(() => {
+      if (cancelled) return;
+      const w = generatePlanet(seed);
       if (cancelled) return;
       setWorld(w);
       setStatus('');
       dirtyRef.current = true;
-    }, 30);
+    }, 40);
 
-    return () => { cancelled = true; clearTimeout(t); };
-  }, [seed, mode, cityName]);
+    return () => { cancelled = true; clearTimeout(t0); clearTimeout(t1); };
+  }, [seed]);
 
-  const members = useMemo(() => {
-    if (!world || world.kind !== 'city') return [];
-    return placeMembers(world, madeDeckAll, sick52);
-  }, [world, sick52]);
+  const crew = useMemo(() => (world ? placeCrew(world, madeDeckAll, sick52) : []), [world, sick52]);
 
-  /* ------------------------------------------------- planet raster ---- */
+  /* ------------------------------------------------------ base raster -- */
 
   useEffect(() => {
-    if (!world || world.kind !== 'planet') { baseRef.current = null; return; }
+    if (!world) { baseRef.current = null; return undefined; }
     let cancelled = false;
-    setStatus('Rendering terrain…');
+    const t0 = setTimeout(() => { if (!cancelled) setStatus('Rendering terrain…'); }, 0);
     const t = setTimeout(() => {
       if (cancelled) return;
       const off = document.createElement('canvas');
@@ -97,24 +114,24 @@ export default function MapPage() {
       octx.putImageData(img, 0, 0);
       if (cancelled) return;
       baseRef.current = off;
-      detailRef.current = null;
+      sharpRef.current = null;
       setStatus('');
       dirtyRef.current = true;
     }, 20);
-    return () => { cancelled = true; clearTimeout(t); };
+    return () => { cancelled = true; clearTimeout(t0); clearTimeout(t); };
   }, [world, style]);
 
   // Re-render just the visible rectangle at screen resolution once the user is
   // zoomed past the point where the base bitmap would start to look soft.
   // This is the whole trick behind zooming staying sharp.
-  const scheduleDetail = useCallback(() => {
-    if (!world || world.kind !== 'planet') return;
-    clearTimeout(detailTimer.current);
-    detailTimer.current = setTimeout(() => {
+  const scheduleSharpen = useCallback(() => {
+    if (!world) return;
+    clearTimeout(sharpTimer.current);
+    sharpTimer.current = setTimeout(() => {
       const wrap = wrapRef.current;
       if (!wrap || !baseRef.current) return;
       const { x: ox, y: oy, z } = camRef.current;
-      if (z < 1.2) { detailRef.current = null; dirtyRef.current = true; return; }
+      if (z < 1.2) { sharpRef.current = null; dirtyRef.current = true; return; }
 
       const rect = {
         x: -ox / z, y: -oy / z,
@@ -133,14 +150,76 @@ export default function MapPage() {
         const extra = z > 4 ? 7 : z > 2.2 ? 6 : 5;
         rasterizeTerrain(img.data, world, rect, W, H, style, extra);
         octx.putImageData(img, 0, 0);
-        detailRef.current = { canvas: off, rect };
+        sharpRef.current = { canvas: off, rect };
         setStatus('');
         dirtyRef.current = true;
       }, 10);
     }, 280);
   }, [world, style]);
 
-  useEffect(() => { scheduleDetail(); }, [cam, scheduleDetail]);
+  /* -------------------------------------------------------- streaming -- */
+
+  // Cities in view and close enough to be worth a full model. This is the
+  // streaming set: it is what would be a loaded chunk in an engine build.
+  const citiesNeedingDetail = useCallback(() => {
+    const wrap = wrapRef.current;
+    if (!world || !wrap) return [];
+    const { x: ox, y: oy, z } = camRef.current;
+    const W = wrap.clientWidth;
+    const H = wrap.clientHeight;
+    const out = [];
+    for (const c of world.cities) {
+      const rr = c.radius * z;
+      if (rr < DETAIL_ZOOM) continue;
+      const sx = c.x * z + ox;
+      const sy = c.y * z + oy;
+      // Load a screen early so a model is ready before you pan onto it.
+      if (sx < -rr - W || sy < -rr - H || sx > W * 2 + rr || sy > H * 2 + rr) continue;
+      out.push(c);
+    }
+    // Nearest to the middle of the view first.
+    out.sort((a, b) => {
+      const da = Math.hypot(a.x * z + ox - W / 2, a.y * z + oy - H / 2);
+      const db = Math.hypot(b.x * z + ox - W / 2, b.y * z + oy - H / 2);
+      return da - db;
+    });
+    return out;
+  }, [world]);
+
+  const streamDetail = useCallback(() => {
+    clearTimeout(streamTimer.current);
+    streamTimer.current = setTimeout(() => {
+      if (!world) return;
+      const cache = detailsRef.current;
+
+      // One model per frame keeps the map interactive while a dense capital is
+      // being built, and the queue is re-derived each step so panning away
+      // mid-load cancels whatever is no longer wanted.
+      function step() {
+        const wanted = citiesNeedingDetail();
+        const missing = wanted.filter((c) => !cache.has(c.name));
+        if (!missing.length) { setStatus(''); return; }
+        const c = missing[0];
+        setStatus(`Streaming ${c.name}…`);
+        setTimeout(() => {
+          cache.set(c.name, buildCityDetail(world, c));
+          // Evict whatever is furthest from what the camera is looking at.
+          const keep = new Set(wanted.map((w) => w.name));
+          for (const name of cache.keys()) {
+            if (cache.size <= DETAIL_CACHE) break;
+            if (!keep.has(name)) cache.delete(name);
+          }
+          setDetailTick((n) => n + 1);
+          setStreamed(Object.fromEntries([...cache].map(([n, d]) => [n, d.stats])));
+          dirtyRef.current = true;
+          step();
+        }, 16);
+      }
+      step();
+    }, 180);
+  }, [world, citiesNeedingDetail]);
+
+  useEffect(() => { scheduleSharpen(); streamDetail(); }, [cam, scheduleSharpen, streamDetail]);
 
   /* -------------------------------------------------------- fit view -- */
 
@@ -154,7 +233,16 @@ export default function MapPage() {
     return true;
   }, []);
 
-  useEffect(() => { fitView(); }, [fitView, mode, cityName]);
+  useEffect(() => { fitView(); }, [fitView]);
+
+  const flyTo = useCallback((c) => {
+    const wrap = wrapRef.current;
+    if (!wrap || !c) return;
+    // Frame the whole sprawl with a margin, which is always past the point
+    // where its streets and buildings stream in.
+    const z = Math.min(wrap.clientWidth, wrap.clientHeight) / (c.radius * 2.9);
+    setCam({ z, x: wrap.clientWidth / 2 - c.x * z, y: wrap.clientHeight / 2 - c.y * z });
+  }, []);
 
   /* ------------------------------------------------------------ draw -- */
 
@@ -180,23 +268,34 @@ export default function MapPage() {
     if (!world) return;
 
     const { x: ox, y: oy, z } = camRef.current;
-    const toScreen = (wx, wy) => ({ x: wx * z + ox, y: wy * z + oy });
+    const details = detailsRef.current;
+    const detailed = new Set(details.keys());
 
     ctx.save();
     ctx.translate(ox, oy);
     ctx.scale(z, z);
 
-    if (world.kind === 'planet') {
-      if (baseRef.current) ctx.drawImage(baseRef.current, 0, 0, WORLD_W, WORLD_H);
-      const d = detailRef.current;
-      if (d) ctx.drawImage(d.canvas, d.rect.x, d.rect.y, d.rect.w, d.rect.h);
-      drawPlanetVectors(ctx, world, style, z, { rivers: layers.rivers, roads: layers.roads });
-    } else {
-      drawCity(ctx, world, style, z, layers);
+    if (baseRef.current) ctx.drawImage(baseRef.current, 0, 0, WORLD_W, WORLD_H);
+    const sharp = sharpRef.current;
+    if (sharp) ctx.drawImage(sharp.canvas, sharp.rect.x, sharp.rect.y, sharp.rect.w, sharp.rect.h);
+
+    // Ground pass: water, sprawl footprints and block massing, but no roads —
+    // roads have to go over the buildings that stream in between the two.
+    drawPlanetVectors(ctx, world, style, z, {
+      rivers: layers.rivers, roads: false, detailed,
+    });
+
+    for (const c of world.cities) {
+      const det = details.get(c.name);
+      if (det) drawCityDetail(ctx, c, det, style, z, layers);
     }
 
+    drawPlanetVectors(ctx, world, style, z, {
+      rivers: false, cities: false, roads: layers.roads,
+    });
+
     if (layers.grid) {
-      ctx.strokeStyle = 'rgba(148,163,184,0.25)';
+      ctx.strokeStyle = 'rgba(100,116,139,0.28)';
       ctx.lineWidth = 1 / z;
       ctx.beginPath();
       for (let x = 0; x <= WORLD_W; x += 256) { ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); }
@@ -205,26 +304,21 @@ export default function MapPage() {
     }
     ctx.restore();
 
-    /* ---- overlay, drawn in screen space so icons and text stay crisp ---- */
-    // One label engine per frame decides what gets a name: markers are
-    // reserved first, then names are placed highest priority first, and any
-    // that cannot find a clear box is dropped rather than overlapped.
-    const view = { ox, oy, z, W, H };
-    if (world.kind === 'planet') {
-      drawPlanetLabels(ctx, world, style, view, { labels: layers.labels });
-    } else {
-      drawCityLabels(ctx, world, style, view, { layers, members });
-    }
+    // Overlay: one label engine per frame decides what gets a name. Markers
+    // are reserved first, then names are placed highest priority first, and
+    // anything that cannot find a clear box is dropped rather than overlapped.
+    drawPlanetLabels(ctx, world, style, { ox, oy, z, W, H }, {
+      labels: layers.labels, layers, details, crew,
+    });
 
     if (selected) {
-      const p = toScreen(selected.x, selected.y);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 19, 0, Math.PI * 2);
-      ctx.strokeStyle = '#38bdf8';
+      ctx.arc(selected.x * z + ox, selected.y * z + oy, 19, 0, Math.PI * 2);
+      ctx.strokeStyle = '#4F46E5';
       ctx.lineWidth = 3;
       ctx.stroke();
     }
-  }, [world, members, layers, style, selected]);
+  }, [world, crew, layers, style, selected]);
 
   useEffect(() => {
     let raf = 0;
@@ -239,7 +333,7 @@ export default function MapPage() {
     return () => { alive = false; cancelAnimationFrame(raf); };
   }, [draw]);
 
-  useEffect(() => { dirtyRef.current = true; }, [cam, layers, selected, world, members, style, status]);
+  useEffect(() => { dirtyRef.current = true; }, [cam, layers, selected, world, crew, style, status, detailTick]);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -277,19 +371,21 @@ export default function MapPage() {
     const wx = (e.clientX - rect.left - ox) / z;
     const wy = (e.clientY - rect.top - oy) / z;
 
-    // Point features win over areas, so clicking an icon never selects the
-    // district sitting underneath it.
+    // Point features win over areas, so clicking a pin never selects the
+    // quarter sitting underneath it.
     const points = [];
-    if (world.kind === 'planet') {
-      for (const c of world.cities) points.push({ ...c, _t: 'city' });
-    } else {
-      if (layers.pois) for (const p of world.pois) points.push({ ...p, _t: 'poi' });
-      for (const m of members) {
-        if (m.kind === 'made' && !layers.made) continue;
-        if (m.kind === 'sick' && !layers.sick) continue;
-        points.push({ ...m, _t: 'member' });
-      }
+    for (const [name, det] of detailsRef.current) {
+      const c = world.cities.find((o) => o.name === name);
+      if (!c || c.radius * z < DETAIL_ZOOM) continue;
+      if (layers.pois) for (const p of det.pois) points.push({ ...p, _t: 'place', city: name });
     }
+    for (const m of crew) {
+      if (m.kind === 'made' && !layers.made) continue;
+      if (m.kind === 'sick' && !layers.sick) continue;
+      points.push({ ...m, _t: 'member' });
+    }
+    for (const c of world.cities) points.push({ ...c, _t: 'city' });
+
     const tol = 22 / z;
     let best = null;
     let bestD = Infinity;
@@ -297,9 +393,19 @@ export default function MapPage() {
       const dd = Math.hypot(n.x - wx, n.y - wy);
       if (dd < tol && dd < bestD) { bestD = dd; best = n; }
     }
-    if (!best && world.kind === 'city') {
-      const k = world.districtAt(wx, wy);
-      if (k >= 0) best = { ...world.districts[k], _t: 'district' };
+
+    // Falling through to the quarter under the cursor.
+    if (!best) {
+      for (const c of world.cities) {
+        if (!cityContains(c, wx, wy)) continue;
+        const qi = citySectorAt(c, wx, wy);
+        const det = detailsRef.current.get(c.name);
+        const q = det ? det.quarters[qi] : null;
+        best = q
+          ? { ...q, _t: 'quarter', city: c.name, faction: c.faction }
+          : { ...c, _t: 'city' };
+        break;
+      }
     }
     setSelected(best);
   };
@@ -315,7 +421,7 @@ export default function MapPage() {
 
   const zoomAt = (mx, my, f) => {
     setCam((c) => {
-      const nz = Math.max(0.1, Math.min(14, c.z * f));
+      const nz = Math.max(0.1, Math.min(60, c.z * f));
       const k = nz / c.z;
       return { z: nz, x: mx - (mx - c.x) * k, y: my - (my - c.y) * k };
     });
@@ -334,11 +440,6 @@ export default function MapPage() {
     setSeedInput(next);
   };
 
-  const openCity = (name) => {
-    setCityName(CITY_CHOICES.includes(name) ? name : 'Ongaku Prime');
-    setMode('city');
-  };
-
   const savePng = () => {
     if (!world) return;
     setStatus('Exporting…');
@@ -348,42 +449,32 @@ export default function MapPage() {
       out.height = WORLD_H;
       const c = out.getContext('2d');
 
-      if (world.kind === 'planet') {
-        const img = c.createImageData(WORLD_W, WORLD_H);
-        rasterizeTerrain(img.data, world, { x: 0, y: 0, w: WORLD_W, h: WORLD_H }, WORLD_W, WORLD_H, style, 5);
-        c.putImageData(img, 0, 0);
-        drawPlanetVectors(c, world, style, 1, { rivers: layers.rivers, roads: layers.roads });
-      } else {
-        drawCity(c, world, style, 1, layers);
-      }
+      const img = c.createImageData(WORLD_W, WORLD_H);
+      rasterizeTerrain(img.data, world, { x: 0, y: 0, w: WORLD_W, h: WORLD_H }, WORLD_W, WORLD_H, style, 5);
+      c.putImageData(img, 0, 0);
+      drawPlanetVectors(c, world, style, 1, { rivers: layers.rivers, roads: layers.roads });
 
       // The export runs the same label engine at 1:1 world scale, so the
       // poster is decluttered exactly like the screen is — just larger.
-      const view = { ox: 0, oy: 0, z: 1, W: WORLD_W, H: WORLD_H, };
-      if (world.kind === 'planet') {
-        drawPlanetLabels(c, world, style, view, { labels: layers.labels, sizeScale: EXPORT_SCALE, margin: 24 });
-      } else {
-        drawCityLabels(c, world, style, view, {
-          layers, members, sizeScale: EXPORT_SCALE, margin: 24,
-          poiZoom: 0, poiLabelZoom: 0, memberZoom: 0, memberLabelZoom: 0, districtZoom: 0,
-        });
-      }
+      drawPlanetLabels(c, world, style, { ox: 0, oy: 0, z: 1, W: WORLD_W, H: WORLD_H }, {
+        labels: layers.labels, layers, sizeScale: EXPORT_SCALE, margin: 24,
+      });
 
-      c.fillStyle = 'rgba(2,6,16,0.85)';
-      c.fillRect(36, 36, 720, 118);
-      c.strokeStyle = 'rgba(212,175,55,0.75)';
+      c.fillStyle = 'rgba(255,255,255,0.94)';
+      c.fillRect(36, 36, 760, 118);
+      c.strokeStyle = 'rgba(79,70,229,0.5)';
       c.lineWidth = 3;
-      c.strokeRect(36, 36, 720, 118);
+      c.strokeRect(36, 36, 760, 118);
       c.textAlign = 'left';
-      c.fillStyle = '#f8fafc';
+      c.fillStyle = '#0F172A';
       c.font = '800 40px Outfit, system-ui, sans-serif';
-      c.fillText(world.kind === 'planet' ? 'PLANET ONGAKU' : cityName.toUpperCase(), 62, 88);
-      c.fillStyle = '#cbd5e1';
+      c.fillText('PLANET ONGAKU', 62, 88);
+      c.fillStyle = '#475569';
       c.font = '500 20px Outfit, system-ui, sans-serif';
-      c.fillText(`${world.kind === 'planet' ? 'World atlas' : 'District map'} · ${style} · seed ${seed} · dj24.net/map`, 62, 126);
+      c.fillText(`World atlas · ${style} · seed ${seed} · dj24.net/map`, 62, 126);
 
       const a = document.createElement('a');
-      a.download = `planet-ongaku-${world.kind}-${style}-${seed}.png`;
+      a.download = `planet-ongaku-${style}-${seed}.png`;
       a.href = out.toDataURL('image/png');
       a.click();
       setStatus('');
@@ -397,10 +488,15 @@ export default function MapPage() {
   const scaleBar = useMemo(() => {
     const targetPx = 110;
     const km = targetPx / cam.z / UNITS_PER_KM;
-    const nice = [0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000];
-    const pick = nice.find((n) => n >= km) || 5000;
+    const nice = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500];
+    const pick = nice.find((n) => n >= km) || 1000;
     return { km: pick, px: pick * UNITS_PER_KM * cam.z };
   }, [cam.z]);
+
+  const loaded = Object.keys(streamed).length;
+  const selCity = selected && world
+    ? world.cities.find((c) => c.name === (selected._t === 'city' ? selected.name : selected.city))
+    : null;
 
   return (
     <div className="wiki-page map-page">
@@ -409,30 +505,31 @@ export default function MapPage() {
       <header className="map-head">
         <h1>Planet Ongaku — World Generator</h1>
         <p className="map-sub">
-          A procedural atlas with a real terrain engine: elevation, hillshading, climate bands and
-          river networks at planet scale, then a full district map of any city with its road
-          hierarchy, blocks, parks, waterfront and the home turf of both decks. Every seed builds a
-          different world, and the same seed always rebuilds the same one.
+          One continuous world, streamed. Fly from orbit down to a street corner without ever
+          changing maps: terrain, climate and rivers at planet scale, then motorways, sprawl,
+          quarters, blocks and individual buildings as each settlement loads in underneath you.
+          Every seed builds a different world, and the same seed always rebuilds the same one.
         </p>
       </header>
 
       <div className="map-toolbar">
-        <div className="map-seg">
-          <button className={mode === 'planet' ? 'on' : ''} onClick={() => setMode('planet')}>🌍 Planet</button>
-          <button className={mode === 'city' ? 'on' : ''} onClick={() => setMode('city')}>🏙️ City</button>
-        </div>
-
         <div className="map-seg">
           {MAP_STYLES.map((s) => (
             <button key={s.key} className={style === s.key ? 'on' : ''} onClick={() => setStyle(s.key)}>{s.label}</button>
           ))}
         </div>
 
-        {mode === 'city' && (
-          <select className="map-select" value={cityName} onChange={(e) => setCityName(e.target.value)}>
-            {CITY_CHOICES.map((n) => <option key={n} value={n}>{n}</option>)}
-          </select>
-        )}
+        <select
+          className="map-select"
+          value=""
+          onChange={(e) => {
+            const c = world?.cities.find((o) => o.name === e.target.value);
+            if (c) { flyTo(c); setSelected({ ...c, _t: 'city' }); }
+          }}
+        >
+          <option value="">Fly to…</option>
+          {(world?.cities || []).map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}
+        </select>
 
         <div className="map-seed">
           <label htmlFor="seed">Seed</label>
@@ -474,11 +571,15 @@ export default function MapPage() {
           </div>
 
           {status && <div className="map-busy">{status}</div>}
-          <div className="map-hint">Drag to pan · scroll or double-click to zoom · click anything for detail</div>
+          <div className="map-hint">
+            Drag to pan · scroll or double-click to zoom · click anything for detail
+            {loaded ? ` · ${loaded} ${loaded === 1 ? 'city' : 'cities'} streamed` : ''}
+          </div>
 
           {selected && (
             <aside className="map-inspector">
               <button className="map-inspector-close" onClick={() => setSelected(null)}>✕</button>
+
               {selected._t === 'city' && (
                 <>
                   <span className="map-kicker" style={{ color: FACTIONS[selected.faction].color }}>
@@ -489,43 +590,53 @@ export default function MapPage() {
                   <dl className="map-stats">
                     <div><dt>Type</dt><dd>{selected.kind}</dd></div>
                     <div><dt>People</dt><dd>{(selected.pop / 1e6).toFixed(1)}M</dd></div>
-                    <div><dt>Elevation</dt><dd>{selected.elev}m</dd></div>
+                    <div><dt>Across</dt><dd>{((selected.radius * 2) / UNITS_PER_KM).toFixed(0)}km</dd></div>
                   </dl>
                   <p className="map-note"><strong>Climate:</strong> {selected.climate}</p>
-                  {CITY_CHOICES.includes(selected.name) ? (
-                    <button className="map-btn primary wide" onClick={() => openCity(selected.name)}>
-                      Open district map →
-                    </button>
-                  ) : (
-                    <p className="map-note">No district map for settlements this size yet.</p>
+                  <p className="map-note">
+                    {selected.sectors?.length} quarters
+                    {streamed[selected.name]
+                      ? ` · ${streamed[selected.name].buildings.toLocaleString()} buildings, ${streamed[selected.name].places} named places loaded`
+                      : ' · fly in to stream its streets and buildings'}
+                  </p>
+                  <button className="map-btn primary wide" onClick={() => flyTo(selected)}>
+                    Fly down to {selected.name} →
+                  </button>
+                </>
+              )}
+
+              {selected._t === 'quarter' && (
+                <>
+                  <span className="map-kicker" style={{ color: selected.color }}>
+                    Quarter of {selected.city}
+                  </span>
+                  <h3>{selected.name}</h3>
+                  <p>{selected.blurb}</p>
+                  {selected.stories && <p className="map-note"><strong>Stories:</strong> {selected.stories}</p>}
+                  <p className="map-note">
+                    Character: <strong>{selected.role}</strong>. Quarters double as streaming cells —
+                    this one is one chunk of {selCity?.name}.
+                  </p>
+                  {selCity && (
+                    <span className="map-tag" style={{ '--tag': FACTIONS[selCity.faction].color }}>
+                      {FACTIONS[selCity.faction].icon} {FACTIONS[selCity.faction].name}
+                    </span>
                   )}
                 </>
               )}
-              {selected._t === 'district' && (
-                <>
-                  <span className="map-kicker" style={{ color: selected.color }}>District</span>
-                  <h3>{selected.name}</h3>
-                  <p>{selected.blurb}</p>
-                  <p className="map-note"><strong>Stories:</strong> {selected.stories}</p>
-                  <p className="map-note">
-                    <strong>Area:</strong> {(selected.area / (UNITS_PER_KM * UNITS_PER_KM)).toFixed(1)} km²
-                    {' — '}a streaming chunk at production scale.
-                  </p>
-                  <span className="map-tag" style={{ '--tag': FACTIONS[selected.faction].color }}>
-                    {FACTIONS[selected.faction].icon} {FACTIONS[selected.faction].name}
-                  </span>
-                </>
-              )}
-              {selected._t === 'poi' && (
+
+              {selected._t === 'place' && (
                 <>
                   <span className="map-kicker" style={{ color: POI_TYPES[selected.type]?.color }}>
                     {POI_TYPES[selected.type]?.label}
                   </span>
                   <h3>{selected.icon} {selected.name}</h3>
                   <p>{selected.note}</p>
-                  <p className="map-note">📍 {selected.district}</p>
+                  <p className="map-note">📍 {selected.quarter}, {selected.city}</p>
+                  {selected.canon && <p className="map-note">Written into the canon, not generated.</p>}
                 </>
               )}
+
               {selected._t === 'member' && selected.kind === 'made' && (
                 <>
                   <span className="map-kicker" style={{ color: madeHouses[selected.data.suit].color }}>
@@ -545,17 +656,18 @@ export default function MapPage() {
                   {selected.data.loy < 50 && <p className="map-flip">⚠ Flip risk — a police-campaign entry point.</p>}
                   <p className="map-note"><strong>Front:</strong> {selected.data.front}</p>
                   <p className="map-note"><strong>Car:</strong> {selected.data.car}</p>
-                  <p className="map-note">📍 {selected.data.district}</p>
+                  <p className="map-note">📍 {selected.data.district}, Ongaku Prime</p>
                 </>
               )}
+
               {selected._t === 'member' && selected.kind === 'sick' && (
                 <>
                   <span className="map-kicker" style={{ color: '#DC2626' }}>💀 Sick 52 · cell {selected.cell + 1}</span>
                   <h3>{selected.card} — {selected.data.name}</h3>
                   <p>{selected.data.title}</p>
                   <p className="map-note">
-                    Operating outside the districts. They work in cells of five or six, never in the
-                    city proper — a presence, not a resident.
+                    Operating outside the built-up area. They work in cells of five or six, never in
+                    the city proper — a presence, not a resident.
                   </p>
                 </>
               )}
@@ -566,21 +678,13 @@ export default function MapPage() {
         <aside className="map-legend">
           <h3>Layers</h3>
           <div className="map-layer-list">
-            {mode === 'city' ? (
-              <>
-                <label><input type="checkbox" checked={layers.districts} onChange={() => toggle('districts')} /> District territory</label>
-                <label><input type="checkbox" checked={layers.roads} onChange={() => toggle('roads')} /> Road network</label>
-                <label><input type="checkbox" checked={layers.buildings} onChange={() => toggle('buildings')} /> Buildings</label>
-                <label><input type="checkbox" checked={layers.pois} onChange={() => toggle('pois')} /> Points of interest</label>
-                <label><input type="checkbox" checked={layers.made} onChange={() => toggle('made')} /> 🃏 Made Deck (54)</label>
-                <label><input type="checkbox" checked={layers.sick} onChange={() => toggle('sick')} /> 💀 Sick 52 cells</label>
-              </>
-            ) : (
-              <>
-                <label><input type="checkbox" checked={layers.roads} onChange={() => toggle('roads')} /> Motorways & sea routes</label>
-                <label><input type="checkbox" checked={layers.rivers} onChange={() => toggle('rivers')} /> Rivers & lakes</label>
-              </>
-            )}
+            <label><input type="checkbox" checked={layers.roads} onChange={() => toggle('roads')} /> Roads & sea routes</label>
+            <label><input type="checkbox" checked={layers.rivers} onChange={() => toggle('rivers')} /> Rivers & lakes</label>
+            <label><input type="checkbox" checked={layers.districts} onChange={() => toggle('districts')} /> Quarter territory</label>
+            <label><input type="checkbox" checked={layers.buildings} onChange={() => toggle('buildings')} /> Buildings</label>
+            <label><input type="checkbox" checked={layers.pois} onChange={() => toggle('pois')} /> Places</label>
+            <label><input type="checkbox" checked={layers.made} onChange={() => toggle('made')} /> 🃏 Made Deck (54)</label>
+            <label><input type="checkbox" checked={layers.sick} onChange={() => toggle('sick')} /> 💀 Sick 52 cells</label>
             <label><input type="checkbox" checked={layers.labels} onChange={() => toggle('labels')} /> Labels</label>
             <label><input type="checkbox" checked={layers.grid} onChange={() => toggle('grid')} /> Coordinate grid</label>
           </div>
@@ -592,42 +696,23 @@ export default function MapPage() {
             ))}
           </ul>
 
-          {mode === 'city' ? (
-            <>
-              <h3>Map key</h3>
-              <ul className="map-key">
-                {Object.entries(POI_TYPES).map(([k, t]) => (
-                  <li key={k}><span className="map-ring" style={{ borderColor: t.color }} /> {t.label}</li>
-                ))}
-                <li><span className="map-dot" style={{ background: '#D4AF37' }} /> Made Deck member (card shown)</li>
-                <li><span className="map-dot" style={{ background: '#DC2626' }} /> Sick 52 cell</li>
-                <li><span className="map-line" style={{ background: '#facc15' }} /> Ring motorway</li>
-                <li><span className="map-line" style={{ background: '#e2e8f0' }} /> Arterial / street</li>
-              </ul>
+          <h3>Places</h3>
+          <ul className="map-key">
+            {Object.entries(POI_TYPES).map(([k, t]) => (
+              <li key={k}><span className="map-ring" style={{ borderColor: t.color }} /> {t.label}</li>
+            ))}
+            <li><span className="map-dot" style={{ background: '#D4AF37' }} /> Made Deck member (card shown)</li>
+            <li><span className="map-dot" style={{ background: '#DC2626' }} /> Sick 52 cell</li>
+          </ul>
 
-              <h3>Districts</h3>
-              <ul className="map-key">
-                {DISTRICTS.map((d) => (
-                  <li key={d.key}><span className="map-dot" style={{ background: d.color }} /> {d.name}</li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <>
-              <h3>Terrain</h3>
-              <ul className="map-key map-key-biomes">
-                {BIOME_LEGEND.map((b) => (
-                  <li key={b.key}>
-                    <span className="map-dot" style={{ background: biomeSwatch(style, b.key) }} /> {b.label}
-                  </li>
-                ))}
-              </ul>
-              <p className="map-legend-note">
-                Click a city marker, then <strong>Open district map</strong> to generate its
-                districts, roads, landmarks and faction territory.
-              </p>
-            </>
-          )}
+          <h3>Terrain</h3>
+          <ul className="map-key map-key-biomes">
+            {BIOME_LEGEND.map((b) => (
+              <li key={b.key}>
+                <span className="map-dot" style={{ background: biomeSwatch(style, b.key) }} /> {b.label}
+              </li>
+            ))}
+          </ul>
 
           <h3>Seed</h3>
           <p className="map-legend-note">
@@ -641,36 +726,38 @@ export default function MapPage() {
         <h2 className="section-title">How this fits the production plan</h2>
         <div className="map-explainer-grid">
           <div>
-            <h4>Procedural = ordinary, hand-crafted = important</h4>
+            <h4>One perceived world, many streamed chunks</h4>
             <p>
-              The generator lays down terrain, districts, road hierarchy and block massing — the
-              parts nobody remembers. Landmarks like Trolley Fortress, NexaGen Tower and Vantaggio's
-              are placed deliberately, because those are the ones audiences actually recall.
+              There is no second map. Settlements are geometry on the planet, and their streets,
+              blocks and buildings are built on demand when the camera gets close enough, then
+              dropped again when it leaves. That is exactly the load-and-unload contract a Unity
+              streaming setup runs, rehearsed in the browser first.
             </p>
           </div>
           <div>
             <h4>Roads, then blocks, then lots, then buildings</h4>
             <p>
-              Buildings aren't scattered. Each district picks a street orientation and block size,
-              the grid carves blocks, and blocks subdivide into lots — so footprints front onto
-              streets the way real ones do. That's the same pipeline a CityEngine or Houdini graph
-              would run.
+              Each quarter picks a street orientation and block size, the grid carves blocks, and
+              the streamed tier subdivides those same blocks into lots — so footprints front onto
+              the streets you were already looking at. That is the pipeline a CityEngine or Houdini
+              graph would run, in the same order.
             </p>
           </div>
           <div>
-            <h4>One perceived world, many streamed chunks</h4>
+            <h4>Procedural = ordinary, hand-crafted = important</h4>
             <p>
-              District boundaries double as streaming cells, and each one reports its area in km².
-              Most land between 1 and 4 km², which is the chunk size a Unity streaming setup would
-              load and unload beneath a single continuous world.
+              Every settlement generates its own restaurants, museums, stations and warehouses from
+              its quarters' character. The places audiences actually remember — NexaGen Tower,
+              Vantaggio's, Trolley Fortress — are written by hand and placed into the generated
+              fabric.
             </p>
           </div>
           <div>
             <h4>Both decks live on the map</h4>
             <p>
-              All 54 Made Deck members sit in their home districts with full stats, and Sick 52 work
-              in cells out past the district edges. The police campaign and the war campaign are
-              visible on the same board.
+              All 54 Made Deck members sit in their home quarters of Ongaku Prime with full stats,
+              and the Sick 52 work in cells out past the built-up edge. Fly down far enough and the
+              police campaign and the war campaign are on the same board.
             </p>
           </div>
         </div>
@@ -680,16 +767,6 @@ export default function MapPage() {
 }
 
 /* -------------------------------------------------------------- utils */
-
-// Cities keep a stable climate across regenerations of the same seed, so the
-// district map's ground cover matches what the planet view showed.
-function cityClimate(seed, name) {
-  const table = {
-    'Cloud City': 'cold', 'Northreach': 'cold', 'Ashfall': 'arid',
-    'Port Sonora': 'tropical', 'Rose City': 'temperate', 'Rock City': 'arid',
-  };
-  return table[name] || 'temperate';
-}
 
 function biomeSwatch(style, key) {
   const P = palette(style);
