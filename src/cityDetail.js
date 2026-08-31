@@ -234,6 +234,9 @@ export function buildCityDetail(planet, city) {
   /* ---- blocks -> parks, lots, buildings ---- */
   const buildings = [];
   const tall = [];
+  // Roof tone per footprint. Real blocks are never one flat colour, and three
+  // buckets is enough to stop a district reading as a single painted shape.
+  const tone = [];
   const parks = [];
   const openBlocks = [];
 
@@ -284,6 +287,7 @@ export function buildCityDetail(planet, city) {
         const v1 = (j + 1) / n - g / 2;
         lotCorners(q, o, u0, v0, u1, v1, buildings);
         tall.push(isTall && rng() < 0.6 ? 1 : 0);
+        tone.push((rng() * 3) | 0);
       }
     }
   }
@@ -349,6 +353,7 @@ export function buildCityDetail(planet, city) {
     pois,
     buildings: Float32Array.from(buildings),
     tall: Uint8Array.from(tall),
+    tone: Uint8Array.from(tone),
     stats: { blocks, buildings: tall.length, parks: parks.length, places: pois.length },
   };
 }
@@ -484,10 +489,29 @@ export function placeCrew(planet, madeList, sickList) {
 // Building colours per basemap style. Deliberately low contrast: at this zoom
 // the roads and the labels are the content, and a city of high-contrast boxes
 // reads as noise.
+// Three roof tones per style rather than one flat fill, plus a shadow colour.
+// Aerial imagery is never uniform: concrete, tile and metal roofs sit side by
+// side, and it is that variation — not outlines — that makes a block read as
+// buildings rather than as a texture.
 const BUILD = {
-  satellite: { fill: 'rgba(196,189,175,.88)', tall: 'rgba(238,233,222,.92)', edge: 'rgba(24,20,14,.35)', park: 'rgba(84,126,70,.72)', tint: 0.085 },
-  map: { fill: '#d7d1c5', tall: '#c6bdad', edge: 'rgba(132,124,110,.55)', park: '#cfe3bd', tint: 0.14 },
-  terrain: { fill: 'rgba(206,196,177,.95)', tall: 'rgba(188,176,153,.97)', edge: 'rgba(132,122,104,.5)', park: '#c4daae', tint: 0.12 },
+  satellite: {
+    tones: ['rgba(188,180,166,.92)', 'rgba(206,198,183,.92)', 'rgba(168,158,143,.92)'],
+    tall: 'rgba(238,233,222,.94)',
+    edge: 'rgba(24,20,14,.35)', shadow: 'rgba(10,14,22,.38)',
+    park: 'rgba(84,126,70,.72)', tint: 0.085,
+  },
+  map: {
+    tones: ['#d9d3c7', '#e0dad0', '#cfc8ba'],
+    tall: '#c6bdad',
+    edge: 'rgba(132,124,110,.55)', shadow: 'rgba(120,112,98,.22)',
+    park: '#cfe3bd', tint: 0.14,
+  },
+  terrain: {
+    tones: ['rgba(208,198,179,.95)', 'rgba(218,209,192,.95)', 'rgba(194,182,161,.95)'],
+    tall: 'rgba(186,173,150,.97)',
+    edge: 'rgba(132,122,104,.5)', shadow: 'rgba(90,80,64,.28)',
+    park: '#c4daae', tint: 0.12,
+  },
 };
 
 const tracePoly = (ctx, poly) => {
@@ -526,24 +550,51 @@ export function drawCityDetail(ctx, city, detail, styleKey, scale, layers = {}) 
 
   const q = detail.buildings;
   const tall = detail.tall;
-  // Two passes so the whole city is two fill calls rather than thousands.
-  for (let pass = 0; pass < 2; pass++) {
+  const tone = detail.tone;
+
+  // One path per tone, so the whole city is four fills rather than thousands.
+  const path = (test) => {
     ctx.beginPath();
     for (let i = 0, b = 0; i < q.length; i += 8, b++) {
-      if ((tall[b] === 1) !== (pass === 1)) continue;
+      if (!test(b)) continue;
       ctx.moveTo(q[i], q[i + 1]);
       ctx.lineTo(q[i + 2], q[i + 3]);
       ctx.lineTo(q[i + 4], q[i + 5]);
       ctx.lineTo(q[i + 6], q[i + 7]);
       ctx.closePath();
     }
-    ctx.fillStyle = pass === 1 ? B.tall : B.fill;
+  };
+
+  // Towers throw a shadow to the south-east, matching the hillshading's
+  // north-west light. It is the cheapest way to make height read on a flat
+  // map, and it is what tells you where the downtown is at a glance.
+  const drop = city.radius * 0.010;
+  if (city.radius * scale > 260) {
+    ctx.save();
+    ctx.translate(drop, drop);
+    path((b) => tall[b] === 1);
+    ctx.fillStyle = B.shadow;
     ctx.fill();
-    // Outlines only once a footprint is big enough for one to mean anything.
+    ctx.restore();
+  }
+
+  for (let t = 0; t < 3; t++) {
+    path((b) => tall[b] !== 1 && (tone ? tone[b] : 0) === t);
+    ctx.fillStyle = B.tones[t];
+    ctx.fill();
     if (city.radius * scale > 900) {
       ctx.strokeStyle = B.edge;
       ctx.lineWidth = lw(0.5);
       ctx.stroke();
     }
+  }
+
+  path((b) => tall[b] === 1);
+  ctx.fillStyle = B.tall;
+  ctx.fill();
+  if (city.radius * scale > 900) {
+    ctx.strokeStyle = B.edge;
+    ctx.lineWidth = lw(0.5);
+    ctx.stroke();
   }
 }

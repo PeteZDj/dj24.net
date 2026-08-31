@@ -141,9 +141,9 @@ const PALETTES = {
     shadeMin: 0.55, shadeMax: 1.35, water: '#0d3459', deepWater: '#06142a',
     river: '#2a7fb8', road: 'rgba(255,231,175,.85)', roadCase: 'rgba(20,14,4,.55)',
     label: '#ffffff', labelGeo: '#e6eefa', labelWater: 'rgba(179,214,255,.92)', labelHalo: 'rgba(4,10,20,.92)', ui: '#f8fafc',
-    urban: 'rgba(150,146,140,.62)', urbanCore: 'rgba(196,192,184,.5)',
-    urbanCoreFade: 'rgba(196,192,184,0)',
-    urbanEdge: 'rgba(70,66,60,.5)', block: 'rgba(214,210,201,.5)', quay: '#8d8579',
+    urban: 'rgba(158,150,138,.74)', urbanCore: 'rgba(216,207,191,.62)',
+    urbanCoreFade: 'rgba(216,207,191,0)',
+    urbanEdge: 'rgba(64,58,48,.55)', block: 'rgba(208,200,186,.66)', quay: '#8d8579',
   },
   // Deliberately flat: land is one cream, vegetation one green, water one
   // blue. Biome nuance is the Terrain style's job — this is the layer you
@@ -1314,8 +1314,14 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
       ctx.moveTo(c.poly[0].x, c.poly[0].y);
       for (let i = 1; i < c.poly.length; i++) ctx.lineTo(c.poly[i].x, c.poly[i].y);
       ctx.closePath();
+      // Once buildings have streamed in they are the built-up area. Keeping the
+      // flat sprawl fill at full strength leaves bald grey patches wherever the
+      // density falls off, and a hard city limit where the map should fray.
+      const built = opts.detailed && opts.detailed.has(c.name);
+      ctx.globalAlpha = built ? 0.45 : 1;
       ctx.fillStyle = P.urban;
       ctx.fill();
+      ctx.globalAlpha = 1;
       // The silhouette carries the city when it is small; once blocks are
       // visible they define the edge and an outline just looks drawn on.
       if (c.radius * scale < 200) {
@@ -1328,13 +1334,17 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
       const g = ctx.createRadialGradient(c.x, c.y, c.radius * 0.08, c.x, c.y, c.radius * 0.72);
       g.addColorStop(0, P.urbanCore);
       g.addColorStop(1, P.urbanCoreFade);
+      ctx.globalAlpha = built ? 0.4 : 1;
       ctx.fillStyle = g;
       ctx.fill();
+      ctx.globalAlpha = 1;
 
       // Block texture only once a block would be more than a pixel across —
       // and only until the streamed detail tier takes over, which draws the
       // same blocks subdivided into individual buildings.
-      if (c.quads && c.radius * scale > 130 && !(opts.detailed && opts.detailed.has(c.name))) {
+      // Block texture as soon as a block is about a pixel across. This is the
+      // tier that stops a city being a smudge long before its buildings load.
+      if (c.quads && c.radius * scale > 55 && !(opts.detailed && opts.detailed.has(c.name))) {
         ctx.fillStyle = P.block;
         ctx.beginPath();
         for (let i = 0; i < c.quads.length; i += 8) {

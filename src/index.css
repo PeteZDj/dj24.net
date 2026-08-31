@@ -3772,7 +3772,7 @@ a.mission-nav-btn:hover { border-color: var(--act-color); }
   background: var(--bg-alt);
   box-shadow: var(--card-shadow);
 }
-.map-canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.map-canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; overscroll-behavior: contain; }
 .map-canvas:active { cursor: grabbing; }
 
 .map-busy,

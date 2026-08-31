@@ -409,22 +409,32 @@ export default function MapPage() {
     }
     setSelected(best);
   };
-  const onWheel = (e) => {
-    e.preventDefault();
-    const rect = e.currentTarget.getBoundingClientRect();
-    zoomAt(e.clientX - rect.left, e.clientY - rect.top, e.deltaY < 0 ? 1.16 : 1 / 1.16);
-  };
-  const onDoubleClick = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    zoomAt(e.clientX - rect.left, e.clientY - rect.top, 1.9);
-  };
-
-  const zoomAt = (mx, my, f) => {
+  const zoomAt = useCallback((mx, my, f) => {
     setCam((c) => {
       const nz = Math.max(0.1, Math.min(60, c.z * f));
       const k = nz / c.z;
       return { z: nz, x: mx - (mx - c.x) * k, y: my - (my - c.y) * k };
     });
+  }, []);
+
+  // React attaches wheel handlers passively, so preventDefault inside an
+  // onWheel prop is ignored and the page scrolls away under the map. Zooming a
+  // map has to own the wheel, which means a native non-passive listener.
+  useEffect(() => {
+    const cv = canvasRef.current;
+    if (!cv) return undefined;
+    const handler = (e) => {
+      e.preventDefault();
+      const rect = cv.getBoundingClientRect();
+      zoomAt(e.clientX - rect.left, e.clientY - rect.top, e.deltaY < 0 ? 1.16 : 1 / 1.16);
+    };
+    cv.addEventListener('wheel', handler, { passive: false });
+    return () => cv.removeEventListener('wheel', handler);
+  }, [zoomAt]);
+
+  const onDoubleClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    zoomAt(e.clientX - rect.left, e.clientY - rect.top, 1.9);
   };
   const zoomBy = (f) => {
     const wrap = wrapRef.current;
@@ -555,7 +565,6 @@ export default function MapPage() {
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
-            onWheel={onWheel}
             onDoubleClick={onDoubleClick}
           />
 
