@@ -146,6 +146,7 @@ const PALETTES = {
     urbanEdge: 'rgba(64,58,48,.55)', block: 'rgba(208,200,186,.66)', quay: '#8d8579',
     apron: 'rgba(120,118,112,.55)', runway: '#4a4844', runwayMark: 'rgba(255,255,255,.7)',
     track: '#3f3d3a', infield: 'rgba(96,116,74,.5)',
+    wall: 'rgba(112,104,92,.95)', wallEvil: 'rgba(24,10,14,.95)',
   },
   // Deliberately flat: land is one cream, vegetation one green, water one
   // blue. Biome nuance is the Terrain style's job — this is the layer you
@@ -165,6 +166,7 @@ const PALETTES = {
     urbanEdge: 'rgba(203,197,188,.9)', block: 'rgba(214,208,199,.85)', quay: '#cfc8bd',
     apron: '#e3e0d8', runway: '#b9b4a9', runwayMark: 'rgba(255,255,255,.85)',
     track: '#9c968b', infield: '#dce7cd',
+    wall: '#9a9188', wallEvil: '#3b1f26',
   },
   terrain: {
     abyss: [120, 168, 200], ocean: [141, 186, 214], shelf: [163, 202, 226], surf: [182, 216, 236],
@@ -181,6 +183,7 @@ const PALETTES = {
     urbanEdge: 'rgba(156,146,130,.8)', block: 'rgba(188,179,165,.75)', quay: '#b3a894',
     apron: 'rgba(190,182,166,.7)', runway: '#8c857a', runwayMark: 'rgba(255,255,255,.75)',
     track: '#7b736a', infield: 'rgba(150,175,120,.55)',
+    wall: 'rgba(126,116,102,.95)', wallEvil: 'rgba(48,22,28,.95)',
   },
 };
 
@@ -247,6 +250,12 @@ export const BIOME_LEGEND = [
 
 const FIELD_GW = 1536;
 const FIELD_GH = 960;
+
+// A named sub-stream of the world seed. Phases that use one are insulated
+// from every other phase's draw count.
+function stream(seedStr, name) {
+  return mulberry32(seedFromString(`${seedStr}::${name}`));
+}
 
 export function generatePlanet(seedStr) {
   const seed = seedFromString(seedStr);
@@ -425,10 +434,13 @@ export function generatePlanet(seedStr) {
   // The canon settlements are the ones stories happen in. Between them the
   // planet needs somewhere for everyone else to live, or the countryside reads
   // as empty scenery with motorways drawn across it.
+  const rngMinor = stream(seedStr, 'minor');
+  const planet0 = { GW, GH, hf, cities };
+  const usedPlaceNames = new Set(cities.map((c) => c.name));
   const minorAt = (kind, minGap, tries, test) => {
     for (let t = 0; t < tries; t++) {
-      const gx = 6 + Math.floor(rng() * (GW - 12));
-      const gy = 6 + Math.floor(rng() * (GH - 12));
+      const gx = 6 + Math.floor(rngMinor() * (GW - 12));
+      const gy = 6 + Math.floor(rngMinor() * (GH - 12));
       if (!isLandG(gx, gy)) continue;
       const h = hAt(gx, gy);
       if (test && !test(gx, gy, h)) continue;
@@ -438,9 +450,18 @@ export function generatePlanet(seedStr) {
       const lat = Math.abs(gy / (GH - 1) - 0.5) * 2;
       const moist = mf[gy * GW + gx];
       const coastal = isCoastG(gx, gy);
-      const purpose = pickPurpose(rng, kind, h, moist, coastal);
+      const purpose = pickPurpose(rngMinor, kind, h, moist, coastal);
+      // Two villages with the same name is the sort of thing that reads as a bug
+      // even on a planet with ninety settlements, so re-roll until it is unique.
+      let name = '';
+      for (let n = 0; n < 24; n++) {
+        name = `${makeName(rngMinor)} ${purpose.suffix[(rngMinor() * purpose.suffix.length) | 0]}`;
+        if (!usedPlaceNames.has(name)) break;
+      }
+      if (usedPlaceNames.has(name)) continue;
+      usedPlaceNames.add(name);
       return {
-        name: `${makeName(rng)} ${purpose.suffix[(rng() * purpose.suffix.length) | 0]}`,
+        name,
         kind,
         faction: 'neutral',
         purpose,
@@ -448,7 +469,7 @@ export function generatePlanet(seedStr) {
         x: px, y: py,
         elev: Math.round(h * 4200),
         climate: climateOf(lat, moist, h),
-        pop: Math.round((kind === 'village' ? 2600 : 140) * (0.4 + rng() * 1.5)),
+        pop: Math.round((kind === 'village' ? 2600 : 140) * (0.4 + rngMinor() * 1.5)),
       };
     }
     return null;
@@ -461,9 +482,23 @@ export function generatePlanet(seedStr) {
     const v = minorAt('village', 68, 500, (gx, gy, h) => h < 0.36 && (!wantCoast || isCoastG(gx, gy)));
     if (v) cities.push(v);
   }
-  for (let i = 0; i < 22; i++) {
-    // Outposts go where nobody would put a village: high ground and deserts.
-    const o = minorAt('outpost', 62, 400, (gx, gy, h) => h > 0.34 || mf[gy * GW + gx] < 0.26);
+  for (const k of buildCastles(planet0, stream(seedStr, 'castles'), hAt, (gx, gy) => mf[gy * GW + gx])) {
+    if (usedPlaceNames.has(k.name)) continue;
+    usedPlaceNames.add(k.name);
+    cities.push(k);
+  }
+
+  for (let i = 0; i < 26; i++) {
+    // Outposts go where nobody would put a village and no road already goes:
+    // high ground, deserts, and a long way inland. That is what makes them
+    // outposts rather than suburbs.
+    const o = minorAt('outpost', 50, 700, (gx, gy, h) => {
+      if (!(h > 0.34 || mf[gy * GW + gx] < 0.26)) return false;
+      for (let d = 3; d <= 9; d += 3) {
+        if (!isLandG(gx + d, gy) || !isLandG(gx - d, gy) || !isLandG(gx, gy + d) || !isLandG(gx, gy - d)) return false;
+      }
+      return true;
+    });
     if (o) cities.push(o);
   }
 
@@ -478,9 +513,10 @@ export function generatePlanet(seedStr) {
   // street network instead of stopping at a marker.
   const net = generateRoadNetwork(planet);
   planet.routes = net.routes;
-  buildFootprints(planet, rng, nW, net.bearings);
-  planet.circuits = buildCircuits(planet, rng, nW);
-  planet.regions = detectRegions(planet, rng);
+  buildFootprints(planet, seedStr, nW, net.bearings);
+  planet.circuits = buildCircuits(planet, stream(seedStr, 'circuits'), nW);
+  planet.regions = detectRegions(planet, seedStr);
+  planet.corpSites = buildCorpSites(planet, stream(seedStr, 'corps'));
 
   return planet;
 }
@@ -492,11 +528,11 @@ export function generatePlanet(seedStr) {
 // `needs` gates placement against the terrain: a fishing village on a desert
 // plateau is the kind of detail that makes a generated world feel fake.
 const SETTLEMENT_PURPOSE = [
-  { key: 'mine', tier: 'outpost', w: 1, label: 'Mine', site: 'Mine', operator: 'Korrat Steel', icon: '⛏️',
+  { key: 'mine', tier: 'outpost', w: 3.2, label: 'Mine', site: 'Mine', operator: 'The Tower Group', icon: '⛏️',
     suffix: ['Shaft', 'Seam', 'Workings', 'Cut', 'Lode'],
     blurb: 'A working mine. The shaft came first, the huts came after, and nobody pretends otherwise.',
     needs: (h) => h > 0.34 },
-  { key: 'quarry', tier: 'outpost', w: 1, label: 'Quarry', site: 'Quarry', operator: 'Bastion Grade', icon: '🪨',
+  { key: 'quarry', tier: 'outpost', w: 2, label: 'Quarry', site: 'Quarry', operator: 'The Tower Group', icon: '🪨',
     suffix: ['Quarry', 'Pit', 'Face', 'Scar'],
     blurb: 'A stone quarry. Half the motorways on this continent came out of this hole.',
     needs: (h) => h > 0.3 },
@@ -504,15 +540,15 @@ const SETTLEMENT_PURPOSE = [
     suffix: ['Vent', 'Station', 'Wells', 'Field'],
     blurb: 'A geothermal tap feeding the grid. Three engineers, one road, and a fence nobody argues with.',
     needs: (h) => h > 0.36 },
-  { key: 'relay', tier: 'outpost', w: 0.7, label: 'Relay mast', site: 'Relay', operator: 'Onoska Energy', icon: '📶',
+  { key: 'relay', tier: 'outpost', w: 0.7, label: 'Relay mast', site: 'Relay', operator: 'The Tower Group', icon: '📶',
     suffix: ['Relay', 'Signal', 'Mast', 'Repeater'],
     blurb: 'A Frequency Grid relay. On a clear night you can hear it in your fillings.',
     needs: (h) => h > 0.33 },
-  { key: 'salt', tier: 'outpost', w: 1, label: 'Salt works', site: 'Salt Works', operator: null, icon: '🧂',
+  { key: 'salt', tier: 'outpost', w: 1.4, label: 'Salt works', site: 'Salt Works', operator: 'The Tower Group', icon: '🧂',
     suffix: ['Flats', 'Pans', 'Works'],
     blurb: 'Salt pans. Nothing grows, nothing rots, and everything tastes of it.',
     needs: (h, moist) => moist < 0.24 },
-  { key: 'refuel', tier: 'outpost', w: 0.6, label: 'Fuel stop', site: 'Fuel Stop', operator: 'Halcyon Motors', icon: '⛽',
+  { key: 'refuel', tier: 'outpost', w: 0.6, label: 'Fuel stop', site: 'Fuel Stop', operator: 'SkyOngaku', icon: '⛽',
     suffix: ['Halt', 'Stop', 'Waypoint', 'Crossing'],
     blurb: 'Fuel, a canteen and somewhere to sleep. It exists because the next one is four hours away.',
     needs: () => true },
@@ -520,7 +556,7 @@ const SETTLEMENT_PURPOSE = [
     suffix: ['Watch', 'Post', 'Lookout', 'Gate'],
     blurb: 'A border post. Officially a customs point, and everybody knows what that means.',
     needs: (h) => h > 0.3 },
-  { key: 'research', tier: 'outpost', w: 0.5, label: 'Research station', site: 'Field Station', operator: 'NexaGen Harmonics', icon: '🔬',
+  { key: 'research', tier: 'outpost', w: 0.6, label: 'Research station', site: 'Field Station', operator: 'NexaGen Harmonics', icon: '🔬',
     suffix: ['Station', 'Field Post', 'Observatory'],
     blurb: 'A NexaGen field station. The published work is about acoustics. So is the unpublished work.',
     needs: () => true },
@@ -568,6 +604,10 @@ function pickPurpose(rng, tier, h, moist, coastal) {
 }
 
 /* ------------------------------------------------- NAMED GEOGRAPHY */
+
+// The landmasses have names in the world bible, so they are not left to the
+// name generator. Largest first.
+export const CANON_CONTINENTS = ['Yunkai', 'Belkai', 'Ongara', 'Vantessa', 'Karuun'];
 
 const NAME_PARTS = {
   a: ['Ka', 'Ono', 'Sel', 'Var', 'Mor', 'Tan', 'Ish', 'Bel', 'Dro', 'Yun', 'Ashe', 'Kor', 'Vel', 'Ryo', 'Ambe', 'Sura'],
@@ -621,7 +661,7 @@ function interiorPoint(cells, test, CW, CH) {
 
 // Flood fill over a coarse grid to find the map's real features, so the atlas
 // can name what it actually generated rather than sprinkling labels at random.
-function detectRegions(planet, rng) {
+function detectRegions(planet, seedStr) {
   const { GW, GH, hf, mf } = planet;
   const CW = 256;
   const CH = 160;
@@ -700,16 +740,32 @@ function detectRegions(planet, rng) {
     return hf[i] > 0.002 && hf[i] < 0.42 && mf[i] > 0.62;
   };
 
+  // Names are seeded from where the feature is, not from a shared sequence, so
+  // a range in the same place keeps its name however much else about the world
+  // changes around it.
+  const taken = new Set();
+  const nameAt = (r, suffix) => {
+    for (let salt = 0; salt < 40; salt++) {
+      const g = mulberry32(seedFromString(`${seedStr}::geo::${Math.round(r.x)}:${Math.round(r.y)}:${salt}`));
+      const n = suffix ? `${makeName(g)} ${suffix}` : makeName(g);
+      if (!taken.has(n)) { taken.add(n); return n; }
+    }
+    return suffix ? `${makeName(mulberry32(r.x | 0))} ${suffix}` : makeName(mulberry32(r.x | 0));
+  };
+
+  // Continents are canon, not generated. The main landmass of Planet Ongaku
+  // is Yunkai in every world; the smaller ones take the rest of the list in
+  // size order and fall back to generated names beyond it.
   const continents = components(isLand, 900).slice(0, 5)
-    .map((r) => ({ ...r, name: `${makeName(rng)}`, kind: 'continent' }));
+    .map((r, i) => ({ ...r, name: CANON_CONTINENTS[i] || nameAt(r), kind: 'continent' }));
   const oceans = components(isWater, 2600).slice(0, 4)
-    .map((r, i) => ({ ...r, name: i === 0 ? `The ${makeName(rng)} Ocean` : `${makeName(rng)} Sea`, kind: 'ocean' }));
+    .map((r, i) => ({ ...r, name: i === 0 ? `The ${nameAt(r)} Ocean` : `${nameAt(r)} Sea`, kind: 'ocean' }));
   const ranges = components(isHigh, 90).slice(0, 6)
-    .map((r) => ({ ...r, name: `${makeName(rng)} Range`, kind: 'range' }));
+    .map((r) => ({ ...r, name: nameAt(r, 'Range'), kind: 'range' }));
   const deserts = components(isDry, 150).slice(0, 4)
-    .map((r) => ({ ...r, name: `${makeName(rng)} Desert`, kind: 'desert' }));
+    .map((r) => ({ ...r, name: nameAt(r, 'Desert'), kind: 'desert' }));
   const forests = components(isWood, 220).slice(0, 4)
-    .map((r) => ({ ...r, name: `${makeName(rng)} Forest`, kind: 'forest' }));
+    .map((r) => ({ ...r, name: nameAt(r, 'Forest'), kind: 'forest' }));
 
   return [...oceans, ...continents, ...ranges, ...deserts, ...forests];
 }
@@ -915,7 +971,7 @@ function generateRoadNetwork(planet) {
       .map((o, j) => ({ j, d: Math.hypot(o.x - c.x, o.y - c.y) }))
       .filter((e) => e.j !== i)
       .sort((a, b) => a.d - b.d)
-      .slice(0, rank(c) > 1 ? 2 : 1);
+      .slice(0, rank(c) === 3 ? 4 : rank(c) === 2 ? 3 : 2);
     for (const e of near) pairs.add(i < e.j ? `${i},${e.j}` : `${e.j},${i}`);
   });
 
@@ -943,6 +999,11 @@ function generateRoadNetwork(planet) {
     if (!ferry) for (const p of path) used[p] = 1;
 
     const world = path.map(toWorld);
+    // Snap to the real endpoints. The routing grid is coarse — a node can sit
+    // 13 world units from the place it stands for, which is a village-sized
+    // gap between the road and the thing it was drawn to reach.
+    world[0] = { x: majors[i].x, y: majors[i].y };
+    world[world.length - 1] = { x: majors[j].x, y: majors[j].y };
     const combined = rank(majors[i]) + rank(majors[j]);
     routes.push({
       a: majors[i], b: majors[j],
@@ -995,12 +1056,84 @@ function generateRoadNetwork(planet) {
     if (water > 6) continue;
     for (const p of path) used[p] = 1;
     const world = path.map(toWorld);
+    // Same snap, and it matters far more here: this is why lanes were ending
+    // in open country a few hundred metres short of the road they join.
+    world[0] = { x: c.x, y: c.y };
+    world[world.length - 1] = { x: target.x, y: target.y };
     routes.push({ a: c, b: target, pts: smoothPath(world), ferry: false, cls: 'lane' });
     const k = Math.min(world.length - 1, 5);
     bearingOf(c).push(Math.atan2(world[k].y - world[0].y, world[k].x - world[0].x));
   }
 
   return { routes, bearings };
+}
+
+/* ------------------------------------------------------------ CASTLES */
+
+// Castles are older than everything else on the map and were built where they
+// could be defended, which is why they are on high ground and nowhere near the
+// motorways. One of them is not a ruin.
+const CASTLE_SUFFIX = ['Keep', 'Castle', 'Hold', 'Bastion', 'Citadel'];
+
+function buildCastles(planet, rng, hAt, mfAt) {
+  const { GW, GH, hf } = planet;
+  const out = [];
+  const isLandG = (gx, gy) => hf[Math.max(0, Math.min(GH - 1, gy)) * GW + Math.max(0, Math.min(GW - 1, gx))] > SEA + 0.004;
+
+  // The Sick 52 stronghold goes in the middle of the driest, emptiest ground
+  // the planet has. That is the whole point of it.
+  let worst = null;
+  for (let t = 0; t < 4000; t++) {
+    const gx = 10 + Math.floor(rng() * (GW - 20));
+    const gy = 10 + Math.floor(rng() * (GH - 20));
+    if (!isLandG(gx, gy)) continue;
+    const h = hAt(gx, gy);
+    const moist = mfAt(gx, gy);
+    if (h > 0.34 || moist > 0.2) continue;
+    const px = (gx / (GW - 1)) * WORLD_W;
+    const py = (gy / (GH - 1)) * WORLD_H;
+    // Score on how far it is from anyone at all.
+    let lonely = Infinity;
+    for (const c of planet.cities) lonely = Math.min(lonely, Math.hypot(c.x - px, c.y - py));
+    if (!worst || lonely > worst.lonely) worst = { px, py, gx, gy, h, moist, lonely };
+    if (lonely > 420) break;
+  }
+  if (worst) {
+    out.push({
+      name: 'The Last Chord', kind: 'castle', faction: 'sick52', evilHold: true,
+      desc: 'The Sick 52 stronghold. Black walls in open desert, a hundred kilometres from anyone who could hear it. Final Drop holds court here and the Founding Dissonants keep the gates.',
+      x: worst.px, y: worst.py,
+      elev: Math.round(worst.h * 4200),
+      climate: 'arid',
+      pop: 400,
+    });
+  }
+
+  // A handful of ordinary castles, well apart and up in the hills.
+  for (let i = 0; i < 5; i++) {
+    for (let t = 0; t < 600; t++) {
+      const gx = 8 + Math.floor(rng() * (GW - 16));
+      const gy = 8 + Math.floor(rng() * (GH - 16));
+      if (!isLandG(gx, gy)) continue;
+      const h = hAt(gx, gy);
+      if (h < 0.26) continue;
+      const px = (gx / (GW - 1)) * WORLD_W;
+      const py = (gy / (GH - 1)) * WORLD_H;
+      if (planet.cities.some((c) => Math.hypot(c.x - px, c.y - py) < 120)) continue;
+      if (out.some((c) => Math.hypot(c.x - px, c.y - py) < 600)) continue;
+      out.push({
+        name: `${makeName(rng)} ${CASTLE_SUFFIX[(rng() * CASTLE_SUFFIX.length) | 0]}`,
+        kind: 'castle', faction: 'neutral',
+        desc: 'A castle on the high ground, built when the high ground was the argument. A garrison, a chapel, and a village that grew up against the walls.',
+        x: px, y: py,
+        elev: Math.round(h * 4200),
+        climate: climateOf(Math.abs(gy / (GH - 1) - 0.5) * 2, mfAt(gx, gy), h),
+        pop: 900 + Math.round(rng() * 2600),
+      });
+      break;
+    }
+  }
+  return out;
 }
 
 /* ------------------------------------------------------ RACE CIRCUITS */
@@ -1066,7 +1199,7 @@ function buildCircuits(planet, rng, nC) {
 
 /* ------------------------------------------------- CITY FOOTPRINTS */
 
-const CITY_RADIUS = { capital: 64, mega: 48, hostile: 32, port: 27, military: 21, fortress: 16, town: 15, village: 4.6, outpost: 1.9 };
+const CITY_RADIUS = { capital: 64, mega: 48, hostile: 32, port: 27, military: 21, fortress: 16, town: 15, village: 4.6, outpost: 1.05, castle: 3.2 };
 
 // Every city on the planet gets a real urban area: sprawl clipped to the
 // coastline, a ring road, radial roads aligned to the highways arriving from
@@ -1087,7 +1220,7 @@ function nameQuarters(c, rng) {
   } else {
     secs.forEach((s, i) => {
       s.name = i === 0
-        ? (c.kind === 'town' || c.kind === 'village' || c.kind === 'outpost' ? c.name : 'Downtown')
+        ? (c.kind === 'town' || c.kind === 'village' || c.kind === 'outpost' || c.kind === 'castle' ? c.name : 'Downtown')
         : `${makeName(rng)} ${QUARTER_SUFFIX[(rng() * QUARTER_SUFFIX.length) | 0]}`;
     });
   }
@@ -1109,7 +1242,7 @@ function nameQuarters(c, rng) {
   }
 }
 
-function buildFootprints(planet, rng, nC, bearings) {
+function buildFootprints(planet, seedStr, nC, bearings) {
   const { GW, GH, hf } = planet;
   const landAt = (x, y) => {
     const gx = Math.max(0, Math.min(GW - 1, Math.round((x / WORLD_W) * (GW - 1))));
@@ -1118,6 +1251,7 @@ function buildFootprints(planet, rng, nC, bearings) {
   };
 
   planet.cities.forEach((c, ci) => {
+    const rng = mulberry32(seedFromString(`${seedStr}::shape::${c.name}`));
     const R = (CITY_RADIUS[c.kind] || 22) * (0.85 + rng() * 0.3);
     c.radius = R;
 
@@ -1170,7 +1304,7 @@ function buildFootprints(planet, rng, nC, bearings) {
     // Sectors: a downtown plus outlying quarters, each with its own street
     // angle and density. Without them every city renders as one uniform
     // lattice, which is what makes procedural cities look fake.
-    const nSec = c.kind === 'capital' ? 9 : c.kind === 'mega' ? 6 : c.kind === 'town' ? 2 : c.kind === 'village' || c.kind === 'outpost' ? 1 : 3;
+    const nSec = c.kind === 'capital' ? 9 : c.kind === 'mega' ? 6 : c.kind === 'town' ? 2 : c.kind === 'village' || c.kind === 'outpost' ? 1 : c.kind === 'castle' ? 1 : 3;
     const sectors = [{ x: c.x, y: c.y, w: 1.3, dens: 1, ang: rng() * Math.PI }];
     for (let s = 1; s < nSec; s++) {
       const a = (s / (nSec - 1)) * Math.PI * 2 + rng() * 0.7;
@@ -1220,7 +1354,7 @@ function buildFootprints(planet, rng, nC, bearings) {
     // Radials: one per arriving highway, topped up so the city never looks
     // lopsided, each stopping at the edge of the built-up area.
     const angs = [...(bearings.get(c) || [])];
-    const want = c.kind === 'capital' ? 8 : c.kind === 'mega' ? 6 : c.kind === 'village' ? 2 : c.kind === 'outpost' ? 1 : 4;
+    const want = c.kind === 'capital' ? 8 : c.kind === 'mega' ? 6 : c.kind === 'village' ? 2 : c.kind === 'outpost' ? 1 : c.kind === 'castle' ? 2 : 4;
     let guard = 0;
     while (angs.length < want && guard++ < 60) {
       const cand = rng() * Math.PI * 2;
@@ -1254,7 +1388,7 @@ function buildFootprints(planet, rng, nC, bearings) {
       const ux = Math.cos(sec.ang);
       const uy = Math.sin(sec.ang);
       const reach = R * (si === 0 ? 0.8 : 0.65);
-      const step = R / (c.kind === 'capital' ? 24 : c.kind === 'mega' ? 19 : c.kind === 'outpost' ? 3 : c.kind === 'village' ? 5 : 12);
+      const step = R / (c.kind === 'capital' ? 24 : c.kind === 'mega' ? 19 : c.kind === 'outpost' ? 2 : c.kind === 'village' ? 5 : c.kind === 'castle' ? 4 : 12);
       const owns = (x, y) => inCity(x, y) && sectorAt(x, y) === si;
 
       for (let dir = 0; dir < 2; dir++) {
@@ -1644,6 +1778,31 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
         ctx.fill();
       }
 
+      // Castles read as walls and towers rather than as a small town. The
+      // Sick 52 stronghold is drawn in the same shape and a different colour,
+      // because it is the same kind of thing and it is not on your side.
+      if (c.kind === 'castle' && c.radius * scale > 6) {
+        const wall = c.evilHold ? P.wallEvil : P.wall;
+        ctx.beginPath();
+        ctx.moveTo(c.poly[0].x, c.poly[0].y);
+        for (let i = 1; i < c.poly.length; i++) ctx.lineTo(c.poly[i].x, c.poly[i].y);
+        ctx.closePath();
+        ctx.strokeStyle = wall;
+        ctx.lineWidth = lw(Math.min(7, Math.max(1.6, c.radius * scale * 0.05)));
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+        if (c.radius * scale > 30) {
+          ctx.fillStyle = wall;
+          const step = Math.max(4, Math.floor(c.poly.length / 8));
+          ctx.beginPath();
+          for (let i = 0; i < c.poly.length; i += step) {
+            ctx.moveTo(c.poly[i].x, c.poly[i].y);
+            ctx.arc(c.poly[i].x, c.poly[i].y, c.radius * 0.09, 0, Math.PI * 2);
+          }
+          ctx.fill();
+        }
+      }
+
       if (c.port && c.radius * scale > 26) {
         ctx.lineCap = 'butt';
         ctx.strokeStyle = P.quay;
@@ -1897,63 +2056,84 @@ export const CANON_PLACES = [
 ];
 
 
-// The companies that physically built the planet, and the ones that keep it
-// running. Two construction firms on purpose: one that lays the ground and one
-// that puts towers on it, because they want different things from a city and
-// that disagreement is a story engine.
+// Three corporations, planet-spanning, each with buildings in most settlements
+// on the map. Three and not twelve on purpose: a corporation is only worth the
+// name if you keep running into it, and you cannot keep running into twelve.
 //
-// `hq` names the settlement the head office stands in; `role` is the quarter
-// character it wants to be in. Full write-up: docs/ONGAKU-INDUSTRY.md
+// `sites` is what each one builds and where it will build it. Head office
+// first, then the tiers it operates in. Full write-up: docs/ONGAKU-INDUSTRY.md
 export const CORPORATIONS = [
   {
-    name: 'Bastion Grade', short: 'Bastion', kind: 'construction', hq: 'Ongaku Prime', role: 'industry', icon: '🏗️',
-    blurb: 'Heavy civil engineering. Motorways, bridges, sea walls and the Trolley perimeter. Founded by Defence Force engineers who never quite stopped thinking like soldiers.',
-  },
-  {
-    name: 'Merano & Sable', short: 'Merano & Sable', kind: 'construction', hq: 'Ongaku Prime', role: 'core', icon: '🏗️',
-    blurb: 'Commercial developers. Towers, arenas and most of the Neon District skyline. Their crane livery is the most recognisable logo on the planet, and their subcontractor list is where the Hip Hop Mafia money goes in clean.',
-  },
-  {
-    name: 'NexaGen Harmonics', short: 'NexaGen', kind: 'technology', hq: 'Ongaku Prime', role: 'core', icon: '🏢',
+    name: 'NexaGen Harmonics', short: 'NexaGen', icon: '🏢', color: '#0EA5E9',
+    hq: 'Ongaku Prime', hqSite: 'NexaGen Tower',
     blurb: 'The conglomerate. AI, robotics, transport, energy, medical, defence. If it has a chip in it, NexaGen owns the patent or the factory.',
+    sites: [
+      { kind: 'mega', name: 'NexaGen Tower', role: 'core', type: 'landmark', icon: '🏢' },
+      { kind: 'town', name: 'NexaGen Works', role: 'industry', type: 'front', icon: '🏭' },
+      { kind: 'port', name: 'NexaGen Freight Terminal', role: 'harbour', type: 'front', icon: '📦' },
+      { kind: 'village', name: 'NexaGen Depot', role: 'rural', type: 'front', icon: '📦', chance: 0.25 },
+      { kind: 'outpost', name: 'NexaGen Field Station', role: 'remote', type: 'front', icon: '🔬', chance: 0.3 },
+    ],
   },
   {
-    name: 'The Tower Group', short: 'Tower Group', kind: 'media', hq: 'Pop City', role: 'core', icon: '📡',
-    blurb: '24 Radio, OBC News, Tower Sound and half the billboards on the planet. Condemns the Mafia on the news at nine and signs their artists at ten.',
+    name: 'The Tower Group', short: 'Tower Group', icon: '📡', color: '#A855F7',
+    hq: 'Pop City', hqSite: 'Tower Group HQ',
+    blurb: '24 Radio, OBC News, Tower Sound — and Tower Extraction, the mining arm nobody puts on the letterhead. A broadcaster needs rare earth for its transmitters, so it bought the mountains it comes out of.',
+    sites: [
+      { kind: 'capital', name: 'Tower Group Broadcasting House', role: 'core', type: 'landmark', icon: '📡' },
+      { kind: 'mega', name: '24 Radio Studios', role: 'nightlife', type: 'venue', icon: '📻' },
+      { kind: 'town', name: 'Tower Group Relay', role: 'core', type: 'transit', icon: '📶' },
+      { kind: 'village', name: 'Tower Group Exchange', role: 'rural', type: 'civic', icon: '📻', chance: 0.35 },
+      { kind: 'outpost', name: 'Tower Extraction', role: 'remote', type: 'front', icon: '⛏️', chance: 1 },
+    ],
   },
   {
-    name: 'Korrat Steel', short: 'Korrat', kind: 'industry', hq: 'Port Sonora', role: 'harbour', icon: '🏭',
-    blurb: 'Steel, plate and shipbuilding. Everything that floats out of the Harbour District was rolled here first.',
-  },
-  {
-    name: 'Onoska Energy', short: 'Onoska', kind: 'energy', hq: 'Electric City', role: 'industry', icon: '⚡',
-    blurb: 'Generation and grid. Runs the Frequency Grid relays under contract, which makes a power cut a national security event.',
-  },
-  {
-    name: 'Halcyon Motors', short: 'Halcyon', kind: 'industry', hq: 'Rock City', role: 'industry', icon: '🚗',
-    blurb: 'Vehicles, from delivery vans to the Kestrel Continental. Their street-racing division is officially a marketing budget.',
-  },
-  {
-    name: 'Duvall Pressing', short: 'Duvall', kind: 'industry', hq: 'Ongaku Prime', role: 'harbour', icon: '💿',
-    blurb: 'Vinyl and disc pressing since before anyone needed it explained. Runs three shifts, and only two of them are on the books.',
-  },
-  {
-    name: 'Verrado Freight', short: 'Verrado', kind: 'logistics', hq: 'Port Sonora', role: 'harbour', icon: '📦',
-    blurb: 'Containers, warehousing and customs brokerage. Moves everything, asks about very little.',
-  },
-  {
-    name: 'SkyOngaku', short: 'SkyOngaku', kind: 'aviation', hq: 'Skyport 9', role: 'industry', icon: '🛫',
-    blurb: 'The flag carrier. Passenger, cargo and the charter fleet that half the Commission travels on.',
-  },
-  {
-    name: 'Meridian Bank', short: 'Meridian', kind: 'finance', hq: 'Classic City', role: 'core', icon: '🏦',
-    blurb: 'The oldest bank on the planet. Everyone has an account, and everyone assumes theirs is the private one.',
-  },
-  {
-    name: 'Velvet Records', short: 'Velvet', kind: 'media', hq: 'Rose City', role: 'nightlife', icon: '🎼',
-    blurb: 'The prestige label. Ballads, R&B and an artist roster it protects more carefully than its accounts.',
+    name: 'SkyOngaku', short: 'SkyOngaku', icon: '🛫', color: '#F59E0B',
+    hq: 'Skyport 9', hqSite: 'SkyOngaku Operations',
+    blurb: 'The flag carrier. Passenger, cargo and the charter fleet half the Commission travels on. Every airfield on the planet is theirs or leased from them.',
+    sites: [
+      { kind: 'capital', name: 'SkyOngaku Cargo', role: 'industry', type: 'transit', icon: '📦' },
+      { kind: 'mega', name: 'SkyOngaku Terminal', role: 'industry', type: 'transit', icon: '🛫' },
+      { kind: 'port', name: 'SkyOngaku Air Freight', role: 'harbour', type: 'transit', icon: '🛫' },
+      { kind: 'town', name: 'SkyOngaku Desk', role: 'core', type: 'transit', icon: '🛫' },
+      { kind: 'outpost', name: 'SkyOngaku Fuel Stop', role: 'remote', type: 'transit', icon: '⛽', chance: 0.35 },
+    ],
   },
 ];
+
+// Everything else that has a name on the planet is a firm, not a corporation.
+// They still operate sites and put their name on buildings; they just do not
+// get a row in the index.
+export const FIRMS = [
+  { name: 'Bastion Grade', short: 'Bastion', kind: 'construction', blurb: 'Heavy civil engineering. Motorways, bridges, sea walls and the Trolley perimeter, built by people who used to be soldiers.' },
+  { name: 'Merano & Sable', short: 'Merano & Sable', kind: 'construction', blurb: 'Commercial developers. Towers, arenas and most of the Neon District skyline; their subcontractor list is where the Commission money goes in clean.' },
+  { name: 'Korrat Steel', short: 'Korrat', kind: 'industry', blurb: 'Steel, plate and shipbuilding.' },
+  { name: 'Onoska Energy', short: 'Onoska', kind: 'energy', blurb: 'Generation and grid. Runs the Frequency Grid relays under contract.' },
+  { name: 'Halcyon Motors', short: 'Halcyon', kind: 'industry', blurb: 'Vehicles, and a street-racing division that is officially a marketing budget.' },
+  { name: 'Duvall Pressing', short: 'Duvall', kind: 'industry', blurb: 'Vinyl and disc pressing. Three shifts, two of them on the books.' },
+  { name: 'Verrado Freight', short: 'Verrado', kind: 'logistics', blurb: 'Containers, warehousing and customs brokerage.' },
+  { name: 'Meridian Bank', short: 'Meridian', kind: 'finance', blurb: 'The oldest bank on the planet.' },
+  { name: 'Velvet Records', short: 'Velvet', kind: 'media', blurb: 'The prestige label.' },
+];
+
+// Which corporation has what, where. Resolved once per world so the index can
+// list every site without any city model having to be streamed in first.
+function buildCorpSites(planet, rng) {
+  const out = [];
+  for (const co of CORPORATIONS) {
+    for (const c of planet.cities) {
+      if (c.name === co.hq) {
+        out.push({ corp: co.name, short: co.short, city: c.name, name: co.hqSite, role: 'core', type: 'landmark', icon: co.icon, hq: true });
+        continue;
+      }
+      const spec = co.sites.find((sp) => sp.kind === c.kind);
+      if (!spec) continue;
+      if (spec.chance !== undefined && rng() > spec.chance) continue;
+      out.push({ corp: co.name, short: co.short, city: c.name, name: spec.name, role: spec.role, type: spec.type, icon: spec.icon });
+    }
+  }
+  return out;
+}
 
 /* ------------------------------------------------ WORLD SAMPLING API */
 

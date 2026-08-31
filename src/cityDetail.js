@@ -39,6 +39,12 @@ export const PLACE_KINDS = {
   chapel: { type: 'civic', icon: '⛪', label: 'Chapel' },
   postoffice: { type: 'civic', icon: '📮', label: 'Post office' },
   canteen: { type: 'food', icon: '🍲', label: 'Canteen' },
+  warroom: { type: 'military', icon: '🗺️', label: 'War room' },
+  blackchapel: { type: 'landmark', icon: '🖤', label: 'Chapel of Dissonance' },
+  signal: { type: 'military', icon: '📡', label: 'Signal tower' },
+  armoury: { type: 'military', icon: '⚔️', label: 'Armoury' },
+  cells: { type: 'military', icon: '🔓', label: 'Cells' },
+  forge: { type: 'front', icon: '🔥', label: 'Forge' },
   surgery: { type: 'civic', icon: '🩺', label: 'Surgery' },
   bar: { type: 'venue', icon: '🍸', label: 'Bar' },
   club: { type: 'venue', icon: '🎧', label: 'Nightclub' },
@@ -85,6 +91,8 @@ const ROLE_MIX = {
   military: ['barracks', 'barracks', 'warehouse', 'airfield', 'garage', 'hospital'],
   rural: ['shop', 'pub', 'pub', 'chapel', 'school', 'garage', 'postoffice', 'cafe', 'surgery', 'market'],
   remote: ['canteen', 'garage', 'shop'],
+  castle: ['chapel', 'barracks', 'pub', 'shop', 'workshop', 'market', 'library'],
+  stronghold: ['warroom', 'blackchapel', 'signal', 'armoury', 'cells', 'forge', 'barracks'],
 };
 
 // A quarter's name is the strongest signal of what it is, so read the role
@@ -103,6 +111,7 @@ const CANON_ROLE = {
 function roleOf(name, index, dens, kind) {
   // Tier first: a one-quarter village would otherwise inherit the downtown
   // mix and end up with a casino and a museum of modern art.
+  if (kind === 'castle') return 'castle';
   if (kind === 'outpost') return 'remote';
   if (kind === 'village') return 'rural';
   if (CANON_ROLE[name]) return CANON_ROLE[name];
@@ -129,6 +138,8 @@ const QUARTER_BLURB = {
   military: 'Restricted. Fenced, gated and not on most maps.',
   rural: 'A village. One shop, one pub, and everyone knows whose car that is.',
   remote: 'An outpost. However many people it takes to keep the thing running.',
+  castle: 'Walls, a keep and whatever grew up against them afterwards.',
+  stronghold: 'Black walls in open desert. Nothing here was built to be visited.',
 };
 
 /* ----------------------------------------------------------- names -- */
@@ -158,6 +169,12 @@ function placeName(kind, rng, quarter, cityName) {
     case 'casino': return rng() < 0.5 ? `The ${a()} ${n()} Casino` : `${s()} Rooms`;
     case 'concert': return rng() < 0.5 ? `${s()} Concert Hall` : `The ${a()} Hall`;
     case 'livehouse': return rng() < 0.5 ? `The ${a()} ${n()}` : `${s()}'s Live Room`;
+    case 'warroom': return rng() < 0.5 ? 'The War Room' : 'The Long Table';
+    case 'blackchapel': return rng() < 0.5 ? 'The Chapel of Dissonance' : 'The Silent Choir';
+    case 'signal': return rng() < 0.5 ? 'The Black Mast' : `${a()} Signal Tower`;
+    case 'armoury': return rng() < 0.5 ? 'The Armoury' : 'The Long Store';
+    case 'cells': return rng() < 0.5 ? 'The Cells' : 'The Quiet Rooms';
+    case 'forge': return rng() < 0.5 ? 'The Forge' : `${a()} Forge`;
     case 'shop': return rng() < 0.5 ? `${s()}'s Stores` : `The ${quarter} Shop`;
     case 'pub': return rng() < 0.5 ? `The ${a()} ${n()}` : `The ${n()} & ${n()}`;
     case 'chapel': return rng() < 0.5 ? `${quarter} Chapel` : `The Chapel of the ${a()} ${n()}`;
@@ -233,6 +250,8 @@ const USE_MIX = {
   military: ['barracks', 'hangar', 'store', 'workshop'],
   rural: ['house', 'house', 'house', 'cottage', 'cottage', 'barn', 'shopfront', 'workshop'],
   remote: ['hut', 'hut', 'store', 'workshop'],
+  castle: ['keep', 'keep', 'hall', 'store', 'store', 'workshop', 'barracksblock'],
+  stronghold: ['keep', 'keep', 'barracksblock', 'barracksblock', 'forgehouse', 'store'],
 };
 
 const USE_KEYS = Object.keys(USE_MIX).reduce((acc, role) => {
@@ -251,7 +270,8 @@ export const USE_LABEL = {
   chandlery: 'Chandlery', depot: 'Depot', plant: 'Plant', yard: 'Yard',
   pavilion: 'Pavilion', glasshouse: 'Glasshouse', barracks: 'Barracks',
   hangar: 'Hangar', store: 'Stores', cottage: 'Cottage', barn: 'Barn',
-  shopfront: 'Shop', hut: 'Cabin',
+  shopfront: 'Shop', hut: 'Cabin', keep: 'Keep', hall: 'Great hall', barracksblock: 'Garrison block',
+  forgehouse: 'Forge',
 };
 
 const FIRMWORDS = ['Holdings', 'Group', 'Industries', 'Works', 'Trading', 'Freight', 'Supply', 'Engineering', 'Fabrication', 'Logistics'];
@@ -304,6 +324,10 @@ export function buildingInfo(cityName, index, use) {
     case 'barn': name = `${s()} Barn`; break;
     case 'shopfront': name = rng() < 0.5 ? `${s()}'s` : `The ${a()} ${n()}`; break;
     case 'hut': name = `Cabin ${1 + ((rng() * 14) | 0)}`; break;
+    case 'keep': name = rng() < 0.5 ? `The ${a()} Tower` : `${s()} Keep`; break;
+    case 'hall': name = rng() < 0.5 ? 'The Great Hall' : `${s()} Hall`; break;
+    case 'barracksblock': name = `Garrison Block ${1 + ((rng() * 6) | 0)}`; break;
+    case 'forgehouse': name = rng() < 0.5 ? 'The Forge' : `${a()} Forge`; break;
     case 'hangar': name = `Hangar ${1 + ((rng() * 9) | 0)}`; break;
     case 'store': name = `Stores ${1 + ((rng() * 9) | 0)}`; break;
     default: name = `${s()} Building`;
@@ -352,7 +376,7 @@ export function buildCityDetail(planet, city) {
   /* ---- quarters: the sectors, traced into polygons that tile the city ---- */
   const quarters = city.sectors.map((sec, i) => {
     const meta = QUARTER_META[sec.name];
-    const role = roleOf(sec.name || '', i, sec.dens, city.kind);
+    const role = city.evilHold ? 'stronghold' : roleOf(sec.name || '', i, sec.dens, city.kind);
     const RAYS = 40;
     const poly = [];
     for (let a = 0; a < RAYS; a++) {
@@ -419,7 +443,8 @@ export function buildCityDetail(planet, city) {
 
     // Denser, more central blocks are cut into more and smaller lots.
     const pressure = quarter.role === 'core' ? 1
-      : quarter.role === 'remote' ? 0.15
+      : quarter.role === 'remote' ? 0.12
+      : quarter.role === 'castle' ? 0.45
       : quarter.role === 'rural' ? 0.3
       : quarter.role === 'industry' || quarter.role === 'harbour' ? 0.45 : 0.75;
     const density = Math.max(0.25, pressure * (1.15 - dc * 0.5));
@@ -445,8 +470,8 @@ export function buildCityDetail(planet, city) {
 
   /* ---- places ---- */
   const pois = [];
-  const floor = city.kind === 'outpost' ? 2 : city.kind === 'village' ? 5 : 4;
-  const ceiling = city.kind === 'outpost' ? 5 : city.kind === 'village' ? 10 : 120;
+  const floor = city.kind === 'outpost' ? 2 : city.kind === 'village' ? 5 : city.kind === 'castle' ? 4 : 4;
+  const ceiling = city.kind === 'outpost' ? 4 : city.kind === 'village' ? 10 : city.kind === 'castle' ? 9 : 120;
   const want = Math.max(floor, Math.min(ceiling, Math.round(openBlocks.length / 14)));
   const usedBlocks = new Set();
   // Two hotels can share a street, but not a name. Names are re-rolled a few
@@ -460,7 +485,7 @@ export function buildCityDetail(planet, city) {
 
   // One landmark that is unambiguously the middle of the place, first so it
   // owns its name.
-  if (openBlocks.length && city.kind !== 'outpost') {
+  if (openBlocks.length && city.kind !== 'outpost' && !city.evilHold) {
     const q0 = quarters[0];
     usedNames.set(`${city.name} ${SMALL.has(city.kind) ? 'Village Hall' : 'Civic Hall'}`, 1);
     pois.push({
@@ -492,14 +517,18 @@ export function buildCityDetail(planet, city) {
         const rr = rad * (0.9 + nC(Math.cos(ang) * 3, Math.sin(ang) * 3) * 0.16);
         poly.push({ x: blk.x + Math.cos(ang) * rr, y: blk.y + Math.sin(ang) * rr });
       }
-      const squareName = city.name === 'Ongaku Prime' ? 'Harmony Square' : `${squareLabel(rng, city.name)}`;
+      const squareName = city.evilHold ? 'The Black Court'
+        : city.name === 'Ongaku Prime' ? 'Harmony Square'
+        : `${squareLabel(rng, city.name)}`;
       square = { x: blk.x, y: blk.y, r: rad, poly, name: squareName };
       usedNames.set(squareName, 1);
       pois.push({
         x: blk.x, y: blk.y, kind: 'monument', landmark: true,
         type: 'landmark', icon: '\u{1F5FF}',
-        name: monumentName(rng, city),
-        note: `The monument on ${squareName}. Everything in ${city.name} is measured from here.`,
+        name: city.evilHold ? 'The Ace of Spades' : monumentName(rng, city),
+        note: city.evilHold
+          ? 'A single black stone in the middle of the court. Final Drop holds court beside it, and nobody has ever been told what it commemorates.'
+          : `The monument on ${squareName}. Everything in ${city.name} is measured from here.`,
         quarter: quarters[citySectorAt(city, blk.x, blk.y)].name,
       });
     }
@@ -533,7 +562,7 @@ export function buildCityDetail(planet, city) {
   }
 
   seedCanonPlaces(city, quarters, openBlocks, rng, pois, usedBlocks, usedNames);
-  seedHeadOffices(city, quarters, openBlocks, rng, pois, usedBlocks, usedNames);
+  seedCorpSites(planet, city, quarters, openBlocks, rng, pois, usedBlocks, usedNames);
 
   // Canon places are additional to the generated ones, not instead of them:
   // the capital should still have restaurants nobody has written about.
@@ -627,12 +656,12 @@ function seedCanonPlaces(city, quarters, openBlocks, rng, pois, usedBlocks, used
   }
 }
 
-// Head offices. A corporation with a tower somewhere real is worth more to a
-// story than one that only exists in a wiki paragraph.
-function seedHeadOffices(city, quarters, openBlocks, rng, pois, usedBlocks, usedNames) {
-  for (const co of CORPORATIONS) {
-    if (co.hq !== city.name) continue;
-    let qi = quarters.findIndex((q) => q.role === co.role);
+// Corporate sites. The planet decides who has a building where; this only has
+// to find it a block in a quarter of the right character.
+function seedCorpSites(planet, city, quarters, openBlocks, rng, pois, usedBlocks, usedNames) {
+  const sites = (planet.corpSites || []).filter((si) => si.city === city.name);
+  for (const si of sites) {
+    let qi = quarters.findIndex((q) => q.role === si.role);
     if (qi < 0) qi = 0;
     const jx = quarters[qi].x + (rng() - 0.5) * city.radius * 0.4;
     const jy = quarters[qi].y + (rng() - 0.5) * city.radius * 0.4;
@@ -645,13 +674,13 @@ function seedHeadOffices(city, quarters, openBlocks, rng, pois, usedBlocks, used
     }
     if (best < 0) continue;
     usedBlocks.add(best);
-    const name = co.short + " HQ";
-    usedNames.set(name, 1);
+    usedNames.set(si.name, 1);
+    const co = CORPORATIONS.find((c) => c.name === si.corp);
     pois.push({
       x: openBlocks[best].x, y: openBlocks[best].y,
-      kind: 'hq', hq: true, corp: co.name,
-      type: 'landmark', icon: co.icon, name,
-      note: co.blurb,
+      kind: 'corp', hq: !!si.hq, corp: si.corp,
+      type: si.type, icon: si.icon, name: si.name,
+      note: si.hq ? `Head office. ${co ? co.blurb : ''}` : `${si.corp} · ${city.name}`,
       quarter: quarters[qi].name,
     });
   }
@@ -694,10 +723,40 @@ export function placeCrew(planet, madeList, sickList) {
     });
   }
 
-  // Cells of five or six, outside the built-up area — the Sick 52 do not keep
-  // addresses in the city.
+  // The Founding Dissonants do not live in cells. Final Drop and the top of
+  // the spades hold The Last Chord, out in the desert where the planet cannot
+  // hear them, and that is the only address any of them has.
+  const hold = planet.cities.find((c) => c.evilHold);
+  // Pick the actual leadership rather than the first seven of whatever order
+  // the roster arrived in: the spades are the Founding Dissonants, and A K Q J
+  // 10 9 8 of that suit is who holds the gates.
+  const ORDER = ['A', 'K', 'Q', 'J', '10', '9', '8'];
+  const spades = sickList
+    .filter((sm) => sm.suit === 'spades' && ORDER.includes(String(sm.rank)))
+    .sort((x, y) => ORDER.indexOf(String(x.rank)) - ORDER.indexOf(String(y.rank)))
+    .slice(0, 7);
+  const inner = hold ? (spades.length >= 7 ? spades : sickList.slice(0, 7)) : [];
+  const innerSet = new Set(inner);
+  const rest = sickList.filter((sm) => !innerSet.has(sm));
+
+  if (hold) {
+    inner.forEach((sm, i) => {
+      const a = (i / inner.length) * Math.PI * 2 + 0.4;
+      const r = hold.radius * (i === 0 ? 0 : 0.52);
+      out.push({
+        kind: 'sick', hold: true,
+        x: hold.x + Math.cos(a) * r,
+        y: hold.y + Math.sin(a) * r,
+        label: sm.name, card: sm.cardLabel || '',
+        cell: -1, place: hold.name, data: sm,
+      });
+    });
+  }
+
+  // Everyone else works in cells of five or six, outside the built-up area of
+  // the capital — a presence, not a resident.
   const cells = [];
-  for (let c = 0; c < 9; c++) {
+  for (let c = 0; c < 8; c++) {
     for (let t = 0; t < 500; t++) {
       const a = rng() * Math.PI * 2;
       const r = R * (1.4 + rng() * 2.2);
@@ -712,7 +771,7 @@ export function placeCrew(planet, madeList, sickList) {
   }
   if (!cells.length) cells.push({ x: home.x + R * 2, y: home.y });
 
-  sickList.forEach((s, i) => {
+  rest.forEach((sm, i) => {
     const base = cells[i % cells.length];
     let x = base.x;
     let y = base.y;
@@ -726,7 +785,7 @@ export function placeCrew(planet, madeList, sickList) {
       y = ty;
       break;
     }
-    out.push({ kind: 'sick', x, y, label: s.name, card: s.cardLabel || '', cell: i % cells.length, data: s });
+    out.push({ kind: 'sick', x, y, label: sm.name, card: sm.cardLabel || '', cell: i % cells.length, data: sm });
   });
 
   return out;

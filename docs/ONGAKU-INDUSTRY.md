@@ -155,3 +155,47 @@ Motors runs the series, officially as a marketing budget.
 Two, and no more, on purpose: a landmark stops being a landmark when there are
 twelve of them, and the season finale only works as a seasonal fixture if there
 is nowhere else it could be held.
+
+---
+
+## 8. Three corporations, not twelve
+
+A corporation is only worth the name if you keep running into it, and you
+cannot keep running into twelve. There are three, and each of them has
+buildings in most settlements on the planet — click one in the map index to
+see its whole estate and fly to any of it.
+
+| | | Head office | Roughly |
+|---|---|---|---|
+| **NexaGen Harmonics** | Technology conglomerate | Ongaku Prime — NexaGen Tower | ~35 sites |
+| **The Tower Group** | Media, and Tower Extraction | Pop City | ~55 sites |
+| **SkyOngaku** | Flag carrier | Skyport 9 | ~22 sites |
+
+**Tower Extraction** is the mining arm that nobody puts on the letterhead. A
+broadcaster needs rare earth for its transmitters and its pressing plants, so
+it bought the mountains the rare earth comes out of. That is why almost every
+outpost on the planet is a Tower Group hole in the ground with a canteen next
+to it, and why a labour dispute at a mine four hundred kilometres from anywhere
+is a problem for the evening news.
+
+Everyone else — Bastion Grade, Merano & Sable, Korrat Steel, Onoska Energy,
+Halcyon Motors, Duvall Pressing, Verrado Freight, Meridian Bank, Velvet Records
+— is a **firm**. They still operate sites and put their names on buildings.
+They just do not get a row in the index.
+
+## 9. Castles, and The Last Chord
+
+Castles predate everything else on the map and stand where the ground could be
+defended, which is why they are up in the hills and nowhere near a motorway.
+They are drawn as walls and corner towers rather than as small towns.
+
+**The Last Chord** is the exception. Black walls in open desert, sited on the
+loneliest habitable ground the generator can find — the placement is scored on
+distance from every other settlement on the planet. There is no civic hall, no
+fountain and no pub. There is The Black Court, and on it a single black stone
+called The Ace of Spades that nobody has ever been told the meaning of.
+
+Final Drop holds court there. So do the six Founding Dissonants below him —
+Red Silence, Hollow Aria, Bass Phantom, Nocturne Prime, Sonic Vicar and Black
+Vinyl, the top of the spades. Seven of the Sick 52 have an address; the other
+forty-five work in cells outside the capital and do not.

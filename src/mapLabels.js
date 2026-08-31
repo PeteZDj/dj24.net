@@ -245,8 +245,11 @@ const CITY_LABEL = {
   town: { size: 11.0, weight: 600, priority: 72, minZoom: 0.26, dot: 4.0, hollow: true },
   // Villages and outposts only appear once you are looking at a region rather
   // than a planet. Drawn at world scale they bury the geography.
+  // A castle is a landmark long before it is a settlement, so it shows up at
+  // the same zoom as a town even though almost nobody lives there.
+  castle: { size: 11.5, weight: 700, priority: 76, minZoom: 0.2, dot: 5.0, square: true },
   village: { size: 10.0, weight: 600, priority: 46, minZoom: 0.62, dot: 3.2, hollow: true },
-  outpost: { size: 9.5, weight: 500, priority: 38, minZoom: 1.05, dot: 2.6, hollow: true },
+  outpost: { size: 9.5, weight: 500, priority: 38, minZoom: 1.4, dot: 2.4, hollow: true },
 };
 
 const REGION_LABEL = {
@@ -396,7 +399,9 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
     for (const mem of opts.crew) {
       if (mem.kind === 'made' && layers.made === false) continue;
       if (mem.kind === 'sick' && layers.sick === false) continue;
-      if (z < (opts.crewZoom ?? 8)) continue;
+      // The seven at the stronghold are the point of the stronghold, so they
+      // appear as soon as it is worth looking at rather than at street zoom.
+      if (z < (mem.hold ? 1.6 : opts.crewZoom ?? 8)) continue;
       let x = mem.x * z + ox;
       let y = mem.y * z + oy;
       if (x < -30 || y < -30 || x > W + 30 || y > H + 30) continue;

@@ -52,6 +52,7 @@ export default function MapPage() {
   const [streamed, setStreamed] = useState({});
   const [placeTypes, setPlaceTypes] = useState(() => Object.fromEntries(Object.keys(POI_TYPES).map((k) => [k, true])));
   const [query, setQuery] = useState('');
+  const [openCorp, setOpenCorp] = useState(null);
 
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
@@ -584,6 +585,14 @@ export default function MapPage() {
       .slice(0, 60);
   }, [world, query]);
 
+  // Every building a corporation owns on the planet, grouped so the index can
+  // drill from a company into its estate without any city being streamed in.
+  const corpEstate = useMemo(() => {
+    const byCorp = {};
+    for (const si of world?.corpSites || []) (byCorp[si.corp] = byCorp[si.corp] || []).push(si);
+    return byCorp;
+  }, [world]);
+
   const worldStats = useMemo(() => {
     if (!world) return { total: 0, village: 0, outpost: 0, routes: 0, ports: 0, airports: 0, circuits: 0 };
     return {
@@ -863,14 +872,42 @@ export default function MapPage() {
           </div>
 
           <h3>Corporations</h3>
-          <ul className="map-key">
-            {CORPORATIONS.map((co) => (
-              <li key={co.name}>
-                <button className="map-linkline" onClick={() => { const c = world?.cities.find((o) => o.name === co.hq); if (c) { flyTo(c); setSelected({ ...c, _t: 'city' }); } }}>
-                  {co.icon} <strong>{co.short}</strong> <em>{co.hq}</em>
-                </button>
-              </li>
-            ))}
+          <ul className="map-key map-corps">
+            {CORPORATIONS.map((co) => {
+              const sites = corpEstate[co.name] || [];
+              const open = openCorp === co.name;
+              return (
+                <li key={co.name}>
+                  <button
+                    className="map-linkline"
+                    onClick={() => setOpenCorp(open ? null : co.name)}
+                    aria-expanded={open}
+                  >
+                    {co.icon} <strong>{co.short}</strong>
+                    <em>{sites.length} sites</em>
+                    <span className="map-caret">{open ? '▾' : '▸'}</span>
+                  </button>
+                  {open && (
+                    <>
+                      <p className="map-corp-blurb">{co.blurb}</p>
+                      <ul className="map-corp-sites">
+                        {sites.map((si, i) => {
+                          const c = world?.cities.find((o) => o.name === si.city);
+                          return (
+                            <li key={`${si.city}-${i}`}>
+                              <button onClick={() => { if (c) { flyTo(c); setSelected({ ...c, _t: 'city' }); } }}>
+                                <span>{si.icon} {si.name}{si.hq ? ' · HQ' : ''}</span>
+                                <em>{si.city}</em>
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           <h3>Factions</h3>
