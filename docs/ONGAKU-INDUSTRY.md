@@ -1,0 +1,119 @@
+# Planet Ongaku — Industry, Infrastructure and the Firms That Built It
+
+Companion to `PLANET-ONGAKU-WORLD-BIBLE.md`. Everything here is canon and is
+wired into the world generator at `/map`: each company below has a head office
+that stands on a real block in a real quarter, and you can fly to it.
+
+The point of this document is not a list of logos. It is that **institutions
+generate stories the way factions do**. A construction firm that wants a
+motorway widened and a developer that wants the same land for towers are in
+conflict without either of them being a villain, and both of them need
+somewhere to launder a favour.
+
+---
+
+## 1. The two construction firms
+
+Deliberately two, because they want different things from a city.
+
+### Bastion Grade
+*Heavy civil engineering — Ongaku Prime, Skyport quarter*
+
+Motorways, bridges, sea walls, tunnels, and the Trolley perimeter. Founded by
+Ongaku Defence Force engineers who mustered out after the last border war and
+never quite stopped thinking like soldiers: their sites run on shift rosters,
+their foremen are called section leads, and they have never missed a government
+deadline in forty years.
+
+Bastion builds the things that are only noticed when they fail. That gives them
+a permanent relationship with the Planetary Security Directorate, standing
+contracts with Aero Command, and a filing cabinet of ground surveys for every
+strategic site on the planet — which is the single most valuable stolen
+document in the setting.
+
+**Story hooks:** a Sick 52 cell does not need to attack Trolley if it can get
+Bastion's drainage plans. A Bastion section lead who wants to talk to a
+journalist is a person with a very short life expectancy.
+
+### Merano & Sable
+*Commercial development — Ongaku Prime, Central District*
+
+Towers, arenas, retail, and most of the Neon District skyline. Their yellow and
+oxblood crane livery is the most recognised logo on the planet; children draw
+it without knowing what it is.
+
+Where Bastion builds infrastructure, Merano & Sable build *value* — and value
+needs financing, which needs partners, which is where the Hip Hop Mafia enter
+the story. Nothing in the Merano & Sable accounts is illegal. The illegality is
+three subcontractors down, in a scaffolding company nobody has heard of, and it
+has been that way since the firm's second generation.
+
+**Story hooks:** the Commission's cleanest money moves through concrete. A
+compulsory purchase order in Southside is a Merano & Sable letter with a
+Diamonds house enforcer standing behind it.
+
+**Bastion ↔ Merano & Sable:** they bid against each other on everything and
+sit on the same industry board. Bastion thinks Merano & Sable are gangsters
+with an architect. Merano & Sable think Bastion are soldiers who never learned
+to make a profit. Both are right.
+
+---
+
+## 2. Industry and infrastructure
+
+| Company | Sector | Head office |
+|---|---|---|
+| **NexaGen Harmonics** | Technology conglomerate — AI, robotics, transport, energy, medical, defence | Ongaku Prime, Central District |
+| **The Tower Group** | Media — 24 Radio, OBC News, Tower Sound | Pop City |
+| **Korrat Steel** | Steel, plate and shipbuilding | Port Sonora, harbour |
+| **Onoska Energy** | Generation and grid; runs the Frequency Grid relays under contract | Electric City |
+| **Halcyon Motors** | Vehicles, vans to the Kestrel Continental; a street-racing "marketing budget" | Rock City |
+| **Duvall Pressing** | Vinyl and disc pressing. Three shifts, two of them on the books | Ongaku Prime, harbour |
+| **Verrado Freight** | Containers, warehousing, customs brokerage | Port Sonora, harbour |
+| **SkyOngaku** | Flag carrier — passenger, cargo, charter | Skyport 9 |
+| **Meridian Bank** | The oldest bank on the planet | Classic City |
+| **Velvet Records** | Prestige label — ballads and R&B | Rose City |
+
+**Onoska Energy ↔ everyone:** a power cut is not an inconvenience on Ongaku, it
+is a national security event, because the Frequency Grid runs on Onoska relays.
+That single dependency puts a civilian utility inside every military plot.
+
+---
+
+## 3. Ports, airports and the shape of a settlement
+
+Every coastal settlement generates a working harbour: a main wharf along the
+shore with finger piers off it, sized to the settlement. Every city from town
+upward generates an airfield outside the built-up edge, aligned to the wind
+rather than to the street grid, with one runway — two for the capital.
+
+These are not decoration. A port is where product arrives, an airfield is where
+people leave from, and both are the natural site for a scene that needs a
+deadline.
+
+| Tier | Example | Roughly |
+|---|---|---|
+| Capital | Ongaku Prime | ~16 km across, 9 quarters, international airport, docks |
+| Mega | Urban City, Electric City | ~12 km, 6 quarters |
+| Port / hostile / town | Port Sonora, Joke City, Northreach | 5–8 km, 2–3 quarters |
+| Fortress / military | Trolley, Skyport 9 | Restricted, airbase |
+| **Village** | ~46 per world | ~2 km, one quarter, one road in and out |
+| **Outpost** | ~22 per world | Fuel, a relay mast and somewhere to sleep |
+
+Villages sit on the low ground between cities. Outposts go where nobody would
+put a village — high passes and deserts — which is exactly where a story needs
+somewhere to hide.
+
+---
+
+## 4. Buildings
+
+Every footprint on the map has a use and a tenant, drawn from the character of
+the quarter it stands in: offices and chambers downtown, warehouses and cold
+stores on the water, halls of residence and faculties on the campus, works and
+depots in the industrial yards. Fly close enough and the map names almost all
+of them.
+
+That is the point of the generator. The named landmarks are the ones audiences
+remember, but a city only feels inhabited when the *unremarkable* buildings
+also have names on them.

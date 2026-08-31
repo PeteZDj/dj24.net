@@ -144,6 +144,7 @@ const PALETTES = {
     urban: 'rgba(158,150,138,.74)', urbanCore: 'rgba(216,207,191,.62)',
     urbanCoreFade: 'rgba(216,207,191,0)',
     urbanEdge: 'rgba(64,58,48,.55)', block: 'rgba(208,200,186,.66)', quay: '#8d8579',
+    apron: 'rgba(120,118,112,.55)', runway: '#4a4844', runwayMark: 'rgba(255,255,255,.7)',
   },
   // Deliberately flat: land is one cream, vegetation one green, water one
   // blue. Biome nuance is the Terrain style's job — this is the layer you
@@ -161,6 +162,7 @@ const PALETTES = {
     urban: 'rgba(233,229,223,.95)', urbanCore: 'rgba(223,218,210,.75)',
     urbanCoreFade: 'rgba(223,218,210,0)',
     urbanEdge: 'rgba(203,197,188,.9)', block: 'rgba(214,208,199,.85)', quay: '#cfc8bd',
+    apron: '#e3e0d8', runway: '#b9b4a9', runwayMark: 'rgba(255,255,255,.85)',
   },
   terrain: {
     abyss: [120, 168, 200], ocean: [141, 186, 214], shelf: [163, 202, 226], surf: [182, 216, 236],
@@ -175,6 +177,7 @@ const PALETTES = {
     urban: 'rgba(208,200,188,.85)', urbanCore: 'rgba(196,187,173,.6)',
     urbanCoreFade: 'rgba(196,187,173,0)',
     urbanEdge: 'rgba(156,146,130,.8)', block: 'rgba(188,179,165,.75)', quay: '#b3a894',
+    apron: 'rgba(190,182,166,.7)', runway: '#8c857a', runwayMark: 'rgba(255,255,255,.75)',
   },
 };
 
@@ -414,6 +417,48 @@ export function generatePlanet(seedStr) {
     }
   }
 
+  // ---- villages and outposts ----
+  //
+  // The canon settlements are the ones stories happen in. Between them the
+  // planet needs somewhere for everyone else to live, or the countryside reads
+  // as empty scenery with motorways drawn across it.
+  const minorAt = (kind, minGap, tries, test) => {
+    for (let t = 0; t < tries; t++) {
+      const gx = 6 + Math.floor(rng() * (GW - 12));
+      const gy = 6 + Math.floor(rng() * (GH - 12));
+      if (!isLandG(gx, gy)) continue;
+      const h = hAt(gx, gy);
+      if (test && !test(gx, gy, h)) continue;
+      const px = (gx / (GW - 1)) * WORLD_W;
+      const py = (gy / (GH - 1)) * WORLD_H;
+      if (cities.some((c) => Math.hypot(c.x - px, c.y - py) < (c.kind === 'village' || c.kind === 'outpost' ? minGap : minGap * 1.7))) continue;
+      const lat = Math.abs(gy / (GH - 1) - 0.5) * 2;
+      return {
+        name: minorName(rng, kind),
+        kind,
+        faction: 'neutral',
+        desc: kind === 'village'
+          ? 'A village. A few hundred people, one road in and one road out.'
+          : 'An outpost. Fuel, a relay mast and somewhere to sleep.',
+        x: px, y: py,
+        elev: Math.round(h * 4200),
+        climate: climateOf(lat, mf[gy * GW + gx], h),
+        pop: Math.round((kind === 'village' ? 4200 : 260) * (0.5 + rng() * 1.4)),
+      };
+    }
+    return null;
+  };
+
+  for (let i = 0; i < 46; i++) {
+    const v = minorAt('village', 74, 400, (gx, gy, h) => h < 0.36);
+    if (v) cities.push(v);
+  }
+  for (let i = 0; i < 22; i++) {
+    // Outposts go where nobody would put a village: high ground and deserts.
+    const o = minorAt('outpost', 62, 400, (gx, gy, h) => h > 0.34 || mf[gy * GW + gx] < 0.26);
+    if (o) cities.push(o);
+  }
+
   const planet = {
     kind: 'planet', seed: seedStr, GW, GH, hf, mf,
     noiseH: nH, noiseR: nR,
@@ -429,6 +474,16 @@ export function generatePlanet(seedStr) {
   planet.regions = detectRegions(planet, rng);
 
   return planet;
+}
+
+// Village and outpost names. Deliberately plainer than the canon cities: these
+// are places named after a ford, a mill or whoever got there first.
+const VILLAGE_SUFFIX = ['Cross', 'Ford', 'Hollow', 'Bridge', 'Mill', 'Rest', 'Bend', 'Green', 'Fields', 'Wells', 'Barrow', 'Landing', 'Reach', 'Combe'];
+const OUTPOST_SUFFIX = ['Station', 'Camp', 'Watch', 'Post', 'Relay', 'Halt', 'Depot', 'Rise', 'Signal', 'Waypoint'];
+
+function minorName(rng, kind) {
+  const pool = kind === 'outpost' ? OUTPOST_SUFFIX : VILLAGE_SUFFIX;
+  return `${makeName(rng)} ${pool[(rng() * pool.length) | 0]}`;
 }
 
 /* ------------------------------------------------- NAMED GEOGRAPHY */
@@ -743,11 +798,16 @@ function generateRoadNetwork(planet) {
     y: (((n / RGW) | 0) / (RGH - 1)) * WORLD_H,
   });
 
+  // Villages and outposts are not part of the trunk network; they hang off it.
+  // Building the trunk from the canon settlements only, then feeding the minor
+  // ones in, is also what keeps the A* cost down.
+  const MAJOR = (c) => c.kind !== 'village' && c.kind !== 'outpost';
+  const majors = cities.filter(MAJOR);
   const rank = (c) => (c.kind === 'capital' ? 3 : c.kind === 'mega' ? 2 : 1);
 
   // Minimum spanning tree guarantees every city is reachable; the extra
   // nearest-neighbour links stop the network being a pure tree.
-  const n = cities.length;
+  const n = majors.length;
   const pairs = new Set();
   const inTree = new Array(n).fill(false);
   const best = new Array(n).fill(Infinity);
@@ -765,12 +825,12 @@ function generateRoadNetwork(planet) {
     pairs.add(pick < bestFrom[pick] ? `${pick},${bestFrom[pick]}` : `${bestFrom[pick]},${pick}`);
     for (let i = 0; i < n; i++) {
       if (inTree[i]) continue;
-      const d = Math.hypot(cities[i].x - cities[pick].x, cities[i].y - cities[pick].y);
+      const d = Math.hypot(majors[i].x - majors[pick].x, majors[i].y - majors[pick].y);
       if (d < best[i]) { best[i] = d; bestFrom[i] = pick; }
     }
   }
-  cities.forEach((c, i) => {
-    const near = cities
+  majors.forEach((c, i) => {
+    const near = majors
       .map((o, j) => ({ j, d: Math.hypot(o.x - c.x, o.y - c.y) }))
       .filter((e) => e.j !== i)
       .sort((a, b) => a.d - b.d)
@@ -782,14 +842,15 @@ function generateRoadNetwork(planet) {
   // minor roads then merge into them rather than the other way round.
   const ordered = [...pairs]
     .map((k) => k.split(',').map(Number))
-    .sort((p, q) => (rank(cities[q[0]]) + rank(cities[q[1]])) - (rank(cities[p[0]]) + rank(cities[p[1]])));
+    .sort((p, q) => (rank(majors[q[0]]) + rank(majors[q[1]])) - (rank(majors[p[0]]) + rank(majors[p[1]])));
 
   const routes = [];
-  const bearings = cities.map(() => []);
+  const bearings = new Map();
+  const bearingOf = (c) => { let b = bearings.get(c); if (!b) bearings.set(c, (b = [])); return b; };
 
   for (const [i, j] of ordered) {
-    const a = idxOf(cities[i]);
-    const b = idxOf(cities[j]);
+    const a = idxOf(majors[i]);
+    const b = idxOf(majors[j]);
     if (a === b) continue;
     const path = aStar(h, used, a, b);
     if (!path || path.length < 2) continue;
@@ -801,9 +862,9 @@ function generateRoadNetwork(planet) {
     if (!ferry) for (const p of path) used[p] = 1;
 
     const world = path.map(toWorld);
-    const combined = rank(cities[i]) + rank(cities[j]);
+    const combined = rank(majors[i]) + rank(majors[j]);
     routes.push({
-      a: cities[i], b: cities[j], ai: i, bi: j,
+      a: majors[i], b: majors[j],
       pts: ferry ? [world[0], world[world.length - 1]] : smoothPath(world),
       ferry,
       cls: combined >= 5 ? 'motorway' : combined >= 3 ? 'highway' : 'road',
@@ -813,11 +874,38 @@ function generateRoadNetwork(planet) {
       // Bearing the route leaves each city on, so the city's own radial roads
       // can be aligned to meet it.
       const k = Math.min(world.length - 1, 6);
-      bearings[i].push(Math.atan2(world[k].y - world[0].y, world[k].x - world[0].x));
+      bearingOf(majors[i]).push(Math.atan2(world[k].y - world[0].y, world[k].x - world[0].x));
       const e = world.length - 1;
       const k2 = Math.max(0, e - 6);
-      bearings[j].push(Math.atan2(world[k2].y - world[e].y, world[k2].x - world[e].x));
+      bearingOf(majors[j]).push(Math.atan2(world[k2].y - world[e].y, world[k2].x - world[e].x));
     }
+  }
+
+
+  // Now feed the villages and outposts in. Each gets one lane to whichever
+  // settlement is nearest, which is how a real minor road network grows: not
+  // planned, just the shortest way to somewhere that already had a road.
+  for (const c of cities) {
+    if (MAJOR(c)) continue;
+    let host = null;
+    let hostD = Infinity;
+    for (const o of cities) {
+      if (o === c) continue;
+      if (!MAJOR(o) && o.kind !== 'village') continue;
+      const d = Math.hypot(o.x - c.x, o.y - c.y);
+      if (d < hostD) { hostD = d; host = o; }
+    }
+    if (!host || hostD > 900) continue;
+    const path = aStar(h, used, idxOf(c), idxOf(host));
+    if (!path || path.length < 2) continue;
+    let water = 0;
+    for (const p of path) if (h[p] <= 0) water++;
+    if (water > 6) continue;
+    for (const p of path) used[p] = 1;
+    const world = path.map(toWorld);
+    routes.push({ a: c, b: host, pts: smoothPath(world), ferry: false, cls: 'lane' });
+    const k = Math.min(world.length - 1, 5);
+    bearingOf(c).push(Math.atan2(world[k].y - world[0].y, world[k].x - world[0].x));
   }
 
   return { routes, bearings };
@@ -825,7 +913,7 @@ function generateRoadNetwork(planet) {
 
 /* ------------------------------------------------- CITY FOOTPRINTS */
 
-const CITY_RADIUS = { capital: 64, mega: 48, hostile: 34, port: 30, military: 24, fortress: 18, town: 20 };
+const CITY_RADIUS = { capital: 64, mega: 48, hostile: 34, port: 30, military: 24, fortress: 18, town: 20, village: 9, outpost: 4.5 };
 
 // Every city on the planet gets a real urban area: sprawl clipped to the
 // coastline, a ring road, radial roads aligned to the highways arriving from
@@ -929,7 +1017,7 @@ function buildFootprints(planet, rng, nC, bearings) {
     // Sectors: a downtown plus outlying quarters, each with its own street
     // angle and density. Without them every city renders as one uniform
     // lattice, which is what makes procedural cities look fake.
-    const nSec = c.kind === 'capital' ? 9 : c.kind === 'mega' ? 6 : c.kind === 'town' ? 2 : 3;
+    const nSec = c.kind === 'capital' ? 9 : c.kind === 'mega' ? 6 : c.kind === 'town' ? 2 : c.kind === 'village' || c.kind === 'outpost' ? 1 : 3;
     const sectors = [{ x: c.x, y: c.y, w: 1.3, dens: 1, ang: rng() * Math.PI }];
     for (let s = 1; s < nSec; s++) {
       const a = (s / (nSec - 1)) * Math.PI * 2 + rng() * 0.7;
@@ -978,8 +1066,8 @@ function buildFootprints(planet, rng, nC, bearings) {
 
     // Radials: one per arriving highway, topped up so the city never looks
     // lopsided, each stopping at the edge of the built-up area.
-    const angs = [...(bearings[ci] || [])];
-    const want = c.kind === 'capital' ? 8 : c.kind === 'mega' ? 6 : 4;
+    const angs = [...(bearings.get(c) || [])];
+    const want = c.kind === 'capital' ? 8 : c.kind === 'mega' ? 6 : c.kind === 'village' ? 3 : c.kind === 'outpost' ? 2 : 4;
     let guard = 0;
     while (angs.length < want && guard++ < 60) {
       const cand = rng() * Math.PI * 2;
@@ -1013,7 +1101,7 @@ function buildFootprints(planet, rng, nC, bearings) {
       const ux = Math.cos(sec.ang);
       const uy = Math.sin(sec.ang);
       const reach = R * (si === 0 ? 0.8 : 0.65);
-      const step = R / (c.kind === 'capital' ? 24 : c.kind === 'mega' ? 19 : 12);
+      const step = R / (c.kind === 'capital' ? 24 : c.kind === 'mega' ? 19 : c.kind === 'outpost' ? 5 : c.kind === 'village' ? 7 : 12);
       const owns = (x, y) => inCity(x, y) && sectorAt(x, y) === si;
 
       for (let dir = 0; dir < 2; dir++) {
@@ -1099,17 +1187,63 @@ function buildFootprints(planet, rng, nC, bearings) {
       });
     }
 
-    // Port: a quay reaching into the water on the seaward side.
+    // Port: a working harbour on the seaward side rather than a single quay —
+    // a main wharf with finger piers off it, which is what makes a waterfront
+    // read as industry instead of as a line on the water.
     if (c.coastal) {
       let seaAng = 0;
       let shortest = Infinity;
       for (const p of poly) if (p.r < shortest) { shortest = p.r; seaAng = p.ang; }
+      const ca = Math.cos(seaAng);
+      const sa = Math.sin(seaAng);
+      const bx = c.x + ca * shortest * 0.98;
+      const by = c.y + sa * shortest * 0.98;
+      const wharfLen = R * (c.kind === 'capital' ? 0.42 : c.kind === 'mega' ? 0.34 : 0.24);
+      const piers = [];
+      const nP = c.kind === 'capital' ? 5 : c.kind === 'mega' ? 4 : c.kind === 'port' ? 4 : 2;
+      for (let i = 0; i < nP; i++) {
+        const t = (i - (nP - 1) / 2) * (wharfLen / Math.max(1, nP - 1)) * 1.5;
+        const px = bx - sa * t;
+        const py = by + ca * t;
+        const len = R * (0.10 + rng() * 0.10);
+        piers.push({ x: px, y: py, x2: px + ca * len, y2: py + sa * len });
+      }
       c.port = {
-        x: c.x + Math.cos(seaAng) * shortest * 1.02,
-        y: c.y + Math.sin(seaAng) * shortest * 1.02,
-        ang: seaAng,
-        len: R * 0.3,
+        x: bx, y: by, ang: seaAng, len: wharfLen, piers,
+        name: `${c.name} ${c.kind === 'port' || c.kind === 'capital' ? 'Docks' : 'Harbour'}`,
       };
+    }
+
+    // Airfield: flat ground just outside the built-up edge, aligned to the
+    // prevailing wind rather than to the street grid, like a real one.
+    if (['capital', 'mega', 'port', 'military', 'town'].includes(c.kind)) {
+      const runwayAng = rng() * Math.PI;
+      for (let t = 0; t < 40; t++) {
+        const a = rng() * Math.PI * 2;
+        const d = R * (1.15 + rng() * 0.55);
+        const ax = c.x + Math.cos(a) * d;
+        const ay = c.y + Math.sin(a) * d;
+        if (!landAt(ax, ay)) continue;
+        const rl = R * (c.kind === 'capital' ? 0.55 : c.kind === 'mega' ? 0.42 : 0.3);
+        const ux = Math.cos(runwayAng);
+        const uy = Math.sin(runwayAng);
+        // Both ends have to be on land or the aircraft stop in the sea.
+        if (!landAt(ax + ux * rl, ay + uy * rl) || !landAt(ax - ux * rl, ay - uy * rl)) continue;
+        const runways = [];
+        const nR = c.kind === 'capital' ? 2 : 1;
+        for (let i = 0; i < nR; i++) {
+          const off = (i - (nR - 1) / 2) * R * 0.16;
+          runways.push({
+            x1: ax + ux * -rl - uy * off, y1: ay + uy * -rl + ux * off,
+            x2: ax + ux * rl - uy * off, y2: ay + uy * rl + ux * off,
+          });
+        }
+        c.airport = {
+          x: ax, y: ay, ang: runwayAng, r: rl, runways,
+          name: c.kind === 'military' ? `${c.name} Airbase` : `${c.name} ${c.kind === 'capital' ? 'International' : 'Airport'}`,
+        };
+        break;
+      }
     }
 
     nameQuarters(c, rng);
@@ -1357,14 +1491,66 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
         ctx.fill();
       }
 
-      if (c.port && c.radius * scale > 40) {
-        ctx.strokeStyle = P.quay;
-        ctx.lineWidth = lw(2.6);
+      if (c.port && c.radius * scale > 26) {
         ctx.lineCap = 'butt';
+        ctx.strokeStyle = P.quay;
+        // Main wharf along the shore, then the finger piers off it.
+        ctx.lineWidth = lw(3.4);
         ctx.beginPath();
-        ctx.moveTo(c.port.x, c.port.y);
-        ctx.lineTo(c.port.x + Math.cos(c.port.ang) * c.port.len, c.port.y + Math.sin(c.port.ang) * c.port.len);
+        ctx.moveTo(c.port.x - Math.sin(c.port.ang) * c.port.len, c.port.y + Math.cos(c.port.ang) * c.port.len);
+        ctx.lineTo(c.port.x + Math.sin(c.port.ang) * c.port.len, c.port.y - Math.cos(c.port.ang) * c.port.len);
         ctx.stroke();
+        if (c.radius * scale > 90) {
+          ctx.lineWidth = lw(2.2);
+          ctx.beginPath();
+          for (const pr of c.port.piers) {
+            ctx.moveTo(pr.x, pr.y);
+            ctx.lineTo(pr.x2, pr.y2);
+          }
+          ctx.stroke();
+        }
+        ctx.lineCap = 'round';
+      }
+
+      // Airfield: apron, then runways with centreline markings.
+      if (c.airport && c.radius * scale > 40) {
+        const ap = c.airport;
+        // The apron follows the runways. A circle of tarmac in a forest is the
+        // single most obvious tell that a map was generated rather than drawn.
+        const aw = ap.r * 2.3;
+        const ah = ap.r * (ap.runways.length > 1 ? 0.62 : 0.40);
+        ctx.save();
+        ctx.translate(ap.x, ap.y);
+        ctx.rotate(ap.ang);
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(-aw / 2, -ah / 2, aw, ah, ap.r * 0.14);
+        else ctx.rect(-aw / 2, -ah / 2, aw, ah);
+        ctx.fillStyle = P.apron;
+        ctx.fill();
+        ctx.restore();
+        ctx.lineCap = 'butt';
+        ctx.strokeStyle = P.runway;
+        ctx.lineWidth = lw(Math.min(9, Math.max(2.5, ap.r * scale * 0.09)));
+        ctx.beginPath();
+        for (const r of ap.runways) {
+          ctx.moveTo(r.x1, r.y1);
+          ctx.lineTo(r.x2, r.y2);
+        }
+        ctx.stroke();
+        if (c.radius * scale > 220) {
+          ctx.save();
+          ctx.setLineDash([lw(7), lw(7)]);
+          ctx.strokeStyle = P.runwayMark;
+          ctx.lineWidth = lw(1);
+          ctx.beginPath();
+          for (const r of ap.runways) {
+            ctx.moveTo(r.x1, r.y1);
+            ctx.lineTo(r.x2, r.y2);
+          }
+          ctx.stroke();
+          ctx.restore();
+        }
+        ctx.lineCap = 'round';
       }
     }
   }
@@ -1393,7 +1579,10 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
     // Wider than a city map would draw them: at planet zoom these lines are
     // the only thing showing how the world is connected, so they have to hold
     // up against terrain rather than disappear into it.
-    const WIDTH = { motorway: [6.4, 3.7], highway: [4.8, 2.7], road: [3.2, 1.7], ring: [3.4, 1.8], radial: [3.2, 1.7] };
+    const WIDTH = {
+      motorway: [10.5, 6.2], highway: [7.0, 4.0], road: [4.4, 2.4],
+      lane: [2.8, 1.4], ring: [4.0, 2.1], radial: [3.6, 1.9],
+    };
     for (const pass of [0, 1]) {
       ctx.strokeStyle = pass === 0 ? P.roadCase : P.road;
 
@@ -1422,7 +1611,20 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
           continue;
         }
 
+        if (r.cls === 'lane' && scale < 0.55) continue;
         ctx.lineWidth = lw(WIDTH[r.cls][pass]);
+        trace(r.pts);
+        ctx.stroke();
+      }
+    }
+
+    // A median down the interstates, once they are wide enough to have one.
+    // Nothing says trunk route like a road that is visibly two carriageways.
+    if (scale > 0.9) {
+      ctx.strokeStyle = P.roadCase;
+      ctx.lineWidth = lw(1.0);
+      for (const r of planet.routes) {
+        if (r.ferry || r.cls !== 'motorway') continue;
         trace(r.pts);
         ctx.stroke();
       }
@@ -1513,6 +1715,64 @@ export const CANON_PLACES = [
   { name: 'Grid Relay Station', type: 'military', d: 'trolley', icon: '📶', note: 'Frequency Grid infrastructure.' },
 ];
 
+
+// The companies that physically built the planet, and the ones that keep it
+// running. Two construction firms on purpose: one that lays the ground and one
+// that puts towers on it, because they want different things from a city and
+// that disagreement is a story engine.
+//
+// `hq` names the settlement the head office stands in; `role` is the quarter
+// character it wants to be in. Full write-up: docs/ONGAKU-INDUSTRY.md
+export const CORPORATIONS = [
+  {
+    name: 'Bastion Grade', short: 'Bastion', kind: 'construction', hq: 'Ongaku Prime', role: 'industry', icon: '🏗️',
+    blurb: 'Heavy civil engineering. Motorways, bridges, sea walls and the Trolley perimeter. Founded by Defence Force engineers who never quite stopped thinking like soldiers.',
+  },
+  {
+    name: 'Merano & Sable', short: 'Merano & Sable', kind: 'construction', hq: 'Ongaku Prime', role: 'core', icon: '🏗️',
+    blurb: 'Commercial developers. Towers, arenas and most of the Neon District skyline. Their crane livery is the most recognisable logo on the planet, and their subcontractor list is where the Hip Hop Mafia money goes in clean.',
+  },
+  {
+    name: 'NexaGen Harmonics', short: 'NexaGen', kind: 'technology', hq: 'Ongaku Prime', role: 'core', icon: '🏢',
+    blurb: 'The conglomerate. AI, robotics, transport, energy, medical, defence. If it has a chip in it, NexaGen owns the patent or the factory.',
+  },
+  {
+    name: 'The Tower Group', short: 'Tower Group', kind: 'media', hq: 'Pop City', role: 'core', icon: '📡',
+    blurb: '24 Radio, OBC News, Tower Sound and half the billboards on the planet. Condemns the Mafia on the news at nine and signs their artists at ten.',
+  },
+  {
+    name: 'Korrat Steel', short: 'Korrat', kind: 'industry', hq: 'Port Sonora', role: 'harbour', icon: '🏭',
+    blurb: 'Steel, plate and shipbuilding. Everything that floats out of the Harbour District was rolled here first.',
+  },
+  {
+    name: 'Onoska Energy', short: 'Onoska', kind: 'energy', hq: 'Electric City', role: 'industry', icon: '⚡',
+    blurb: 'Generation and grid. Runs the Frequency Grid relays under contract, which makes a power cut a national security event.',
+  },
+  {
+    name: 'Halcyon Motors', short: 'Halcyon', kind: 'industry', hq: 'Rock City', role: 'industry', icon: '🚗',
+    blurb: 'Vehicles, from delivery vans to the Kestrel Continental. Their street-racing division is officially a marketing budget.',
+  },
+  {
+    name: 'Duvall Pressing', short: 'Duvall', kind: 'industry', hq: 'Ongaku Prime', role: 'harbour', icon: '💿',
+    blurb: 'Vinyl and disc pressing since before anyone needed it explained. Runs three shifts, and only two of them are on the books.',
+  },
+  {
+    name: 'Verrado Freight', short: 'Verrado', kind: 'logistics', hq: 'Port Sonora', role: 'harbour', icon: '📦',
+    blurb: 'Containers, warehousing and customs brokerage. Moves everything, asks about very little.',
+  },
+  {
+    name: 'SkyOngaku', short: 'SkyOngaku', kind: 'aviation', hq: 'Skyport 9', role: 'industry', icon: '🛫',
+    blurb: 'The flag carrier. Passenger, cargo and the charter fleet that half the Commission travels on.',
+  },
+  {
+    name: 'Meridian Bank', short: 'Meridian', kind: 'finance', hq: 'Classic City', role: 'core', icon: '🏦',
+    blurb: 'The oldest bank on the planet. Everyone has an account, and everyone assumes theirs is the private one.',
+  },
+  {
+    name: 'Velvet Records', short: 'Velvet', kind: 'media', hq: 'Rose City', role: 'nightlife', icon: '🎼',
+    blurb: 'The prestige label. Ballads, R&B and an artist roster it protects more carefully than its accounts.',
+  },
+];
 
 /* ------------------------------------------------ WORLD SAMPLING API */
 

@@ -13,6 +13,7 @@
 // =====================================================================
 
 import { palette, FACTIONS, WORLD_W, WORLD_H } from './mapGenerator.js';
+import { buildingInfo } from './cityDetail.js';
 
 const TAU = Math.PI * 2;
 const LABEL_FONT = 'Outfit, "Segoe UI", system-ui, sans-serif';
@@ -171,6 +172,7 @@ export function makeLabeller(ctx, W, H, opts = {}) {
   }
 
   const early = [];
+  const earlyDropped = [];
 
   return {
     // Markers, pins and anything else text must not sit on top of.
@@ -182,6 +184,7 @@ export function makeLabeller(ctx, W, H, opts = {}) {
       if (!item.text) return false;
       const box = place(item);
       if (box) early.push([item, box]);
+      else earlyDropped.push(item.text);
       return !!box;
     },
     reserveCircle(x, y, r) { insert({ x0: x - r, y0: y - r, x1: x + r, y1: y + r }); },
@@ -202,9 +205,11 @@ export function makeLabeller(ctx, W, H, opts = {}) {
       for (const [it, box] of early) paint(it, box);
       for (const [it, box] of placed) paint(it, box);
       const total = placed.length + early.length;
+      const missed = [...earlyDropped, ...dropped];
       queue.length = 0;
       early.length = 0;
-      return { placed: total, dropped: dropped.length, droppedText: dropped };
+      earlyDropped.length = 0;
+      return { placed: total, dropped: missed.length, droppedText: missed };
     },
   };
 }
@@ -238,6 +243,10 @@ const CITY_LABEL = {
   hostile: { size: 12.0, weight: 600, priority: 80, minZoom: 0.15, dot: 5.5 },
   port: { size: 12.0, weight: 600, priority: 78, minZoom: 0.15, dot: 5.5 },
   town: { size: 11.0, weight: 600, priority: 72, minZoom: 0.26, dot: 4.0, hollow: true },
+  // Villages and outposts only appear once you are looking at a region rather
+  // than a planet. Drawn at world scale they bury the geography.
+  village: { size: 10.0, weight: 600, priority: 46, minZoom: 0.62, dot: 3.2, hollow: true },
+  outpost: { size: 9.5, weight: 500, priority: 38, minZoom: 1.05, dot: 2.6, hollow: true },
 };
 
 const REGION_LABEL = {
@@ -310,6 +319,22 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
     }
   }
 
+  // Titles claim their space before anything else is reserved: a city you have
+  // flown down into must always be named, whatever is on its streets.
+  if (opts.labels !== false) {
+    for (const m of marks) {
+      if (m.showDot) continue;
+      const reach = m.c.radius * z * 0.55;
+      L.addFirst({
+        text: m.c.name, area: true, clamp: true, x: m.x, y: m.y,
+        size: m.st.size * k * 1.5, weight: m.st.weight, tracking: 2.5 * k,
+        color: P.label, halo: P.labelHalo, priority: m.st.priority,
+        valid: planet.hf ? isLand : null,
+        spread: { x0: m.x - reach, y0: m.y - reach, x1: m.x + reach, y1: m.y + reach },
+      });
+    }
+  }
+
   // Quarter names are structural too, so they claim their space alongside the
   // city title rather than competing with the places inside them.
   if (opts.labels !== false) {
@@ -352,6 +377,7 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
       // as you pull back is the stuff that matters.
       const sorted = [...det.pois].sort((a, b) => (b.canon ? 1 : 0) - (a.canon ? 1 : 0) + (PIN_RANK[b.type] || 0) - (PIN_RANK[a.type] || 0));
       for (const poi of sorted) {
+        if (opts.placeTypes && opts.placeTypes[poi.type] === false) continue;
         const x = poi.x * z + ox;
         const y = poi.y * z + oy;
         if (x < -40 || y < -40 || x > W + 40 || y > H + 40) continue;
@@ -454,6 +480,41 @@ export function drawPlanetLabels(ctx, planet, styleKey, view, opts = {}) {
       });
     }
 
+  }
+
+  // Tenants. Once a footprint is big enough on screen to read a name inside
+  // it, it gets one — which is the difference between a street of grey boxes
+  // and a street you can walk down. The engine drops whatever does not fit, so
+  // the density sorts itself out as you zoom.
+  if (details && layers.tenants !== false && opts.labels !== false) {
+    const cands = [];
+    for (const m of marks) {
+      const det = details.get(m.c.name);
+      if (!det || !det.use) continue;
+      const q = det.buildings;
+      for (let i = 0, b = 0; i < q.length; i += 8, b++) {
+        const bx = ((q[i] + q[i + 2] + q[i + 4] + q[i + 6]) / 4) * z + ox;
+        const by = ((q[i + 1] + q[i + 3] + q[i + 5] + q[i + 7]) / 4) * z + oy;
+        if (bx < -50 || by < -30 || bx > W + 50 || by > H + 30) continue;
+        const wpx = Math.hypot(q[i + 2] - q[i], q[i + 3] - q[i + 1]) * z;
+        const hpx = Math.hypot(q[i + 6] - q[i], q[i + 7] - q[i + 1]) * z;
+        const span = Math.min(wpx, hpx);
+        if (span < (opts.tenantSpan ?? 22)) continue;
+        cands.push({ city: m.c.name, b, x: bx, y: by, span, tall: det.tall[b] === 1, use: det.useKeys[det.use[b]] });
+      }
+    }
+    // Biggest first, and capped: past a few hundred the rest would be dropped
+    // on collision anyway and only cost measuring time.
+    cands.sort((a, b) => b.span - a.span);
+    for (const c of cands.slice(0, 420)) {
+      const info = buildingInfo(c.city, c.b, c.use);
+      L.add({
+        text: info.name, x: c.x, y: c.y, area: true,
+        size: 9.5 * k, weight: c.tall ? 600 : 500,
+        color: P.labelGeo, halo: P.labelHalo,
+        priority: 6 + (c.tall ? 3 : 0),
+      });
+    }
   }
 
   const gz = geoZoomScale(z);

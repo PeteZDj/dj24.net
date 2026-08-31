@@ -17,7 +17,7 @@
 
 import {
   mulberry32, seedFromString, makeNoise, DISTRICTS,
-  cityContains, citySectorAt, isLandAt, CANON_PLACES,
+  cityContains, citySectorAt, isLandAt, CANON_PLACES, CORPORATIONS,
 } from './mapGenerator.js';
 
 /* ---------------------------------------------------------- places -- */
@@ -110,11 +110,11 @@ const QUARTER_BLURB = {
 
 /* ----------------------------------------------------------- names -- */
 
-const SURNAMES = ['Kade', 'Moretti', 'Duvall', 'Verrado', 'Halcyon', 'Meridian', 'Vantage', 'Harlow', 'Bellamy', 'Osei', 'Nakamura', 'Achebe', 'Vega', 'Marlow', 'Dunbar', 'Sable', 'Okafor', 'Ferris', 'Lindqvist', 'Rossi', 'Adeyemi', 'Toure', 'Barros', 'Sinclair', 'Mwangi', 'Petrov'];
-const ADJECTIVES = ['Golden', 'Copper', 'Ivory', 'Crimson', 'Velvet', 'Silver', 'Blue', 'Old', 'Bright', 'Quiet', 'Little', 'Grand', 'Iron', 'Amber', 'Northern'];
-const NOUNS = ['Lantern', 'Anchor', 'Sparrow', 'Kettle', 'Fox', 'Chord', 'Needle', 'Orchid', 'Compass', 'Drum', 'Whistle', 'Crown', 'Bell', 'Pelican', 'Thistle'];
+const SURNAMES = ['Kade', 'Moretti', 'Duvall', 'Verrado', 'Halcyon', 'Meridian', 'Vantage', 'Harlow', 'Bellamy', 'Osei', 'Nakamura', 'Achebe', 'Vega', 'Marlow', 'Dunbar', 'Sable', 'Okafor', 'Ferris', 'Lindqvist', 'Rossi', 'Adeyemi', 'Toure', 'Barros', 'Sinclair', 'Mwangi', 'Petrov', 'Aterno', 'Bhatt', 'Calloway', 'Delacroix', 'Enright', 'Faraday', 'Gilliam', 'Haruki', 'Ibarra', 'Jourdain', 'Kwabena', 'Lasseter', 'Maitland', 'Nsua', 'Ortega', 'Prentice', 'Quintero', 'Radcliffe', 'Sanderson', 'Tavares', 'Ueno', 'Villiers', 'Whitlock', 'Ximenes', 'Yusuf', 'Zabala', 'Amari', 'Boateng', 'Castellan', 'Devereux', 'Espinoza', 'Fontaine', 'Grieves', 'Hollis', 'Idowu', 'Jansen', 'Kilbride', 'Lombardi', 'Mensah', 'Novak', 'Okonjo', 'Pemberton'];
+const ADJECTIVES = ['Golden', 'Copper', 'Ivory', 'Crimson', 'Velvet', 'Silver', 'Blue', 'Old', 'Bright', 'Quiet', 'Little', 'Grand', 'Iron', 'Amber', 'Northern', 'Eastern', 'Western', 'Southern', 'Upper', 'Lower', 'Royal', 'Emerald', 'Scarlet', 'Cobalt', 'Rusted', 'Painted', 'Hollow', 'Broken', 'Twelve', 'Half', 'Midnight', 'Morning', 'Marble', 'Brass', 'Slate'];
+const NOUNS = ['Lantern', 'Anchor', 'Sparrow', 'Kettle', 'Fox', 'Chord', 'Needle', 'Orchid', 'Compass', 'Drum', 'Whistle', 'Crown', 'Bell', 'Pelican', 'Thistle', 'Harp', 'Cymbal', 'Reed', 'Kestrel', 'Heron', 'Otter', 'Beacon', 'Lattice', 'Ember', 'Cinder', 'Quarry', 'Furnace', 'Rope', 'Sail', 'Mast', 'Prism', 'Echo', 'Bassline', 'Vinyl', 'Metronome', 'Tuning Fork', 'Sixteenth', 'Coda', 'Refrain'];
 const ABSTRACTS = ['Sound', 'Rhythm', 'Migration', 'Industry', 'the Republic', 'Broadcast', 'Everyday Life', 'Modern Art', 'Transport', 'the Sea'];
-const STREETWORDS = ['Street', 'Avenue', 'Row', 'Lane', 'Walk', 'Square', 'Gate', 'Wharf', 'Yard', 'Terrace', 'Parade', 'Crescent'];
+const STREETWORDS = ['Street', 'Avenue', 'Row', 'Lane', 'Walk', 'Square', 'Gate', 'Wharf', 'Yard', 'Terrace', 'Parade', 'Crescent', 'Rise', 'Vale', 'Mews', 'Close', 'Broadway', 'Embankment', 'Approach', 'Passage'];
 const FOODWORDS = ['Kitchen', 'Grill', 'Table', 'Rooms', 'Canteen', 'Bistro', 'Diner', 'Bar & Grill'];
 
 const pick = (rng, arr) => arr[(rng() * arr.length) | 0];
@@ -163,6 +163,96 @@ function placeName(kind, rng, quarter, cityName) {
     case 'tower': return `${s()} Tower`;
     default: return `${s()} ${pick(rng, STREETWORDS)}`;
   }
+}
+
+/* ------------------------------------------------- building tenants */
+
+// What a footprint is, by the character of the quarter it stands in. Weighted
+// by repetition like the place mixes above. Every building gets one, which is
+// what lets the map name almost all of them at street level instead of
+// labelling a handful of pins and leaving the rest anonymous.
+const USE_MIX = {
+  core: ['office', 'office', 'office', 'office', 'apartments', 'apartments', 'hotel', 'retail', 'retail', 'bank', 'chambers', 'chambers', 'parking'],
+  nightlife: ['club', 'bar', 'restaurant', 'apartments', 'apartments', 'studio', 'retail', 'hotel'],
+  old: ['apartments', 'retail', 'cafe', 'workshop', 'townhouse', 'townhouse', 'chambers'],
+  residential: ['apartments', 'house', 'house', 'house', 'retail', 'workshop', 'surgery'],
+  wealth: ['villa', 'villa', 'apartments', 'retail', 'chambers'],
+  campus: ['faculty', 'halls', 'apartments', 'library', 'sports', 'cafe'],
+  harbour: ['warehouse', 'warehouse', 'shed', 'works', 'coldstore', 'chandlery', 'office'],
+  industry: ['works', 'warehouse', 'depot', 'plant', 'yard', 'office'],
+  green: ['house', 'pavilion', 'glasshouse', 'villa'],
+  military: ['barracks', 'hangar', 'store', 'workshop'],
+};
+
+const USE_KEYS = Object.keys(USE_MIX).reduce((acc, role) => {
+  for (const u of USE_MIX[role]) if (!acc.includes(u)) acc.push(u);
+  return acc;
+}, []);
+
+export const USE_LABEL = {
+  office: 'Offices', apartments: 'Apartments', hotel: 'Hotel', retail: 'Shops',
+  bank: 'Bank', chambers: 'Chambers', parking: 'Car park', club: 'Club',
+  bar: 'Bar', restaurant: 'Restaurant', studio: 'Studio', cafe: 'Café',
+  workshop: 'Workshop', townhouse: 'Townhouses', house: 'House', villa: 'Villa',
+  surgery: 'Surgery', faculty: 'Faculty', halls: 'Halls of residence',
+  library: 'Library', sports: 'Sports hall', warehouse: 'Warehouse',
+  shed: 'Transit shed', works: 'Works', coldstore: 'Cold store',
+  chandlery: 'Chandlery', depot: 'Depot', plant: 'Plant', yard: 'Yard',
+  pavilion: 'Pavilion', glasshouse: 'Glasshouse', barracks: 'Barracks',
+  hangar: 'Hangar', store: 'Stores',
+};
+
+const FIRMWORDS = ['Holdings', 'Group', 'Industries', 'Works', 'Trading', 'Freight', 'Supply', 'Engineering', 'Fabrication', 'Logistics'];
+const BLOCKWORDS = ['Court', 'Mansions', 'House', 'Buildings', 'Terrace', 'Chambers', 'Place', 'Point', 'Wharf', 'Yard'];
+
+// Names are derived, not stored: a capital has thousands of footprints and
+// only a few hundred are ever on screen at a size worth reading. Seeding off
+// the city name and the building index keeps them stable anyway.
+export function buildingInfo(cityName, index, use) {
+  const rng = mulberry32(seedFromString(`${cityName}::b${index}`));
+  const s = () => pick(rng, SURNAMES);
+  const a = () => pick(rng, ADJECTIVES);
+  const n = () => pick(rng, NOUNS);
+  const num = () => 1 + ((rng() * 240) | 0);
+  let name;
+  switch (use) {
+    case 'office': name = rng() < 0.45 ? `${s()} House` : rng() < 0.6 ? `${s()} ${pick(rng, FIRMWORDS)}` : `${num()} ${s()} ${pick(rng, STREETWORDS)}`; break;
+    case 'chambers': name = `${s()} Chambers`; break;
+    case 'bank': name = `${s()} Bank`; break;
+    case 'hotel': name = rng() < 0.5 ? `The ${s()} Hotel` : `Hotel ${n()}`; break;
+    case 'apartments': name = rng() < 0.5 ? `${s()} ${pick(rng, BLOCKWORDS)}` : `${a()} ${n()} Apartments`; break;
+    case 'townhouse': name = `${num()}–${num() + 6} ${s()} ${pick(rng, STREETWORDS)}`; break;
+    case 'house': name = `${num()} ${s()} ${pick(rng, STREETWORDS)}`; break;
+    case 'villa': name = rng() < 0.5 ? `${s()} Lodge` : `The ${a()} ${n()}`; break;
+    case 'retail': name = rng() < 0.5 ? `${s()}'s` : `${a()} ${n()} Stores`; break;
+    case 'cafe': name = `Café ${s()}`; break;
+    case 'restaurant': name = rng() < 0.5 ? `${s()}'s Table` : `The ${a()} ${n()}`; break;
+    case 'bar': name = `The ${a()} ${n()}`; break;
+    case 'club': name = rng() < 0.5 ? `Club ${n()}` : a().toUpperCase(); break;
+    case 'studio': name = `${s()} Sound`; break;
+    case 'workshop': name = `${s()} ${rng() < 0.5 ? 'Repairs' : 'Workshop'}`; break;
+    case 'surgery': name = `${s()} Surgery`; break;
+    case 'faculty': name = `${pick(rng, ABSTRACTS)} Faculty`; break;
+    case 'halls': name = `${s()} Hall`; break;
+    case 'library': name = `${s()} Library`; break;
+    case 'sports': name = `${s()} Sports Hall`; break;
+    case 'warehouse': name = rng() < 0.4 ? `Unit ${num()}` : `${s()} ${pick(rng, FIRMWORDS)}`; break;
+    case 'shed': name = `Transit Shed ${1 + ((rng() * 12) | 0)}`; break;
+    case 'coldstore': name = `${s()} Cold Store`; break;
+    case 'chandlery': name = `${s()} Chandlery`; break;
+    case 'works': name = `${s()} Works`; break;
+    case 'plant': name = `${s()} ${rng() < 0.5 ? 'Plant' : 'Refinery'}`; break;
+    case 'depot': name = `${s()} Depot`; break;
+    case 'yard': name = `${s()} Yard`; break;
+    case 'parking': name = `${s()} ${pick(rng, STREETWORDS)} Car Park`; break;
+    case 'pavilion': name = `${s()} Pavilion`; break;
+    case 'glasshouse': name = `${s()} Glasshouse`; break;
+    case 'barracks': name = `${s()} Block`; break;
+    case 'hangar': name = `Hangar ${1 + ((rng() * 9) | 0)}`; break;
+    case 'store': name = `Stores ${1 + ((rng() * 9) | 0)}`; break;
+    default: name = `${s()} Building`;
+  }
+  return { name, use, label: USE_LABEL[use] || 'Building' };
 }
 
 /* ------------------------------------------------------- the build -- */
@@ -237,6 +327,7 @@ export function buildCityDetail(planet, city) {
   // Roof tone per footprint. Real blocks are never one flat colour, and three
   // buckets is enough to stop a district reading as a single painted shape.
   const tone = [];
+  const use = [];
   const parks = [];
   const openBlocks = [];
 
@@ -288,6 +379,7 @@ export function buildCityDetail(planet, city) {
         lotCorners(q, o, u0, v0, u1, v1, buildings);
         tall.push(isTall && rng() < 0.6 ? 1 : 0);
         tone.push((rng() * 3) | 0);
+        use.push(USE_KEYS.indexOf(pick(rng, USE_MIX[quarter.role] || USE_MIX.residential)));
       }
     }
   }
@@ -320,6 +412,7 @@ export function buildCityDetail(planet, city) {
   }
 
   seedCanonPlaces(city, quarters, openBlocks, rng, pois, usedBlocks, usedNames);
+  seedHeadOffices(city, quarters, openBlocks, rng, pois, usedBlocks, usedNames);
 
   // Canon places are additional to the generated ones, not instead of them:
   // the capital should still have restaurants nobody has written about.
@@ -354,6 +447,8 @@ export function buildCityDetail(planet, city) {
     buildings: Float32Array.from(buildings),
     tall: Uint8Array.from(tall),
     tone: Uint8Array.from(tone),
+    use: Uint8Array.from(use),
+    useKeys: USE_KEYS,
     stats: { blocks, buildings: tall.length, parks: parks.length, places: pois.length },
   };
 }
@@ -404,6 +499,36 @@ function seedCanonPlaces(city, quarters, openBlocks, rng, pois, usedBlocks, used
     pois.push({
       x: blk.x, y: blk.y, kind: 'canon', canon: true,
       type: def.type, icon: def.icon, name: def.name, note: def.note,
+      quarter: quarters[qi].name,
+    });
+  }
+}
+
+// Head offices. A corporation with a tower somewhere real is worth more to a
+// story than one that only exists in a wiki paragraph.
+function seedHeadOffices(city, quarters, openBlocks, rng, pois, usedBlocks, usedNames) {
+  for (const co of CORPORATIONS) {
+    if (co.hq !== city.name) continue;
+    let qi = quarters.findIndex((q) => q.role === co.role);
+    if (qi < 0) qi = 0;
+    const jx = quarters[qi].x + (rng() - 0.5) * city.radius * 0.4;
+    const jy = quarters[qi].y + (rng() - 0.5) * city.radius * 0.4;
+    let best = -1;
+    let bd = Infinity;
+    for (let i = 0; i < openBlocks.length; i++) {
+      if (usedBlocks.has(i)) continue;
+      const d = Math.hypot(openBlocks[i].x - jx, openBlocks[i].y - jy);
+      if (d < bd) { bd = d; best = i; }
+    }
+    if (best < 0) continue;
+    usedBlocks.add(best);
+    const name = co.short + " HQ";
+    usedNames.set(name, 1);
+    pois.push({
+      x: openBlocks[best].x, y: openBlocks[best].y,
+      kind: 'hq', hq: true, corp: co.name,
+      type: 'landmark', icon: co.icon, name,
+      note: co.blurb,
       quarter: quarters[qi].name,
     });
   }

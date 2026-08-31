@@ -5,7 +5,7 @@ import { madeDeckAll, madeHouses } from '../madeDeckData';
 import {
   WORLD_W, WORLD_H, FACTIONS, MAP_STYLES, BIOME_LEGEND,
   generatePlanet, rasterizeTerrain, drawPlanetVectors,
-  randomSeedWord, palette, cityContains, citySectorAt,
+  randomSeedWord, palette, cityContains, citySectorAt, CORPORATIONS,
 } from '../mapGenerator';
 import { buildCityDetail, drawCityDetail, placeCrew } from '../cityDetail';
 import { drawPlanetLabels, POI_TYPES } from '../mapLabels';
@@ -30,13 +30,16 @@ const DETAIL_ZOOM = 150;
 // takes single-digit milliseconds to rebuild, so this can stay small.
 const DETAIL_CACHE = 6;
 
+// Bump when the file shape changes in a way an older reader could not handle.
+const OGX_VERSION = 1;
+
 export default function MapPage() {
   const [seed, setSeed] = useState('NEON-GRID-2481');
   const [seedInput, setSeedInput] = useState('NEON-GRID-2481');
   const [style, setStyle] = useState('map');
   const [layers, setLayers] = useState({
     districts: true, roads: true, buildings: true, rivers: true,
-    pois: true, made: true, sick: true, labels: true, grid: false,
+    pois: true, made: true, sick: true, labels: true, tenants: true, grid: false,
   });
   const [selected, setSelected] = useState(null);
   const [cam, setCam] = useState({ x: 0, y: 0, z: 0.3 });
@@ -47,6 +50,8 @@ export default function MapPage() {
   // Render-safe mirror of what the streaming cache holds, so the panel can
   // report it without reaching into a ref during render.
   const [streamed, setStreamed] = useState({});
+  const [placeTypes, setPlaceTypes] = useState(() => Object.fromEntries(Object.keys(POI_TYPES).map((k) => [k, true])));
+  const [query, setQuery] = useState('');
 
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
@@ -58,6 +63,8 @@ export default function MapPage() {
   const sharpTimer = useRef(0);
   const streamTimer = useRef(0);
   const detailsRef = useRef(new Map());
+  const fileRef = useRef(null);
+  const pendingCamRef = useRef(null);
 
   // The rAF draw loop reads the camera through a ref so it never has to be
   // re-created when the camera moves. Declared first so it is up to date
@@ -233,7 +240,15 @@ export default function MapPage() {
     return true;
   }, []);
 
-  useEffect(() => { fitView(); }, [fitView]);
+  useEffect(() => {
+    // A camera restored from an .ogx wins over the default fit.
+    if (pendingCamRef.current && world) {
+      const c = pendingCamRef.current;
+      pendingCamRef.current = null;
+      if (c && c.z > 0) { setCam(c); return; }
+    }
+    fitView();
+  }, [fitView, world]);
 
   const flyTo = useCallback((c) => {
     const wrap = wrapRef.current;
@@ -308,7 +323,7 @@ export default function MapPage() {
     // are reserved first, then names are placed highest priority first, and
     // anything that cannot find a clear box is dropped rather than overlapped.
     drawPlanetLabels(ctx, world, style, { ox, oy, z, W, H }, {
-      labels: layers.labels, layers, details, crew,
+      labels: layers.labels, layers, details, crew, placeTypes,
     });
 
     if (selected) {
@@ -318,7 +333,7 @@ export default function MapPage() {
       ctx.lineWidth = 3;
       ctx.stroke();
     }
-  }, [world, crew, layers, style, selected]);
+  }, [world, crew, layers, style, selected, placeTypes]);
 
   useEffect(() => {
     let raf = 0;
@@ -333,7 +348,7 @@ export default function MapPage() {
     return () => { alive = false; cancelAnimationFrame(raf); };
   }, [draw]);
 
-  useEffect(() => { dirtyRef.current = true; }, [cam, layers, selected, world, crew, style, status, detailTick]);
+  useEffect(() => { dirtyRef.current = true; }, [cam, layers, selected, world, crew, style, status, detailTick, placeTypes]);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -450,6 +465,67 @@ export default function MapPage() {
     setSeedInput(next);
   };
 
+  /* -------------------------------------------------------- .ogx file -- */
+
+  // An .ogx is not a picture of the map, it is the map: the world is fully
+  // determined by its seed, so a few hundred bytes rebuild it exactly. The
+  // settlement list is carried along so a file can be read by something that
+  // is not this generator.
+  const saveOgx = () => {
+    if (!world) return;
+    const doc = {
+      format: 'ongaku-atlas',
+      version: OGX_VERSION,
+      generator: 'dj24.net/map',
+      saved: new Date().toISOString(),
+      seed,
+      view: { style, camera: cam, layers, placeTypes },
+      index: {
+        settlements: world.cities.map((c) => ({
+          name: c.name, kind: c.kind, faction: c.faction,
+          x: Math.round(c.x * 100) / 100, y: Math.round(c.y * 100) / 100,
+          pop: c.pop, climate: c.climate, elev: c.elev,
+          port: !!c.port, airport: c.airport ? c.airport.name : null,
+        })),
+        regions: world.regions.map((r) => ({ name: r.name, kind: r.kind })),
+        routes: world.routes.length,
+      },
+    };
+    const blob = new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${seed.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.ogx`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    setStatus('Saved .ogx');
+    setTimeout(() => setStatus(''), 1400);
+  };
+
+  const loadOgx = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const doc = JSON.parse(String(reader.result));
+        if (doc.format !== 'ongaku-atlas' || !doc.seed) throw new Error('not an Ongaku atlas file');
+        // The camera has to wait for the world: changing the seed tears the
+        // current one down, and fitView would overwrite anything set now.
+        pendingCamRef.current = doc.view?.camera || null;
+        if (doc.view?.style) setStyle(doc.view.style);
+        if (doc.view?.layers) setLayers((l) => ({ ...l, ...doc.view.layers }));
+        if (doc.view?.placeTypes) setPlaceTypes((t) => ({ ...t, ...doc.view.placeTypes }));
+        setSeed(String(doc.seed).toUpperCase());
+        setSeedInput(String(doc.seed).toUpperCase());
+        setStatus(`Loaded ${file.name}`);
+        setTimeout(() => setStatus(''), 1800);
+      } catch (err) {
+        setStatus(`Could not read that file — ${err.message}`);
+        setTimeout(() => setStatus(''), 3200);
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const savePng = () => {
     if (!world) return;
     setStatus('Exporting…');
@@ -467,7 +543,7 @@ export default function MapPage() {
       // The export runs the same label engine at 1:1 world scale, so the
       // poster is decluttered exactly like the screen is — just larger.
       drawPlanetLabels(c, world, style, { ox: 0, oy: 0, z: 1, W: WORLD_W, H: WORLD_H }, {
-        labels: layers.labels, layers, sizeScale: EXPORT_SCALE, margin: 24,
+        labels: layers.labels, layers, placeTypes, sizeScale: EXPORT_SCALE, margin: 24,
       });
 
       c.fillStyle = 'rgba(255,255,255,0.94)';
@@ -494,6 +570,30 @@ export default function MapPage() {
   const toggle = (k) => setLayers((l) => ({ ...l, [k]: !l[k] }));
 
   /* ------------------------------------------------------------ view -- */
+
+  // Settlements ranked so the index reads capital-first rather than in
+  // generation order, and filtered live by the search box.
+  const index = useMemo(() => {
+    if (!world) return [];
+    const q = query.trim().toLowerCase();
+    const order = { capital: 0, mega: 1, hostile: 2, fortress: 2, military: 2, port: 3, town: 4, village: 5, outpost: 6 };
+    return world.cities
+      .filter((c) => !q || c.name.toLowerCase().includes(q) || c.kind.includes(q))
+      .sort((a, b) => (order[a.kind] ?? 9) - (order[b.kind] ?? 9) || a.name.localeCompare(b.name))
+      .slice(0, 60);
+  }, [world, query]);
+
+  const worldStats = useMemo(() => {
+    if (!world) return { total: 0, village: 0, outpost: 0, routes: 0, ports: 0, airports: 0 };
+    return {
+      total: world.cities.length,
+      village: world.cities.filter((c) => c.kind === 'village').length,
+      outpost: world.cities.filter((c) => c.kind === 'outpost').length,
+      routes: world.routes.length,
+      ports: world.cities.filter((c) => c.port).length,
+      airports: world.cities.filter((c) => c.airport).length,
+    };
+  }, [world]);
 
   const scaleBar = useMemo(() => {
     const targetPx = 110;
@@ -553,6 +653,15 @@ export default function MapPage() {
         </div>
 
         <button className="map-btn primary" onClick={() => regenerate()}>🎲 New world</button>
+        <button className="map-btn" onClick={saveOgx} title="Save this world as an .ogx atlas file">💾 Save .ogx</button>
+        <button className="map-btn" onClick={() => fileRef.current?.click()} title="Open an .ogx atlas file">📂 Open .ogx</button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".ogx,application/json"
+          style={{ display: 'none' }}
+          onChange={(e) => { loadOgx(e.target.files?.[0]); e.target.value = ''; }}
+        />
         <button className="map-btn gold" onClick={savePng}>⬇ Save PNG</button>
       </div>
 
@@ -685,18 +794,78 @@ export default function MapPage() {
         </div>
 
         <aside className="map-legend">
+          <h3>World</h3>
+          <dl className="map-worldstats">
+            <div><dt>Settlements</dt><dd>{worldStats.total}</dd></div>
+            <div><dt>Villages</dt><dd>{worldStats.village}</dd></div>
+            <div><dt>Outposts</dt><dd>{worldStats.outpost}</dd></div>
+            <div><dt>Routes</dt><dd>{worldStats.routes}</dd></div>
+            <div><dt>Harbours</dt><dd>{worldStats.ports}</dd></div>
+            <div><dt>Airfields</dt><dd>{worldStats.airports}</dd></div>
+          </dl>
+
+          <h3>Index</h3>
+          <input
+            className="map-search"
+            placeholder="Find a settlement…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <ul className="map-index">
+            {index.map((c) => (
+              <li key={c.name}>
+                <button onClick={() => { flyTo(c); setSelected({ ...c, _t: 'city' }); }}>
+                  <span className="map-dot" style={{ background: FACTIONS[c.faction].color }} />
+                  <span className="map-index-name">{c.name}</span>
+                  <span className="map-index-kind">{c.kind}</span>
+                </button>
+              </li>
+            ))}
+            {!index.length && <li className="map-index-empty">Nothing matches “{query}”.</li>}
+          </ul>
+
           <h3>Layers</h3>
           <div className="map-layer-list">
             <label><input type="checkbox" checked={layers.roads} onChange={() => toggle('roads')} /> Roads & sea routes</label>
             <label><input type="checkbox" checked={layers.rivers} onChange={() => toggle('rivers')} /> Rivers & lakes</label>
             <label><input type="checkbox" checked={layers.districts} onChange={() => toggle('districts')} /> Quarter territory</label>
             <label><input type="checkbox" checked={layers.buildings} onChange={() => toggle('buildings')} /> Buildings</label>
+            <label><input type="checkbox" checked={layers.tenants} onChange={() => toggle('tenants')} /> Building tenants</label>
             <label><input type="checkbox" checked={layers.pois} onChange={() => toggle('pois')} /> Places</label>
             <label><input type="checkbox" checked={layers.made} onChange={() => toggle('made')} /> 🃏 Made Deck (54)</label>
             <label><input type="checkbox" checked={layers.sick} onChange={() => toggle('sick')} /> 💀 Sick 52 cells</label>
             <label><input type="checkbox" checked={layers.labels} onChange={() => toggle('labels')} /> Labels</label>
             <label><input type="checkbox" checked={layers.grid} onChange={() => toggle('grid')} /> Coordinate grid</label>
           </div>
+
+          <h3>
+            Places
+            <button className="map-mini" onClick={() => setPlaceTypes(allPlaceTypes(true))}>all</button>
+            <button className="map-mini" onClick={() => setPlaceTypes(allPlaceTypes(false))}>none</button>
+          </h3>
+          <div className="map-layer-list">
+            {Object.entries(POI_TYPES).map(([k, t]) => (
+              <label key={k}>
+                <input
+                  type="checkbox"
+                  checked={placeTypes[k] !== false}
+                  onChange={() => setPlaceTypes((s) => ({ ...s, [k]: s[k] === false }))}
+                />
+                <span className="map-ring" style={{ borderColor: t.color }} /> {t.label}
+              </label>
+            ))}
+          </div>
+
+          <h3>Corporations</h3>
+          <ul className="map-key">
+            {CORPORATIONS.map((co) => (
+              <li key={co.name}>
+                <button className="map-linkline" onClick={() => { const c = world?.cities.find((o) => o.name === co.hq); if (c) { flyTo(c); setSelected({ ...c, _t: 'city' }); } }}>
+                  {co.icon} <strong>{co.short}</strong> <em>{co.hq}</em>
+                </button>
+              </li>
+            ))}
+          </ul>
 
           <h3>Factions</h3>
           <ul className="map-key">
@@ -705,13 +874,13 @@ export default function MapPage() {
             ))}
           </ul>
 
-          <h3>Places</h3>
+          <h3>Map key</h3>
           <ul className="map-key">
-            {Object.entries(POI_TYPES).map(([k, t]) => (
-              <li key={k}><span className="map-ring" style={{ borderColor: t.color }} /> {t.label}</li>
-            ))}
             <li><span className="map-dot" style={{ background: '#D4AF37' }} /> Made Deck member (card shown)</li>
             <li><span className="map-dot" style={{ background: '#DC2626' }} /> Sick 52 cell</li>
+            <li><span className="map-line" style={{ background: '#94a3b8', height: '5px' }} /> Interstate</li>
+            <li><span className="map-line" style={{ background: '#94a3b8', height: '3px' }} /> Highway</li>
+            <li><span className="map-line" style={{ background: '#cbd5e1' }} /> Road & village lane</li>
           </ul>
 
           <h3>Terrain</h3>
@@ -726,7 +895,8 @@ export default function MapPage() {
           <h3>Seed</h3>
           <p className="map-legend-note">
             <code>{seed}</code><br />
-            The same seed always rebuilds the same world, so a map can be shared by seed alone.
+            The same seed always rebuilds the same world, so an <code>.ogx</code> file is a few
+            hundred bytes rather than a copy of the map.
           </p>
         </aside>
       </div>
@@ -776,6 +946,8 @@ export default function MapPage() {
 }
 
 /* -------------------------------------------------------------- utils */
+
+const allPlaceTypes = (on) => Object.fromEntries(Object.keys(POI_TYPES).map((k) => [k, on]));
 
 function biomeSwatch(style, key) {
   const P = palette(style);
