@@ -138,8 +138,8 @@ const PALETTES = {
     steppe: [154, 152, 96], woodland: [95, 127, 62], forest: [63, 102, 51],
     jungle: [44, 82, 40], taiga: [58, 91, 69], tundra: [138, 141, 120],
     ice: [230, 238, 242], rock: [125, 115, 100], snow: [240, 244, 247],
-    shadeMin: 0.55, shadeMax: 1.35, water: '#0d3459', deepWater: '#06142a',
-    river: '#2a7fb8', road: 'rgba(255,231,175,.85)', roadCase: 'rgba(20,14,4,.55)',
+    shadeMin: 0.55, shadeMax: 1.35, jitter: 1, shore: [236, 226, 196], water: '#0d3459', deepWater: '#06142a',
+    river: '#2a7fb8', road: '#fbe9bd', roadCase: 'rgba(14,11,6,.82)',
     label: '#ffffff', labelGeo: '#e6eefa', labelWater: 'rgba(179,214,255,.92)', labelHalo: 'rgba(4,10,20,.92)', ui: '#f8fafc',
     urban: 'rgba(158,150,138,.74)', urbanCore: 'rgba(216,207,191,.62)',
     urbanCoreFade: 'rgba(216,207,191,0)',
@@ -153,13 +153,17 @@ const PALETTES = {
   // switch to when you want roads, districts and labels to carry the map.
   map: {
     abyss: [164, 201, 228], ocean: [170, 205, 231], shelf: [178, 211, 235], surf: [186, 217, 239],
-    beach: [240, 234, 219], desert: [245, 235, 212], dune: [245, 235, 212],
-    scrub: [242, 239, 233], savanna: [242, 239, 233], grass: [242, 239, 233],
-    steppe: [242, 239, 233], woodland: [214, 232, 200], forest: [200, 224, 184],
-    jungle: [196, 221, 180], taiga: [214, 232, 205], tundra: [244, 244, 241],
+    // Flat, but not featureless. A game atlas differentiates farmland from
+    // scrub from desert with a handful of clearly separated fills; the old
+    // palette collapsed all four into the same cream and left the continent
+    // looking bleached.
+    beach: [239, 228, 199], desert: [240, 226, 191], dune: [244, 232, 200],
+    scrub: [235, 230, 202], savanna: [231, 229, 196], grass: [219, 232, 200],
+    steppe: [232, 229, 210], woodland: [203, 225, 187], forest: [182, 212, 166],
+    jungle: [166, 202, 152], taiga: [204, 224, 199], tundra: [240, 241, 236],
     ice: [253, 254, 255], rock: [232, 228, 220], snow: [255, 255, 255],
-    shadeMin: 0.975, shadeMax: 1.025, water: '#aacde7', deepWater: '#9ac2e0',
-    river: '#8fbfe0', road: '#ffffff', roadCase: '#d4d0c8',
+    shadeMin: 0.99, shadeMax: 1.01, jitter: 0.22, shore: [126, 158, 182], water: '#aacde7', deepWater: '#9ac2e0',
+    river: '#8fbfe0', road: '#ffffff', roadCase: '#39424f',
     label: '#3c4043', labelGeo: '#6f7276', labelWater: '#7ba7cc', labelHalo: 'rgba(255,255,255,.95)', ui: '#202124',
     urban: 'rgba(233,229,223,.95)', urbanCore: 'rgba(223,218,210,.75)',
     urbanCoreFade: 'rgba(223,218,210,0)',
@@ -175,8 +179,8 @@ const PALETTES = {
     steppe: [200, 199, 150], woodland: [150, 180, 122], forest: [122, 158, 106],
     jungle: [104, 143, 96], taiga: [146, 174, 140], tundra: [206, 203, 186],
     ice: [246, 250, 252], rock: [188, 173, 150], snow: [252, 252, 252],
-    shadeMin: 0.7, shadeMax: 1.22, water: '#8dbad6', deepWater: '#78a8c8',
-    river: '#5a9ec4', road: 'rgba(255,255,255,.9)', roadCase: 'rgba(140,130,110,.7)',
+    shadeMin: 0.7, shadeMax: 1.22, jitter: 0.8, shore: [140, 164, 178], water: '#8dbad6', deepWater: '#78a8c8',
+    river: '#5a9ec4', road: '#ffffff', roadCase: '#6d6555',
     label: '#33413d', labelGeo: '#4a5a54', labelWater: '#5d92b5', labelHalo: 'rgba(255,255,255,.92)', ui: '#1f2937',
     urban: 'rgba(208,200,188,.85)', urbanCore: 'rgba(196,187,173,.6)',
     urbanCoreFade: 'rgba(196,187,173,0)',
@@ -1673,6 +1677,7 @@ export function rasterizeTerrain(out, planet, rect, W, H, styleKey, extraOctaves
   const HW = W + 1;
   const HH = H + 1;
   const heights = new Float32Array(HW * HH);
+  const tone = new Float32Array(HW * HH);
   const moist = new Float32Array(HW * HH);
 
   const stepX = rect.w / W;
@@ -1699,6 +1704,7 @@ export function rasterizeTerrain(out, planet, rect, W, H, styleKey, extraOctaves
       const h11 = hf[r1 + 1];
       let h = (h00 + (h10 - h00) * tx) + ((h01 + (h11 - h01) * tx) - (h00 + (h10 - h00) * tx)) * ty;
 
+      const smooth = h;
       if (extraOctaves > 0) {
         h += detailOctaves(noiseH, nx, ny, FIELD_OCT, FIELD_OCT + extraOctaves) * DETAIL_AMP;
       }
@@ -1711,6 +1717,9 @@ export function rasterizeTerrain(out, planet, rect, W, H, styleKey, extraOctaves
 
       const k = py * HW + px;
       heights[k] = h;
+      // Colour follows the smooth field, mostly. A little of the detail is kept
+      // so the ground is not dead flat, but not enough to read as noise.
+      tone[k] = smooth + (h - smooth) * 0.22;
       moist[k] = mt;
     }
   }
@@ -1724,6 +1733,7 @@ export function rasterizeTerrain(out, planet, rect, W, H, styleKey, extraOctaves
   const gx = RELIEF / stepX;
   const gy = RELIEF / stepY;
   const shadeRange = P.shadeMax - P.shadeMin;
+  const J = P.jitter ?? 1;
 
   // Light from the north-west at roughly 45 degrees — the convention every
   // printed atlas uses, and the one that reads as "raised" rather than "sunken".
@@ -1763,20 +1773,21 @@ export function rasterizeTerrain(out, planet, rect, W, H, styleKey, extraOctaves
 
       // Break biome edges with high-frequency noise so bands blend into each
       // other instead of meeting along a hard contour line.
-      const jitter = noiseH(nxOf(rect, px, stepX) * 90, nyOf(rect, py, stepY) * 90) * 0.055;
+      const jitter = noiseH(nxOf(rect, px, stepX) * 90, nyOf(rect, py, stepY) * 90) * 0.055 * J;
       // A touch of the same noise in the shading keeps large single-biome
       // areas from looking like flat paint at high zoom.
       shade *= 1 + jitter * 0.55;
       const m = moist[k] + jitter;
+      const hc = tone[k];
       // Temperature falls with latitude and with altitude.
-      const temp = Math.max(0, Math.min(1, (1 - lat * 1.05) - Math.max(0, h - 0.18) * 1.15 + jitter * 0.5));
+      const temp = Math.max(0, Math.min(1, (1 - lat * 1.05) - Math.max(0, hc - 0.18) * 1.15 + jitter * 0.5));
 
       // Mottling the elevation used for colour breaks the snow line and the
       // tree line into a ragged edge instead of a clean contour.
-      const hv = h + jitter * 1.4;
+      const hv = hc + jitter * 1.4;
 
       let col;
-      if (h < 0.002) col = P.beach;
+      if (h < 0.006) col = P.beach;
       else if (hv > 0.86) col = P.snow;
       else if (hv > 0.44) col = temp < 0.26 ? P.snow : P.rock;
       else if (temp < 0.10) col = P.ice;
@@ -1787,7 +1798,16 @@ export function rasterizeTerrain(out, planet, rect, W, H, styleKey, extraOctaves
       else if (m > 0.47) col = P.forest;
       else if (m > 0.31) col = P.savanna;
       else if (m > 0.18) col = P.scrub;
-      else col = ((px + py) & 7) < 3 ? P.dune : P.desert;
+      else col = J > 0.5 && ((px + py) & 7) < 3 ? P.dune : P.desert;
+
+      // One pixel of shoreline wherever land touches water. A coast that is
+      // only the place two fills happen to meet never reads as a coast.
+      if (P.shore
+        && (heights[k + 1] <= SEA || heights[k + HW] <= SEA
+          || (px > 0 && heights[k - 1] <= SEA) || (py > 0 && heights[k - HW] <= SEA))) {
+        col = P.shore;
+        shade = 1;
+      }
 
       out[o] = Math.min(255, col[0] * shade);
       out[o + 1] = Math.min(255, col[1] * shade);
@@ -1991,13 +2011,17 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
       if (!c.streets || c.radius * scale < 110) continue;
       // Local streets carry the city at close range, so they get a casing
       // once they are wide enough for one to read.
-      if (c.radius * scale > 400) {
+      // Streets are cased as soon as the casing would be more than a pixel,
+      // which is much earlier than it used to be: an uncased street grid is a
+      // sheet of graph paper, a cased one is a city.
+      const cased = c.radius * scale > 150;
+      if (cased) {
         ctx.strokeStyle = P.roadCase;
-        ctx.lineWidth = lw(2.4);
+        ctx.lineWidth = lw(3.0);
         for (const s of c.streets) { trace(s); ctx.stroke(); }
       }
       ctx.strokeStyle = P.road;
-      ctx.lineWidth = lw(c.radius * scale > 400 ? 1.5 : 0.9);
+      ctx.lineWidth = lw(cased ? 1.8 : 1.0);
       for (const s of c.streets) { trace(s); ctx.stroke(); }
     }
 
@@ -2006,9 +2030,11 @@ export function drawPlanetVectors(ctx, planet, styleKey, scale, opts = {}) {
     // Wider than a city map would draw them: at planet zoom these lines are
     // the only thing showing how the world is connected, so they have to hold
     // up against terrain rather than disappear into it.
+    // Casing then fill. The gap between the two numbers is the visible dark
+    // edge, and it is what makes a junction look like a junction.
     const WIDTH = {
-      motorway: [10.5, 6.2], highway: [7.0, 4.0], road: [4.4, 2.4],
-      lane: [2.8, 1.4], access: [3.0, 1.5], ring: [4.0, 2.1], radial: [3.6, 1.9],
+      motorway: [11.5, 6.6], highway: [8.0, 4.4], road: [5.4, 2.8],
+      lane: [3.4, 1.5], access: [3.6, 1.6], ring: [6.2, 3.4], radial: [5.6, 3.0],
     };
     for (const pass of [0, 1]) {
       ctx.strokeStyle = pass === 0 ? P.roadCase : P.road;
