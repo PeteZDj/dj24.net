@@ -32,10 +32,26 @@ export default function MafiaMember() {
             <img src={member.image} alt={member.name} />
           ) : (
             <div className="sick52-card-placeholder" style={{
-              background: `${member.houseColor}22`, height: 400,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem',
+              background: 'radial-gradient(circle, #1a1610 0%, #0c0a08 100%)',
+              border: `2px solid ${member.houseColor}55`,
+              height: 400,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '2rem',
+              textAlign: 'center',
+              borderRadius: '8px',
             }}>
-              {member.name.charAt(0)}
+              <span style={{ fontSize: '5rem', lineHeight: 1, filter: `drop-shadow(0 0 12px ${member.houseColor}66)`, color: member.houseColor }}>
+                {member.houseSymbol}
+              </span>
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, marginTop: '1rem', letterSpacing: '3px', color: '#f3f4f6' }}>
+                {member.card ? `${member.card}${member.houseSymbol} · ${member.title.toUpperCase()}` : 'CLASSIFIED'}
+              </span>
+              <span style={{ fontSize: '0.8rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '2px', marginTop: '0.5rem' }}>
+                Character Art In Production Queue
+              </span>
             </div>
           )}
         </div>
@@ -126,6 +142,30 @@ export default function MafiaMember() {
           )}
         </div>
       </div>
+
+      {member.modelSheet && (
+        <div className="mafia-model-sheet-container" style={{
+          marginTop: '2.5rem',
+          padding: '1.5rem',
+          background: 'rgba(255, 255, 255, 0.03)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '12px',
+        }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: 0, marginBottom: '0.5rem' }}>
+            <span>📐</span> 3D Model & Animation Turnaround Sheet
+          </h3>
+          <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+            Production-grade orthographic model sheet (Front, Side, Back A-pose views) with costume callouts, weapon schematics, and color swatches for 3D modeling (Blender / Maya / Unity) and AI video generation.
+          </p>
+          <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.15)', background: '#0a0a0a' }}>
+            <img 
+              src={member.modelSheet} 
+              alt={`${member.name} Turnaround Model Sheet`} 
+              style={{ width: '100%', height: 'auto', display: 'block' }} 
+            />
+          </div>
+        </div>
+      )}
 
       <div className="sick52-member-nav">
         {prev ? (

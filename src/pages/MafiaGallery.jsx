@@ -12,8 +12,25 @@ function MemberCard({ m }) {
         {m.image ? (
           <img src={m.image} alt={m.name} loading="lazy" />
         ) : (
-          <div className="sick52-card-placeholder" style={{ background: accent + '22' }}>
-            <span>{m.name.charAt(0)}</span>
+          <div className="sick52-card-placeholder" style={{
+            background: 'radial-gradient(circle, #1a1610 0%, #0c0a08 100%)',
+            border: `1px solid ${accent}44`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+            textAlign: 'center',
+          }}>
+            <span style={{ fontSize: '2.5rem', lineHeight: 1, filter: `drop-shadow(0 0 10px ${accent}66)`, color: accent }}>
+              {m.houseSymbol}
+            </span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, marginTop: '0.5rem', letterSpacing: '2px', color: '#f3f4f6' }}>
+              {m.card ? `${m.card}${m.houseSymbol}` : 'CLASSIFIED'}
+            </span>
+            <span style={{ fontSize: '0.6rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '0.25rem' }}>
+              Art in Queue
+            </span>
           </div>
         )}
         <div className="sick52-card-overlay">
@@ -37,8 +54,11 @@ function MemberCard({ m }) {
 
 export default function MafiaGallery() {
   const [view, setView] = useState('houses');
+  const [filterMode, setFilterMode] = useState('illustrated'); // 'illustrated' (default) or 'all'
   const roster = getMafiaRoster();
   const houses = getMafiaByHouse();
+
+  const displayedRoster = filterMode === 'illustrated' ? roster.filter(m => m.image) : roster;
 
   return (
     <div className="wiki-page">
@@ -56,38 +76,72 @@ export default function MafiaGallery() {
         </div>
       </div>
 
-      <div className="sort-bar">
-        <span className="sort-bar-label">Organize by:</span>
-        <button type="button" className={`sort-btn ${view === 'houses' ? 'active' : ''}`} onClick={() => setView('houses')}>Card Houses ♠♥♣♦</button>
-        <button type="button" className={`sort-btn ${view === 'rank' ? 'active' : ''}`} onClick={() => setView('rank')}>Commission Rank</button>
-        <Link to="/factions/hip-hop-mafia" className="sort-btn sort-btn-link">Faction Page →</Link>
+      <div className="sort-bar" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span className="sort-bar-label">Organize by:</span>
+          <button type="button" className={`sort-btn ${view === 'houses' ? 'active' : ''}`} onClick={() => setView('houses')}>Card Houses ♠♥♣♦</button>
+          <button type="button" className={`sort-btn ${view === 'rank' ? 'active' : ''}`} onClick={() => setView('rank')}>Commission Rank</button>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span className="sort-bar-label">Filter:</span>
+          <button
+            type="button"
+            className={`sort-btn ${filterMode === 'illustrated' ? 'active' : ''}`}
+            onClick={() => setFilterMode('illustrated')}
+            title="Show only characters with completed anime artwork"
+          >
+            Illustrated Only ({roster.filter(m => m.image).length})
+          </button>
+          <button
+            type="button"
+            className={`sort-btn ${filterMode === 'all' ? 'active' : ''}`}
+            onClick={() => setFilterMode('all')}
+            title="Show full deck roster including unillustrated seats"
+          >
+            Full Deck ({roster.length})
+          </button>
+          <Link to="/factions/hip-hop-mafia" className="sort-btn sort-btn-link">Faction Page →</Link>
+        </div>
       </div>
 
-      {view === 'houses' && Object.values(houses).filter(h => h.members.length > 0).map(house => (
-        <div key={house.key} className="tier-section" style={{ '--tier-color': house.color }}>
-          <div className="tier-header">
-            <div className="tier-header-bar" style={{ background: house.color }} />
-            <h2 className="tier-heading">
-              <span style={{ color: house.color }}>{house.symbol}</span> {house.house}{' '}
-              <span className="tier-range" style={{ color: house.color }}>· {house.branch}</span>
-            </h2>
-            <p className="tier-desc">{house.desc}</p>
+      {view === 'houses' && Object.values(houses).map(house => {
+        const members = filterMode === 'illustrated'
+          ? house.members.filter(m => m.image)
+          : house.members;
+
+        if (members.length === 0) return null;
+
+        return (
+          <div key={house.key} className="tier-section" style={{ '--tier-color': house.color }}>
+            <div className="tier-header">
+              <div className="tier-header-bar" style={{ background: house.color }} />
+              <h2 className="tier-heading">
+                <span style={{ color: house.color }}>{house.symbol}</span> {house.house}{' '}
+                <span className="tier-range" style={{ color: house.color }}>· {house.branch}</span>
+              </h2>
+              <p className="tier-desc">{house.desc}</p>
+            </div>
+            <div className="sick52-tier-grid">
+              {members.map(m => <MemberCard key={m.slug} m={m} />)}
+            </div>
           </div>
-          <div className="sick52-tier-grid">
-            {house.members.map(m => <MemberCard key={m.slug} m={m} />)}
-          </div>
-        </div>
-      ))}
+        );
+      })}
 
       {view === 'rank' && (
         <div className="tier-section">
           <div className="tier-header">
             <div className="tier-header-bar" style={{ background: '#C9A227' }} />
             <h2 className="tier-heading">By Commission Rank</h2>
-            <p className="tier-desc">Aces and Jokers first. Signed artists sit outside the deck on purpose.</p>
+            <p className="tier-desc">
+              {filterMode === 'illustrated'
+                ? 'Showing all members with completed anime illustrations.'
+                : 'Aces and Jokers first. Signed artists sit outside the deck on purpose.'}
+            </p>
           </div>
           <div className="sick52-tier-grid">
-            {roster.map(m => <MemberCard key={m.slug} m={m} />)}
+            {displayedRoster.map(m => <MemberCard key={m.slug} m={m} />)}
           </div>
         </div>
       )}
@@ -100,27 +154,30 @@ export default function MafiaGallery() {
             The Made Deck eats in public. These rooms are where money moves, votes happen, and late-night scenes write themselves.
           </p>
         </div>
+
         <div className="mafia-restaurant-grid">
-          {mafiaRestaurants.map(r => {
-            const tied = roster.find(m => m.slug === r.tiedTo);
-            return (
-              <article key={r.slug} className="mafia-restaurant-card" style={{ '--rest-color': r.color }}>
-                <div className="mafia-restaurant-logo-wrap">
-                  <img src={r.logo} alt={`${r.name} logo`} />
-                </div>
-                <div className="mafia-restaurant-body">
+          {mafiaRestaurants.map(r => (
+            <div key={r.slug} className="mafia-restaurant-card" style={{ '--accent': r.color }}>
+              <div className="mafia-restaurant-header">
+                <img src={r.logo} alt={r.name} className="mafia-restaurant-logo" />
+                <div>
                   <h3>{r.name}</h3>
-                  <p className="mafia-restaurant-tag">{r.tagline}</p>
-                  <p>{r.desc}</p>
-                  {tied && (
-                    <Link to={`/hip-hop-mafia/${tied.slug}`} className="wiki-link">
-                      Tied to {tied.name} →
-                    </Link>
-                  )}
+                  <span className="mafia-restaurant-tagline">{r.tagline}</span>
                 </div>
-              </article>
-            );
-          })}
+              </div>
+              <p className="mafia-restaurant-desc">{r.desc}</p>
+              {r.tiedTo && (
+                <div className="mafia-restaurant-footer">
+                  <span className="mafia-restaurant-tied">
+                    Primary front for{' '}
+                    <Link to={`/hip-hop-mafia/${r.tiedTo}`} className="wiki-link">
+                      {r.tiedTo.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                    </Link>
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </section>
     </div>
