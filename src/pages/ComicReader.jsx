@@ -75,10 +75,8 @@ export default function ComicReader() {
   const { slug } = useParams();
   const comic = getComic(slug);
 
-  useEffect(() => {
-    saveProgress(comic);
-    window.scrollTo(0, 0);
-  }, [slug]);
+  const chapter = comic?.slug;
+  useEffect(() => { saveProgress(chapter); }, [chapter]);
 
   if (!comic) {
     return (
