@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { getComicArcs } from '../comicsData';
+import { readProgress } from '../comicProgress';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 function StatusBadge({ status }) {
@@ -36,17 +37,19 @@ function ChapterCard({ ch, color }) {
 export default function ComicsIndex() {
   const arcs = getComicArcs();
   const featured = arcs[0].chapters.find(c => c.hasScript);
+  const progress = readProgress();
 
   return (
     <div className="wiki-page comics-index">
       <Breadcrumbs />
       <h1>DJ24: The War of Sound — Webcomic</h1>
       <p className="page-intro">
-        The saga as a <strong>cyberpunk-shonen webcomic</strong>: vertical-scroll chapters where the
-        DJ battles are drawn as full sound-combat. Season 1 runs <strong>50 chapters across 4 arcs</strong>.
-        The opening run is fully scripted and ready to read — start with{' '}
-        <Link to="/comics/ch01-the-first-drop" className="wiki-link">Chapter 1</Link>.
+        On Planet Ongaku, DJs fight with sound. Read the opening chapters through synopses, dialogue
+        and storyboard art. The arc list also shows the planned chapters for the rest of Season 1.
       </p>
+      {progress && <p className="page-intro">
+        <Link to={`/comics/${progress.slug}`} className="wiki-link">Resume chapter {progress.number} · {progress.title} →</Link>
+      </p>}
 
       {featured && (
         <Link to={`/comics/${featured.slug}`} className="comic-hero" style={{ '--arc-color': arcs[0].color }}>

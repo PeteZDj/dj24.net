@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getComic } from '../comicsData';
+import { saveProgress } from '../comicProgress';
 import { loadMarkdown, resolveWikiLink } from '../contentLoader';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -73,6 +75,11 @@ export default function ComicReader() {
   const { slug } = useParams();
   const comic = getComic(slug);
 
+  useEffect(() => {
+    saveProgress(comic);
+    window.scrollTo(0, 0);
+  }, [slug]);
+
   if (!comic) {
     return (
       <div className="wiki-page">
@@ -142,7 +149,7 @@ export default function ComicReader() {
             <div className="infobox-row"><dt>Chapter</dt><dd>#{comic.number}</dd></div>
             <div className="infobox-row"><dt>Setting</dt><dd><LocationText text={comic.setting} /></dd></div>
             <div className="infobox-row"><dt>Pages</dt><dd>{comic.pages.length} pages</dd></div>
-            <div className="infobox-row"><dt>Format</dt><dd>Vertical scroll (webtoon)</dd></div>
+            <div className="infobox-row"><dt>Format</dt><dd>Chapter synopsis and illustrated storyboard</dd></div>
             <div className="infobox-row">
               <dt>Previous</dt>
               <dd>
