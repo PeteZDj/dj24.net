@@ -1,16 +1,38 @@
-﻿# ðŸŽµ DJ24: War of Sound - Official Wiki
+<img src="docs/portfolio/logo.png" alt="DJ24: War of Sound logo" width="100">
 
-## Live preview
+# DJ24: War of Sound
 
-![DJ24 War of Sound wiki](docs/screenshot.png)
+*This world moves to music.*
 
-> **An epic multimedia universe spanning anime, video games, comics, and manga**
+[Visit DJ24: War of Sound](https://dj24.net/) · [Repository guide](#repository-guide)
 
-## ðŸŒŸ About This Project
+## Idea
+
+An original DJ-led story universe told through comics, characters and games.
+
+## Overview
+
+War of Sound uses DJ culture as the basis for an original world of characters, factions, and rivalries. The public comic library is the way into the story.
+
+Readers can open a chapter and return to where they left off. The wiki and game concepts give the same world room to expand.
+
+## Screenshots
+
+**[DJ24: War of Sound homepage](https://dj24.net/)**
+
+![DJ24: War of Sound homepage](docs/portfolio/product.webp)
+
+**[Comic chapter library](https://dj24.net/comics)**
+
+![Comic chapter library](docs/portfolio/feature.webp)
+
+## Repository guide
+
+### ðŸŒŸ About This Project
 
 **DJ24: War of Sound** is a comprehensive multimedia franchise created by **petezdj**, featuring an expansive universe where music is weaponized and sound shapes reality itself. This wiki serves as the central hub for all lore, characters, factions, and world-building across multiple media formats.
 
-### ðŸ“º Media Formats
+#### ðŸ“º Media Formats
 - **Anime Series** - Epic animated battles and character-driven storytelling
 - **Video Games** - From tactical rhythm combat to open-world RPG adventures
 - **Manga/Comics** - Visual storytelling across multiple story arcs
@@ -18,7 +40,7 @@
 
 ---
 
-## ðŸ“š Project Knowledge Base
+### ðŸ“š Project Knowledge Base
 
 A full, structured, verifiable knowledge base lives in [`docs/`](docs/README.md):
 
@@ -31,11 +53,11 @@ Start at [`docs/README.md`](docs/README.md).
 
 ---
 
-## ðŸŒ The World of Planet Ongaku
+### ðŸŒ The World of Planet Ongaku
 
 On **Planet Ongaku**, music isn't just artâ€”it's power. The **Frequency Grid** controls reality itself, and those who master sound control the fate of the world.
 
-### Major Locations
+#### Major Locations
 
 | Location | Description |
 |----------|-------------|
@@ -56,15 +78,15 @@ On **Planet Ongaku**, music isn't just artâ€”it's power. The **Frequency Gr
 
 ---
 
-## âš”ï¸ Major Factions
+### âš”ï¸ Major Factions
 
-### ðŸ›¡ï¸ DJ24 - The Elite Guardians
+#### ðŸ›¡ï¸ DJ24 - The Elite Guardians
 
 **"Structure, Unity, Control."**
 
 The elite 24-hour guardian unit protecting Planet Ongaku. Each member represents one hour of the day, forming a living failsafe against chaos.
 
-#### Featured Members
+##### Featured Members
 
 | Hour | Name | Role |
 |------|------|------|
@@ -105,13 +127,13 @@ The elite 24-hour guardian unit protecting Planet Ongaku. Each member represents
 
 ---
 
-### ðŸ’€ The Sick 52 - Exiled Masters
+#### ðŸ’€ The Sick 52 - Exiled Masters
 
 **"They exiled us. They erased us. Now we erase them."**
 
 Once the 52 greatest musicians in the galaxy, betrayed by the Harmony Council 200 years ago. Now mutated, powerful, and seeking revenge.
 
-#### The Founding Dissonants (Tier I - Ranks 1-12)
+##### The Founding Dissonants (Tier I - Ranks 1-12)
 
 | Rank | Name | Title | Role |
 |------|------|-------|------|
@@ -128,7 +150,7 @@ Once the 52 greatest musicians in the galaxy, betrayed by the Harmony Council 20
 | **#11** | **Chorus Tyrant** | Supreme War Conductor | Field Marshal |
 | **#12** | **Final Drop** | The Demon of the Abyss | The Final Hour |
 
-#### Additional Tiers
+##### Additional Tiers
 
 **52 Total Members** organized in 5 tiers:
 - **Tier I:** The Founding Dissonants (1-12) - Original ideological rebels with black + red cloaks
@@ -141,13 +163,13 @@ Once the 52 greatest musicians in the galaxy, betrayed by the Harmony Council 20
 
 ---
 
-### ðŸ›ï¸ Harmony Council
+#### ðŸ›ï¸ Harmony Council
 
 **"One sound, one rhythm, one world."**
 
 The authoritarian rulers enforcing the **Single Beat System (SBS)** across Planet Ongaku.
 
-#### Council Members
+##### Council Members
 
 - **Grand Composer Veyra** - Public Face of Control
 - **The Conductor** - Elite Enforcer
@@ -161,13 +183,13 @@ The authoritarian rulers enforcing the **Single Beat System (SBS)** across Plane
 
 ---
 
-### ðŸ¢ NexaGen Harmonics
+#### ðŸ¢ NexaGen Harmonics
 
 **"Power belongs to those who control it."**
 
 A cybernetic megacorporation weaponizing music through technology and cloning.
 
-#### Key Figures
+##### Key Figures
 
 - **Lysander Coda** - CEO / Industrialist
 - **Synth-09** - AI DJ Masterpiece (unstable but perfect)
@@ -177,7 +199,7 @@ A cybernetic megacorporation weaponizing music through technology and cloning.
 
 ---
 
-### ðŸ¤¡ The Komedians
+#### ðŸ¤¡ The Komedians
 
 **"Reality is just a setup. We are the punchline."**
 
@@ -188,47 +210,47 @@ Interdimensional invaders from Planet Joke who rewrite reality into absurdist ni
 
 ---
 
-## ðŸŽ® The Games
+### ðŸŽ® The Games
 
-### DJ Battle (Low-Res Era)
+#### DJ Battle (Low-Res Era)
 **Genre:** Tactical Rhythm Combat  
 Build your dojo, train fighters, and compete in 1v1 DJ battles during the Golden Age of Sound.
 
-### DJ VIP (Early-HD Era)
+#### DJ VIP (Early-HD Era)
 **Genre:** Narrative Social Sim  
 Navigate fame, corruption, and the music industry's fall from grace.
 
-### DJ24 (XD Era)
+#### DJ24 (XD Era)
 **Genre:** Open-World Action RPG  
 Cyberpunk city-building, real-time sound combat, and interdimensional warfare. The flagship game.
 
-### DJ24: The Sick 52 (Mid-XD Era)
+#### DJ24: The Sick 52 (Mid-XD Era)
 **Genre:** Squad Tactics  
 City-control warfare. Choose your side: DJ24 or the Sick 52.
 
-### Planet Ongaku (Galactic Era)
+#### Planet Ongaku (Galactic Era)
 **Genre:** Space 4X Strategy  
 Explore the cosmos, manage civilizations, and wage music-based interstellar war.
 
 ---
 
-## ðŸ“– Story Arcs / Seasons
+### ðŸ“– Story Arcs / Seasons
 
-### Season 1: The Internal War
+#### Season 1: The Internal War
 Sync joins DJ24. The escalating conflict with the Sick 52 leads to the collapse of the Frequency Grid.
 
-### Season 2: The Komedian Invasion
+#### Season 2: The Komedian Invasion
 Reality breaks. Sync is captured and taken to Planet Joke. Cities become nightmares.
 
-### Season 3: The AI War
+#### Season 3: The AI War
 General 24 allies with AI musicians. Sync wanders through underground culture. The Sick 52 grows stronger.
 
-### Season 4: The Forgotten Soldiers
+#### Season 4: The Forgotten Soldiers
 DJ24 fractures. Sync becomes an anti-hero hunting the Sick 52. Intergalactic politics emerge.
 
 ---
 
-## ðŸ› ï¸ Tech Stack
+### ðŸ› ï¸ Tech Stack
 
 This wiki is built with modern web technologies:
 
@@ -240,13 +262,13 @@ This wiki is built with modern web technologies:
 
 ---
 
-## ðŸš€ Getting Started
+### ðŸš€ Getting Started
 
-### Prerequisites
+#### Prerequisites
 - Node.js 18+ 
 - npm or yarn
 
-### Installation
+#### Installation
 
 ```bash
 # Clone the repository
@@ -266,13 +288,13 @@ npm run build
 npm run preview
 ```
 
-### Development
+#### Development
 ```bash
 npm run dev
 ```
 Visit `http://localhost:5173` to see the wiki in action.
 
-### Building
+#### Building
 ```bash
 npm run build
 ```
@@ -280,7 +302,7 @@ Outputs to `dist/` folder ready for deployment.
 
 ---
 
-## ðŸ“ Project Structure
+### ðŸ“ Project Structure
 
 ```
 dj24.net/
@@ -307,7 +329,7 @@ dj24.net/
 
 ---
 
-## ðŸŽ¨ Features
+### ðŸŽ¨ Features
 
 - **Dynamic Routing** - Seamless navigation between pages
 - **Markdown Content** - Easy-to-edit lore and character bios
@@ -321,7 +343,7 @@ dj24.net/
 
 ---
 
-## ðŸ–¼ï¸ Artwork & Assets
+### ðŸ–¼ï¸ Artwork & Assets
 
 This repository contains **200+ high-quality images** including:
 
@@ -336,13 +358,13 @@ This repository contains **200+ high-quality images** including:
 
 ---
 
-## ðŸŒ Live Site
+### ðŸŒ Live Site
 
 Visit the live wiki at: **[dj24.net](http://dj24.net)**
 
 ---
 
-## ðŸ“ Content Guidelines
+### ðŸ“ Content Guidelines
 
 All content in this wiki is original creative work by **petezdj**. This includes:
 - Character designs and artwork
@@ -353,7 +375,7 @@ All content in this wiki is original creative work by **petezdj**. This includes
 
 ---
 
-## ðŸ¤ Contributing
+### ðŸ¤ Contributing
 
 This is a personal creative project. If you'd like to contribute or have suggestions:
 
@@ -364,7 +386,7 @@ This is a personal creative project. If you'd like to contribute or have suggest
 
 ---
 
-## ðŸ“œ License
+### ðŸ“œ License
 
 This project and all creative content Â© 2026 petezdj. All rights reserved.
 
@@ -372,7 +394,7 @@ The code is available for reference and learning purposes.
 
 ---
 
-## ðŸ“§ Contact
+### ðŸ“§ Contact
 
 **Creator:** petezdj  
 **Project:** DJ24: War of Sound  
@@ -383,7 +405,7 @@ The code is available for reference and learning purposes.
 
 <div align="center">
 
-### ðŸŽµ "In a world where music is power, who will control the sound?" ðŸŽµ
+#### ðŸŽµ "In a world where music is power, who will control the sound?" ðŸŽµ
 
 **DJ24: War of Sound** - An epic multimedia universe
 
