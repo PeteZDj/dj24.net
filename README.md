@@ -28,11 +28,11 @@ Readers can open a chapter and return to where they left off. The wiki and game 
 
 ## Repository guide
 
-### ðŸŒŸ About This Project
+### 🌟 About This Project
 
 **DJ24: War of Sound** is a comprehensive multimedia franchise created by **petezdj**, featuring an expansive universe where music is weaponized and sound shapes reality itself. This wiki serves as the central hub for all lore, characters, factions, and world-building across multiple media formats.
 
-#### ðŸ“º Media Formats
+#### 📺 Media Formats
 - **Anime Series** - Epic animated battles and character-driven storytelling
 - **Video Games** - From tactical rhythm combat to open-world RPG adventures
 - **Manga/Comics** - Visual storytelling across multiple story arcs
@@ -40,22 +40,22 @@ Readers can open a chapter and return to where they left off. The wiki and game 
 
 ---
 
-### ðŸ“š Project Knowledge Base
+### 📚 Project Knowledge Base
 
 A full, structured, verifiable knowledge base lives in [`docs/`](docs/README.md):
 
-- **`docs/lore/`** â€” the dissected canon: world & science, the galaxy, factions, the DJ24 roster,
+- **`docs/lore/`** — the dissected canon: world & science, the galaxy, factions, the DJ24 roster,
   the canonical Sick 52, the timeline & seasons, and games & media.
-- **`docs/source/`** â€” faithful Markdown conversions of the original lore pages (the source of truth).
-- **`docs/CANON-NOTES.md`** â€” canon status, decisions, and source-vs-site discrepancies.
+- **`docs/source/`** — faithful Markdown conversions of the original lore pages (the source of truth).
+- **`docs/CANON-NOTES.md`** — canon status, decisions, and source-vs-site discrepancies.
 
 Start at [`docs/README.md`](docs/README.md).
 
 ---
 
-### ðŸŒ The World of Planet Ongaku
+### 🌍 The World of Planet Ongaku
 
-On **Planet Ongaku**, music isn't just artâ€”it's power. The **Frequency Grid** controls reality itself, and those who master sound control the fate of the world.
+On **Planet Ongaku**, music isn't just art—it's power. The **Frequency Grid** controls reality itself, and those who master sound control the fate of the world.
 
 #### Major Locations
 
@@ -74,13 +74,13 @@ On **Planet Ongaku**, music isn't just artâ€”it's power. The **Frequency Gr
 | **Clown Country** | Comedic Chaos Realm |
 | **Intro: The Dream** | The Beginning Zone |
 
-**ðŸ–¼ï¸ View Location Artwork:** All city artwork is included in `public/images/cities/` (24 high-quality images)
+**🖼️ View Location Artwork:** All city artwork is included in `public/images/cities/` (24 high-quality images)
 
 ---
 
-### âš”ï¸ Major Factions
+### ⚔️ Major Factions
 
-#### ðŸ›¡ï¸ DJ24 - The Elite Guardians
+#### 🛡️ DJ24 - The Elite Guardians
 
 **"Structure, Unity, Control."**
 
@@ -123,11 +123,11 @@ The elite 24-hour guardian unit protecting Planet Ongaku. Each member represents
 - Disruption Unit
 - Special Operations
 
-**ðŸ–¼ï¸ View Character Art:** All DJ24 character artwork is included in `public/images/dj24/` (30+ character images)
+**🖼️ View Character Art:** All DJ24 character artwork is included in `public/images/dj24/` (30+ character images)
 
 ---
 
-#### ðŸ’€ The Sick 52 - Exiled Masters
+#### 💀 The Sick 52 - Exiled Masters
 
 **"They exiled us. They erased us. Now we erase them."**
 
@@ -159,11 +159,11 @@ Once the 52 greatest musicians in the galaxy, betrayed by the Harmony Council 20
 - **Tier IV:** The Psychological Choir (37-44) - Mind-based manipulators
 - **Tier V:** The Mutated Prototypes (45-52) - Experimental evolutions
 
-**ðŸ–¼ï¸ View Character Art:** All Sick 52 character artwork is included in `public/images/sick52/` (65+ character images)
+**🖼️ View Character Art:** All Sick 52 character artwork is included in `public/images/sick52/` (65+ character images)
 
 ---
 
-#### ðŸ›ï¸ Harmony Council
+#### 🏛️ Harmony Council
 
 **"One sound, one rhythm, one world."**
 
@@ -179,11 +179,11 @@ The authoritarian rulers enforcing the **Single Beat System (SBS)** across Plane
 - **Arbiter Shen** - Justice Enforcer
 - **Auditor Kane** - Resource Controller
 
-**ðŸ–¼ï¸ View Character Art:** Council member artwork in `public/images/harmony-council/` (7 images)
+**🖼️ View Character Art:** Council member artwork in `public/images/harmony-council/` (7 images)
 
 ---
 
-#### ðŸ¢ NexaGen Harmonics
+#### 🏢 NexaGen Harmonics
 
 **"Power belongs to those who control it."**
 
@@ -195,11 +195,11 @@ A cybernetic megacorporation weaponizing music through technology and cloning.
 - **Synth-09** - AI DJ Masterpiece (unstable but perfect)
 - **Unit Omega** - Mass-Produced Enforcer
 
-**ðŸ–¼ï¸ View Character Art:** NexaGen characters in `public/images/extended/` (22 images)
+**🖼️ View Character Art:** NexaGen characters in `public/images/extended/` (22 images)
 
 ---
 
-#### ðŸ¤¡ The Komedians
+#### 🤡 The Komedians
 
 **"Reality is just a setup. We are the punchline."**
 
@@ -210,7 +210,7 @@ Interdimensional invaders from Planet Joke who rewrite reality into absurdist ni
 
 ---
 
-### ðŸŽ® The Games
+### 🎮 The Games
 
 #### DJ Battle (Low-Res Era)
 **Genre:** Tactical Rhythm Combat  
@@ -234,7 +234,7 @@ Explore the cosmos, manage civilizations, and wage music-based interstellar war.
 
 ---
 
-### ðŸ“– Story Arcs / Seasons
+### 📖 Story Arcs / Seasons
 
 #### Season 1: The Internal War
 Sync joins DJ24. The escalating conflict with the Sick 52 leads to the collapse of the Frequency Grid.
@@ -250,7 +250,7 @@ DJ24 fractures. Sync becomes an anti-hero hunting the Sick 52. Intergalactic pol
 
 ---
 
-### ðŸ› ï¸ Tech Stack
+### 🛠️ Tech Stack
 
 This wiki is built with modern web technologies:
 
@@ -262,7 +262,7 @@ This wiki is built with modern web technologies:
 
 ---
 
-### ðŸš€ Getting Started
+### 🚀 Getting Started
 
 #### Prerequisites
 - Node.js 18+ 
@@ -302,34 +302,34 @@ Outputs to `dist/` folder ready for deployment.
 
 ---
 
-### ðŸ“ Project Structure
+### 📁 Project Structure
 
 ```
 dj24.net/
-â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ components/      # Reusable React components
-â”‚   â”œâ”€â”€ pages/          # Page components for routing
-â”‚   â”œâ”€â”€ contentLoader.js # Content management system
-â”‚   â”œâ”€â”€ App.jsx         # Main application component
-â”‚   â””â”€â”€ main.jsx        # Application entry point
-â”œâ”€â”€ content/            # Markdown content files
-â”‚   â”œâ”€â”€ factions/
-â”‚   â”œâ”€â”€ characters/
-â”‚   â”œâ”€â”€ cities/
-â”‚   â””â”€â”€ wiki/
-â”œâ”€â”€ public/images/      # Character art and assets (200+ images)
-â”‚   â”œâ”€â”€ dj24/          # DJ24 member portraits (30+ images)
-â”‚   â”œâ”€â”€ sick52/        # Sick 52 member portraits (65+ images)
-â”‚   â”œâ”€â”€ extended/      # Extended cast (22 images)
-â”‚   â”œâ”€â”€ harmony-council/ # Council members (7 images)
-â”‚   â”œâ”€â”€ cities/        # Location artwork (24 images)
-â”‚   â””â”€â”€ logos/         # Faction logos (17 images)
-â””â”€â”€ public/            # Static assets
+├── src/
+│   ├── components/      # Reusable React components
+│   ├── pages/          # Page components for routing
+│   ├── contentLoader.js # Content management system
+│   ├── App.jsx         # Main application component
+│   └── main.jsx        # Application entry point
+├── content/            # Markdown content files
+│   ├── factions/
+│   ├── characters/
+│   ├── cities/
+│   └── wiki/
+├── public/images/      # Character art and assets (200+ images)
+│   ├── dj24/          # DJ24 member portraits (30+ images)
+│   ├── sick52/        # Sick 52 member portraits (65+ images)
+│   ├── extended/      # Extended cast (22 images)
+│   ├── harmony-council/ # Council members (7 images)
+│   ├── cities/        # Location artwork (24 images)
+│   └── logos/         # Faction logos (17 images)
+└── public/            # Static assets
 ```
 
 ---
 
-### ðŸŽ¨ Features
+### 🎨 Features
 
 - **Dynamic Routing** - Seamless navigation between pages
 - **Markdown Content** - Easy-to-edit lore and character bios
@@ -343,7 +343,7 @@ dj24.net/
 
 ---
 
-### ðŸ–¼ï¸ Artwork & Assets
+### 🖼️ Artwork & Assets
 
 This repository contains **200+ high-quality images** including:
 
@@ -358,13 +358,13 @@ This repository contains **200+ high-quality images** including:
 
 ---
 
-### ðŸŒ Live Site
+### 🌐 Live Site
 
 Visit the live wiki at: **[dj24.net](http://dj24.net)**
 
 ---
 
-### ðŸ“ Content Guidelines
+### 📝 Content Guidelines
 
 All content in this wiki is original creative work by **petezdj**. This includes:
 - Character designs and artwork
@@ -375,7 +375,7 @@ All content in this wiki is original creative work by **petezdj**. This includes
 
 ---
 
-### ðŸ¤ Contributing
+### 🤝 Contributing
 
 This is a personal creative project. If you'd like to contribute or have suggestions:
 
@@ -386,15 +386,15 @@ This is a personal creative project. If you'd like to contribute or have suggest
 
 ---
 
-### ðŸ“œ License
+### 📜 License
 
-This project and all creative content Â© 2026 petezdj. All rights reserved.
+This project and all creative content © 2026 petezdj. All rights reserved.
 
 The code is available for reference and learning purposes.
 
 ---
 
-### ðŸ“§ Contact
+### 📧 Contact
 
 **Creator:** petezdj  
 **Project:** DJ24: War of Sound  
@@ -405,7 +405,7 @@ The code is available for reference and learning purposes.
 
 <div align="center">
 
-#### ðŸŽµ "In a world where music is power, who will control the sound?" ðŸŽµ
+#### 🎵 "In a world where music is power, who will control the sound?" 🎵
 
 **DJ24: War of Sound** - An epic multimedia universe
 
